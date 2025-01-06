@@ -1,5 +1,7 @@
 from terrainCard import terrainCard
+import scoringCards
 import random
+import math
 
 deck = []
 # 2 cost cards:
@@ -27,5 +29,20 @@ monsterDeck.append(terrainCard("KoboldOnslaught", 0, [["Monster", 0], ["Monster"
 
 #Randomize
 random.shuffle(monsterDeck)
-deck.append(monsterDeck[0])
-random.shuffle(deck)
+season = [0, 8]
+while season[0] < 4:
+    index = 0
+    deck.append(monsterDeck[season[0]])
+    random.shuffle(deck)
+
+    while season[1] > 0:
+        season[1] -= deck[index].cost
+        if deck[index] in monsterDeck:
+            deck.pop(index)
+            index -= 1
+        index += 1
+
+    # TODO Scoring
+    season[0] += 1
+    season[1] = 8-math.ceil(season[0]/2.0)
+
