@@ -13,7 +13,6 @@ def dfs(grid, row, col, visited, terrain_type):
                     stack.append((nr, nc))
     return cluster
 
-
 def faunlostthicket(grid):
     if not grid or not grid[0]:
         return 0
@@ -32,7 +31,6 @@ def faunlostthicket(grid):
 
     return max_length*2
 
-
 def is_surrounded_by_forest_or_edge(grid, r, c):
     rows = len(grid)
     cols = len(grid[0])
@@ -50,7 +48,6 @@ def is_surrounded_by_forest_or_edge(grid, r, c):
         else:  # Out of bounds, considered as edge of the map
             continue
     return True
-
 
 def heartoftheforest(grid):
     count = 0
@@ -120,6 +117,89 @@ def gnomishcolony(grid, terrain_type="village"):
 
     return count_2x2*6
 
+def contains_4x1_or_1x4(cluster):
+    coordinates_set = set(cluster)
+    for r, c in coordinates_set:
+        # Check for 4x1 rectangle
+        if all((r, c + i) in coordinates_set for i in range(4)):
+            return True
+        # Check for 1x4 rectangle
+        if all((r + i, c) in coordinates_set for i in range(4)):
+            return True
+    return False
+
+def traylomonastery(grid):
+    visited = set()
+    clusters = []
+
+    for row in range(len(grid)):
+        for col in range(len(grid[0])):
+            if (row, col) not in visited and grid[row][col] == "village":
+                cluster = dfs(grid, row, col, visited, "village")
+                clusters.append(cluster)
+
+    count = 0
+    for cluster in clusters:
+        if contains_4x1_or_1x4(cluster):
+            count += 1
+
+    return count*7
+
+def calculate_points(cluster):
+    rows = set()
+    cols = set()
+    for r, c in cluster:
+        rows.add(r)
+        cols.add(c)
+    return len(rows) + len(cols)
+
+def caravansary(grid):
+    visited = set()
+    clusters = []
+
+    for row in range(len(grid)):
+        for col in range(len(grid[0])):
+            if (row, col) not in visited and grid[row][col] == "village":
+                cluster = dfs(grid, row, col, visited, "village")
+                clusters.append(cluster)
+
+    max_points = 0
+
+    for cluster in clusters:
+        points = calculate_points(cluster)
+        if points > max_points:
+            max_points = points
+
+    return max_points
+
+def calculate_points_for_empty_adjacent(grid, cluster):
+    points = 0
+    for r, c in cluster:
+        for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]) and grid[nr][nc] == 0:
+                points += 1
+    return points
+
+def outerenclave(grid):
+    visited = set()
+    clusters = []
+
+    for row in range(len(grid)):
+        for col in range(len(grid[0])):
+            if (row, col) not in visited and grid[row][col] == "village":
+                cluster = dfs(grid, row, col, visited, "village")
+                clusters.append(cluster)
+
+    max_points = 0
+
+    for cluster in clusters:
+        points = calculate_points_for_empty_adjacent(grid, cluster)
+        if points > max_points:
+            max_points = points
+
+    return max_points
+
 def ulemswallow(grid):
     def is_farm(r, c):
         return 0 <= r < len(grid) and 0 <= c < len(grid[0]) and grid[r][c] == "farm"
@@ -141,6 +221,80 @@ def ulemswallow(grid):
 
     return water_count*4
 
+def has_mountain_and_farm(grid, cluster):
+    mountains = set()
+    farms = set()
+
+    for r, c in cluster:
+        for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]):
+                if grid[nr][nc] == "mountain":
+                    mountains.add((nr, nc))
+                if grid[nr][nc] == "farm":
+                    farms.add((nr, nc))
+    return mountains, farms
+
+def clawsgravepeaks(grid):
+    visited = set()
+    clusters = []
+    mountain_count = 0
+
+    for row in range(len(grid)):
+        for col in range(len(grid[0])):
+            if (row, col) not in visited and grid[row][col] == "water":
+                cluster = dfs(grid, row, col, visited, "water")
+                clusters.append(cluster)
+
+    for cluster in clusters:
+        mountains, farms = has_mountain_and_farm(grid, cluster)
+        if farms:
+            mountain_count += len(mountains)
+
+    return mountain_count*5
+
+def jorekburg(grid):
+    column_count = 0
+
+    for col in range(len(grid[0])):
+        farm_count = 0
+        water_count = 0
+        for row in range(len(grid)):
+            if grid[row][col] == "farm":
+                farm_count += 1
+            elif grid[row][col] == "water":
+                water_count += 1
+        if farm_count == water_count and farm_count > 0:
+            column_count += 1
+
+    return column_count*4
+
+def count_adjacent_water(grid, cluster):
+    water_count = 0
+    for r, c in cluster:
+        for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]) and grid[nr][nc] == "water":
+                water_count += 1
+    return water_count
+
+def count_farm_clusters_adjacent_to_water(grid):
+    visited = set()
+    clusters = []
+
+    for row in range(len(grid)):
+        for col in range(len(grid[0])):
+            if (row, col) not in visited and grid[row][col] == "farm":
+                cluster = dfs(grid, row, col, visited, "farm")
+                clusters.append(cluster)
+
+    count = 0
+    for cluster in clusters:
+        if count_adjacent_water(grid, cluster) >= 3:
+            count += 1
+
+    return count*7
+
 def Dwarvenholds(grid):
     def is_filled(row):
         return all(cell != 0 for cell in row)
@@ -161,3 +315,42 @@ def Dwarvenholds(grid):
             cols_count += 1
 
     return 7*(rows_count + cols_count)
+
+def bandedhills(grid):
+    terrain_types = {"Forest", "Village", "Farm", "Water", "Monster", "Mountain"}
+    row_count = 0
+
+    for row in grid:
+        unique_terrains = set(row)
+        valid_terrains = unique_terrains.intersection(terrain_types)
+        if len(valid_terrains) >= 5:
+            row_count += 1
+
+    return row_count*4
+
+def starlitsigil(grid):
+    visited = set()
+    clusters = []
+
+    for row in range(len(grid)):
+        for col in range(len(grid[0])):
+            if (row, col) not in visited and grid[row][col] == 0:
+                cluster = dfs(grid, row, col, visited, 0)
+                if len(cluster) == 3:
+                    clusters.append(cluster)
+
+    return len(clusters)*4
+
+
+def silos(grid):
+    def is_filled(column):
+        return all(cell != 0 for cell in column)
+
+    filled_odd_column_count = 0
+
+    for col in range(0, len(grid[0]), 2):  # Using range to iterate over odd-numbered columns (0-based index)
+        column = [grid[row][col] for row in range(len(grid))]
+        if is_filled(column):
+            filled_odd_column_count += 1
+
+    return filled_odd_column_count*10
