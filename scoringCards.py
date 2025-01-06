@@ -278,7 +278,7 @@ def count_adjacent_water(grid, cluster):
                 water_count += 1
     return water_count
 
-def count_farm_clusters_adjacent_to_water(grid):
+def craylund(grid):
     visited = set()
     clusters = []
 
@@ -295,7 +295,7 @@ def count_farm_clusters_adjacent_to_water(grid):
 
     return count*7
 
-def Dwarvenholds(grid):
+def dwarvenholds(grid):
     def is_filled(row):
         return all(cell != 0 for cell in row)
 

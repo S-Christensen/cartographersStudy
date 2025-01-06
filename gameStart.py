@@ -30,6 +30,23 @@ monsterDeck.append(terrainCard("KoboldOnslaught", 0, [["Monster", 0], ["Monster"
 #Randomize
 random.shuffle(monsterDeck)
 season = [0, 8]
+green = [scoringCards.deepwood, scoringCards.sleepyvalley, scoringCards.heartoftheforest, scoringCards.faunlostthicket]
+blue = [scoringCards.ulemswallow, scoringCards.craylund, scoringCards.jorekburg, scoringCards.clawsgravepeaks]
+red = [scoringCards.gnomishcolony, scoringCards.outerenclave, scoringCards.caravansary, scoringCards.traylomonastery]
+misc = [scoringCards.silos, scoringCards.starlitsigil, scoringCards.bandedhills, scoringCards.dwarvenholds]
+
+scoreTypes = [green[random.randint(0,3)], blue[random.randint(0,3)], red[random.randint(0,3)], misc[random.randint(0,3)]]
+random.shuffle(scoreTypes)
+
+grid= [[0 for _ in range(11)] for _ in range(11)]
+grid[1][1]="mountain"
+grid[3][8]="mountain"
+grid[5][3]="mountain"
+grid[8][9]="mountain"
+grid[9][5]="mountain"
+score = 0
+coins = 0
+
 while season[0] < 4:
     index = 0
     deck.append(monsterDeck[season[0]])
@@ -41,8 +58,16 @@ while season[0] < 4:
             deck.pop(index)
             index -= 1
         index += 1
+        # TODO AI places piece
+        # TODO if piece adj to mountain, check if coin
+        # TODO if card cost 1, check if coin used or not
 
-    # TODO Scoring
+
+    score += scoreTypes[season[0] % 4](grid)
+    score += scoreTypes[(season[0]+1) % 4](grid)
+    score += coins
+    # TODO score -= empty adj to monster
+
     season[0] += 1
     season[1] = 8-math.ceil(season[0]/2.0)
 
