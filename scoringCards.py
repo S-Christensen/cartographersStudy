@@ -354,4 +354,3 @@ def silos(grid):
             filled_odd_column_count += 1
 
     return filled_odd_column_count*10
-
