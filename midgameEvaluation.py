@@ -41,35 +41,35 @@ def is_surrounded_by_forest_or_edge(grid, r, c):
         (r, c - 1),  # left
         (r, c + 1)  # right
     ]
-
+    outcome = 0
     for nr, nc in surroundings:
         if 0 <= nr < rows and 0 <= nc < cols:
-            if grid[nr][nc] != "forest":
-                return False
+            if grid[nr][nc] == "forest":
+                outcome+=1
         else:  # Out of bounds, considered as edge of the map
+            outcome += 1
             continue
-    return True
+    return outcome
 
 # Earn 2 points for each forest space surrounded on all four sides by forest spaces or the edge of the map
 def heartoftheforest(grid):
-    count = 0
+    count = 0.0
     for r in range(len(grid)):
         for c in range(len(grid[0])):
             if grid[r][c] == "forest":
-                if is_surrounded_by_forest_or_edge(grid, r, c):
-                    count += 1
+                count += is_surrounded_by_forest_or_edge(grid, r, c)/4
     return count*2
 
 # Earn 4 points for each row that contains three or more forest spaces
-def sleepyvalley(grid):
-    def count_forests_in_row(row):
-        return row.count("forest")
-
+def sleepyvalley(grid, current_rows):
     row_count = 0
+    straggler = 0
 
     for row in grid:
-        if count_forests_in_row(row) >= 3:
+        if row.count("forest") >= 3:
             row_count += 1
+        else:
+            row_count += (row.count("forest")/3)
 
     return row_count*4
 
@@ -96,6 +96,8 @@ def deepwood(grid):
     for cluster in clusters:
         if len(cluster) >= 5 and not is_adjacent_to_village(grid, cluster):
             count += 1
+        elif not is_adjacent_to_village(grid, cluster):
+            count+=len(cluster)/5
 
     return count*6
 
@@ -111,6 +113,7 @@ def gnomishcolony(grid, terrain_type="village"):
                 clusters.append(cluster)
 
     count_2x2 = 0
+
     for cluster in clusters:
         if any(
                 (r, c) in cluster and
@@ -120,6 +123,18 @@ def gnomishcolony(grid, terrain_type="village"):
                 for r, c in cluster
         ):
             count_2x2 += 1
+        else:
+            champ = 0
+            for r,c in cluster:
+                temp_count = .25
+                if (r + 1, c) in cluster:
+                    temp_count+=.25
+                if (r, c + 1) in cluster:
+                    temp_count+=.25
+                if (r + 1, c + 1) in cluster:
+                    temp_count+=.25
+                champ = max(champ, temp_count)
+            count_2x2 += champ
 
     return count_2x2*6
 
@@ -149,7 +164,19 @@ def traylomonastery(grid):
     for cluster in clusters:
         if contains_4x1_or_1x4(cluster):
             count += 1
-
+        else:
+            champ = 0
+            for r, c in set(cluster):
+                # Check for 4x1 rectangle
+                i=0
+                while (r, c + i) in set(cluster) == "village":
+                    i+=1
+                # Check for 1x4 rectangle
+                j=0
+                if (r + j, c) in set(cluster) == "village":
+                    j+=1
+                champ = max(champ, i/4, j/4)
+            count += champ
     return count*7
 
 def calculate_points(cluster):
@@ -228,8 +255,11 @@ def ulemswallow(grid):
 
     for r in range(len(grid)):
         for c in range(len(grid[0])):
-            if grid[r][c] == "water" and count_adjacent_farms(r, c) >= 2:
+            temp = count_adjacent_farms(r, c)
+            if grid[r][c] == "water" and temp >= 2:
                 water_count += 1
+            else:
+                water_count+=temp/2
 
     return water_count*4
 
@@ -247,7 +277,8 @@ def has_mountain_and_farm(grid, cluster):
                     farms.add((nr, nc))
     return mountains, farms
 
-# Earn 5 points for each mountain space connected to a farm space by a cluster of waters paces
+# Earn 5 points for each mountain space connected to a farm space by a cluster of waters spaces
+# This one is hard to make a greedy evaluation. Feel free to fork and improve.
 def clawsgravepeaks(grid):
     visited = set()
     clusters = []
@@ -263,6 +294,8 @@ def clawsgravepeaks(grid):
         mountains, farms = has_mountain_and_farm(grid, cluster)
         if farms:
             mountain_count += len(mountains)
+        else:
+            mountain_count += len(mountains)/2
 
     return mountain_count*5
 
@@ -306,16 +339,16 @@ def craylund(grid):
 
     count = 0
     for cluster in clusters:
-        if count_adjacent_water(grid, cluster) >= 3:
+        temp = count_adjacent_water(grid, cluster)
+        if temp >= 3:
             count += 1
+        else:
+            count += temp/3
 
     return count*7
 
 # Earn 7 points for each complete row or complete column of filled spaces that contains a mountain space
 def dwarvenholds(grid):
-    def is_filled(row):
-        return all(cell != 0 for cell in row)
-
     def contains_mountain(row):
         return "mountain" in row
 
@@ -323,13 +356,17 @@ def dwarvenholds(grid):
     cols_count = 0
 
     for row in grid:
-        if is_filled(row) and contains_mountain(row):
-            rows_count += 1
+        if contains_mountain(row):
+            for cell in row:
+                if cell!=0:
+                    rows_count += 1/11
 
     for col in range(len(grid[0])):
         column = [grid[row][col] for row in range(len(grid))]
-        if is_filled(column) and contains_mountain(column):
-            cols_count += 1
+        if contains_mountain(column):
+            for cell in column:
+                if cell != 0:
+                    cols_count += 1/11
 
     return 7*(rows_count + cols_count)
 
@@ -343,11 +380,14 @@ def bandedhills(grid):
         valid_terrains = unique_terrains.intersection(terrain_types)
         if len(valid_terrains) >= 5:
             row_count += 1
+        else:
+            row_count+=len(valid_terrains)/5
 
     return row_count*4
 
 # Earn 4 points for each cluster of exactly three empty spaces surrounded on all sides by filled spaces
 # or the edge of the map.
+# TODO: I genuinely am blanking on how to implement this currently
 def starlitsigil(grid):
     visited = set()
     clusters = []
@@ -370,7 +410,8 @@ def silos(grid):
 
     for col in range(0, len(grid[0]), 2):
         column = [grid[row][col] for row in range(len(grid))]
-        if is_filled(column):
-            filled_odd_column_count += 1
+        for cell in column:
+            if cell != 0:
+                filled_odd_column_count += 1/11
 
     return filled_odd_column_count*10
