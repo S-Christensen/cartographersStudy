@@ -132,7 +132,7 @@ def play(strategy):
         while season[1] > 0:
             season[1] -= deck[index].cost
 
-            # TODO AI places piece
+            # TODO places piece
             # placePiece(deck[index])
             for mountain in mountain_locations:
                 y = mountain[0]
