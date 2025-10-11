@@ -1,18 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Cartographers</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
 <body>
   <h1>Cartographers</h1>
-  <canvas id="gameCanvas" width="550" height="550"></canvas>
-  <div id="cardOptions"></div>
-  <button id="submitBtn">Submit</button>
-
+  <div id="container">
+    <canvas id="gameCanvas" width="550" height="550"></canvas>
+    <div id="sidebar">
+      <h2 id="cardName">Card: Treetop Village</h2>
+      <div id="shapePreview"></div>
+      <div id="colorOptions">
+        <button data-color="Forest">Forest</button>
+        <button data-color="Water">Water</button>
+        <button data-color="Village">Village</button>
+        <button data-color="Farm">Farm</button>
+      </div>
+      <button id="submitBtn">Submit</button>
+    </div>
+  </div>
   <script src="cards.js"></script>
   <script src="game.js"></script>
+  <script src="ui.js"></script>
   <script src="input.js"></script>
 </body>
-</html>

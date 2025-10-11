@@ -1,25 +1,31 @@
-body {
-  background-color: #121212;
-  color: #f0f0f0;
-  font-family: sans-serif;
-  text-align: center;
-}
-canvas {
-  border: 2px solid #00ffcc;
-  background-color: #1e1e1e;
-  margin-bottom: 20px;
-}
-#cardOptions {
+#container {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 20px;
 }
-button {
-  padding: 10px 20px;
-  margin-top: 10px;
+#sidebar {
+  width: 200px;
+  background-color: #1e1e1e;
+  padding: 10px;
+  border: 2px solid #00ffcc;
+  color: #f0f0f0;
+}
+#shapePreview {
+  display: grid;
+  grid-template-columns: repeat(5, 20px);
+  grid-auto-rows: 20px;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+#shapePreview div {
+  width: 20px;
+  height: 20px;
+  background-color: #333;
+}
+#colorOptions button {
+  margin: 5px;
+  padding: 5px 10px;
   background-color: #00ffcc;
   border: none;
-  border-radius: 5px;
-  font-weight: bold;
   cursor: pointer;
 }
