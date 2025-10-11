@@ -379,11 +379,11 @@ def silos(grid):
 #Earn one point per row and column with at least one forest space. The same forest space can be scored in both a row and column
 def greenbough(grid):
     total = 0
-    colSet= set()
+    colSet = set()
     for row in range(len(grid)):
         rowFlag = False
         for col in range(len(grid[0])):
-            if (row,col) == "Forest":
+            if grid[row][col] == "forest":  # FIXED
                 rowFlag = True
                 colSet.add(col)
         if rowFlag:
@@ -577,23 +577,33 @@ def shieldgate(grid):
 # Earn one point for each village space in the largest cluster of village spaces that is not adjacent to a mountain space
 def greatCity(grid):
     visited = set()
-    largest_cluster = []
+    valid_clusters = []
 
     for r in range(len(grid)):
         for c in range(len(grid[0])):
             if (r, c) not in visited and grid[r][c] == "village":
                 cluster = dfs(grid, r, c, visited, "village")
-                if len(cluster) > len(largest_cluster):
-                    largest_cluster = cluster
 
-    for r, c in largest_cluster:
-        for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
-            nr, nc = r + dr, c + dc
-            if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]):
-                if grid[nr][nc] == "mountain":
-                    return 0  # Adjacent to mountain, no points
+                # Check if any tile in cluster is adjacent to a mountain
+                adjacent_to_mountain = False
+                for x, y in cluster:
+                    for dx, dy in [(1,0), (-1,0), (0,1), (0,-1)]:
+                        nx, ny = x + dx, y + dy
+                        if 0 <= nx < len(grid) and 0 <= ny < len(grid[0]):
+                            if grid[nx][ny] == "mountain":
+                                adjacent_to_mountain = True
+                                break
+                    if adjacent_to_mountain:
+                        break
 
-    return len(largest_cluster)
+                if not adjacent_to_mountain:
+                    valid_clusters.append(cluster)
+
+    if not valid_clusters:
+        return 0
+
+    largest = max(valid_clusters, key=len)
+    return len(largest)
 
 # Earn 8 points for each cluster of 6 or more village spaces
 def wildholds(grid):
@@ -679,17 +689,5 @@ def lostBarony(grid):
                         break
                 if filled and size > max_size:
                     max_size = size
-                    top_left = (r, c)
 
-    if not top_left:
-        return 0
-
-    r, c = top_left
-    edge_spaces = set()
-    for i in range(max_size):
-        edge_spaces.add((r, c + i))  # top edge
-        edge_spaces.add((r + i, c))  # left edge
-        edge_spaces.add((r + max_size - 1, c + i))  # bottom edge
-        edge_spaces.add((r + i, c + max_size - 1))  # right edge
-
-    return len(edge_spaces) * 3
+    return max_size * 3

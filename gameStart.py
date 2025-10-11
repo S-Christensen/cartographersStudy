@@ -4,13 +4,17 @@ import random
 import math
 import numpy as np
 import copy
-from collections import defaultdict
-import hashlib
+
 class Player:
     def __init__(self, player_id):
         self.id = player_id
         self.grid_history = []
         self.current_grid = [[0 for _ in range(11)] for _ in range(11)]
+        self.current_grid[1][3]="mountain"
+        self.current_grid[2][8]="mountain"
+        self.current_grid[5][5]="mountain"
+        self.current_grid[8][2]="mountain"
+        self.current_grid[9][7]="mountain"
         self.score = 0
         self.coins = 0
         self.flags = {
@@ -59,11 +63,11 @@ def filter_criteria(card, criteria):
 
 def flip_and_rotate(shape):
     shapes = []
-    for _ in range(2):  # Two flips (original and flipped)
-        for _ in range(4):  # Four rotations (0, 90, 180, 270 degrees)
-            shapes.append(shape)
-            shape = np.rot90(shape)
-        shape = np.fliplr(shape)
+    for flip in [False, True]:
+        flipped = np.fliplr(shape) if flip else shape
+        for k in range(4):  # Rotations: 0, 90, 180, 270
+            rotated = np.rot90(flipped, k)
+            shapes.append(rotated)
     return shapes
 
 '''
@@ -99,6 +103,7 @@ def place_piece(card, grid, scoretypes, strategy):
 '''
 # TODO drag into the grid and rotate/flip while dragging using keybinds
 # q = left rotate, e = right rotate, f = flip
+
 def get_placement_diff(prev_grid, new_grid):
     diff = []
     for i in range(len(prev_grid)):
@@ -131,10 +136,12 @@ def matches_card_shape(diff, card_shapes):
                 return True
     return False
 
-def placed_on_ruins(diff, ruins_locations):
+def placed_on_ruins(diff, ruins_locations=None):
+    if ruins_locations is None:
+        ruins_locations = [(1, 5), (2, 1), (2, 8), (8, 1), (8, 9), (9, 5)]
     return any((x, y) in ruins_locations for x, y, _ in diff)
 
-def validate_placement(prev_grid, new_grid, card, ruins_locations):
+def validate_placement(prev_grid, new_grid, card, flag):
     diff = get_placement_diff(prev_grid, new_grid)
     if not diff:
         return False, "No placement detected"
@@ -142,7 +149,7 @@ def validate_placement(prev_grid, new_grid, card, ruins_locations):
     if not matches_card_shape(diff, card.shapes):
         return False, "Shape does not match card"
 
-    if card.is_ruin and not placed_on_ruins(diff, ruins_locations):
+    if flag and not placed_on_ruins(diff):
         return False, "Ruins card must be placed on a ruins tile"
 
     return True, "Valid placement"
@@ -170,15 +177,14 @@ def monster_penalty(grid):
                         penalized.add((nx, ny))
 
     return len(penalized)
-
+'''
 def start():
     game_session = GameSession("session_001")
     game_session.players["player_1"] = Player("player_1")
-    # TODO Add more players
+    # TODO Add scalability
 
     deck = []
     # 2 cost cards:
-    # TODO ask dobbins if i should include expansion?
     # deck.append(terrainCard("WildwoodGarden", 2, [[[0, "Forest", "Forest"], ["Forest", 0, 0]], [[0, "Farm", "Farm"], ["Farm", 0, 0]]]))
     # deck.append(terrainCard("WildwoodCrossroads", 2, [[[0, "Forest", 0], ["Forest", "Forest", "Forest"], [0, "Forest", 0]], [[0, "Village", 0], ["Village", "Village", "Village"], [0, "Village", 0]]]))
     # deck.append(terrainCard("FrontierDwelling", 2, [[["Village", "Village", "Village"], [0, "Village", 0], [0, "Village", 0]], [["Farm", "Farm", "Farm"], [0, "Farm", 0], [0, "Farm", 0]]]))
@@ -194,7 +200,6 @@ def start():
     deck.append(terrainCard("Homestead", 2, [[[0,"Village",0], ["Village","Village","Village"]], [[0, "Farm", 0], ["Farm","Farm","Farm"]]]))
 
     # 1 cost cards:
-    # TODO ask dobbins if i should include expansion?
     # deck.append(terrainCard("Pasture", 1,  [[["Farm",0,"Farm"]], [[0, "Farm", "Farm"], ["Farm", "Farm", 0]]]))
     # deck.append(terrainCard("Lagoon", 1, [[[0, "Water"], ["Water", 0]], [["Water", "Water", "Water"], [0, "Water", 0]]]))
     # deck.append(terrainCard("Settlement", 1, [[["Village"], ["Village"]], [[0, 0, "Village"], [0, "Village", "Village"], ["Village", "Village", 0]]]))
@@ -207,13 +212,11 @@ def start():
 
 
     # Special + Monster
-    # TODO ask dobbins if i should include expansion?
     # deck.append(terrainCard("KethrasGate", 0, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]]))
     deck.append(terrainCard("RiftLands", 0, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]]))
     deck.append(terrainCard("TempleRuins", 0, [[[-1]]]))
     deck.append(terrainCard("OutpostRuins", 0, [[[-1]]]))
 
-    # TODO ask dobbins if i should include expansion?
     monsterDeck = []
     monsterDeck.append(terrainCard("GoblinAttack", 0,  [["Monster", 0, 0], [0, "Monster", 0], [0, 0, "Monster"]]))
     monsterDeck.append(terrainCard("GnollRaid", 0, [["Monster", "Monster"], ["Monster", 0], ["Monster", "Monster"]]))
@@ -224,10 +227,10 @@ def start():
     #Randomize
     random.shuffle(monsterDeck)
     season = [0, 8]
-    green = [scoringCards.deepwood, scoringCards.sleepyvalley, scoringCards.heartoftheforest, scoringCards.faunlostthicket]
-    blue = [scoringCards.ulemswallow, scoringCards.craylund, scoringCards.jorekburg, scoringCards.clawsgravepeaks]
-    red = [scoringCards.gnomishcolony, scoringCards.outerenclave, scoringCards.caravansary, scoringCards.traylomonastery]
-    misc = [scoringCards.silos, scoringCards.starlitsigil, scoringCards.bandedhills, scoringCards.dwarvenholds]
+    green = [scoringCards.greenbough, scoringCards.stonesideForest, scoringCards.sentinelWood, scoringCards.treetower]
+    blue = [scoringCards.goldenGranary, scoringCards.shoresideExpanse, scoringCards.canalLake, scoringCards.magesValley]
+    red = [scoringCards.greengoldPlains, scoringCards.shieldgate, scoringCards.greatCity, scoringCards.wildholds]
+    misc = [scoringCards.borderlands, scoringCards.brokenRoad, scoringCards.cauldrons, scoringCards.lostBarony]
 
     scoreTypes = [green[random.randint(0,3)], blue[random.randint(0,3)], red[random.randint(0,3)], misc[random.randint(0,3)]]
     random.shuffle(scoreTypes)
@@ -239,9 +242,6 @@ def start():
     grid[8][2]="mountain"
     grid[9][7]="mountain"
 
-    score = 0
-    coins = 0
-
     mountain_locations = [(1,3), (2,8), (5,5), (8,2), (9,7)]
     ruins_locations = [(1,5), (2,1), (2,8), (8,1), (8,9), (9,5)]
 
@@ -252,12 +252,11 @@ def start():
 
         while season[1] > 0:
             season[1] -= deck[index].cost
-
+            # TODO wait for valid input from all players
             # Assume each player submits a new grid after placing their piece
             for player in game_session.players.values():
                 prev_grid = player.current_grid
                 new_grid = get_player_submission(player)  # From peer or frontend
-                diff = get_placement_diff(prev_grid, new_grid)
 
                 # Validate placement
                 valid, message = validate_placement(
@@ -300,4 +299,127 @@ def start():
 
         season[0] += 1
         season[1] = 8-math.ceil(season[0]/2.0)
-    return score
+    return
+'''
+
+def start():
+    game_session = initialize_session()
+    deck, monster_deck = build_decks()
+    score_types = select_scoring_cards()
+
+    for season_index in range(4):
+        run_season(
+            game_session,
+            deck,
+            monster_deck,
+            score_types,
+            season_index,
+        )
+
+
+def initialize_session():
+    session = GameSession("session_001")
+    session.players["player_1"] = Player("player_1")
+    #TODO add scalability using webapp
+    return session
+
+
+def build_decks():
+    deck = [
+        terrainCard("TreetopVillage", 2, [[[0, 0, 0, "Forest", "Forest"], ["Forest", "Forest", "Forest", 0, 0]],
+                                          [[0, 0, 0, "Village", "Village"], ["Village", "Village", "Village", 0, 0]]]),
+        terrainCard("FishingVillage", 2, [[["Village", "Village", "Village", "Village"]],
+                                          [["Water", "Water", "Water", "Water"]]]),
+        terrainCard("HinterlandStream", 2, [[["Farm", "Farm", "Farm"], ["Farm", 0, 0], ["Farm", 0, 0]],
+                                            [["Water", "Water", "Water"], ["Water", 0, 0], ["Water", 0, 0]]]),
+        terrainCard("Orchard", 2, [[[0, 0, "Forest"], ["Forest", "Forest", "Forest"]],
+                                   [[0, 0, "Farm"], ["Farm", "Farm", "Farm"]]]),
+        terrainCard("Marshlands", 2, [[["Forest", 0, 0], ["Forest", "Forest", "Forest"], ["Forest", 0, 0]],
+                                      [["Water", 0, 0], ["Water", "Water", "Water"], ["Water", 0, 0]]]),
+        terrainCard("Homestead", 2, [[[0, "Village", 0], ["Village", "Village", "Village"]],
+                                     [[0, "Farm", 0], ["Farm", "Farm", "Farm"]]]),
+        terrainCard("Farmland", 1, [[["Farm", "Farm"]],
+                                    [[0, "Farm", 0], ["Farm", "Farm", "Farm"], [0, "Farm", 0]]]),
+        terrainCard("ForgottenForest", 1, [[["Forest", 0], [0, "Forest"]],
+                                           [["Forest", "Forest", 0], [0, "Forest", "Forest"]]]),
+        terrainCard("GreatRiver", 1, [[["Water", "Water", "Water"]],
+                                      [[0, 0, "Water"], [0, "Water", "Water"], ["Water", "Water", 0]]]),
+        terrainCard("Hamlet", 1, [[["Village", 0], ["Village", "Village"]],
+                                  [["Village", "Village", "Village"], ["Village", "Village", 0]]]),
+        terrainCard("RiftLands", 0, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]]),
+        terrainCard("TempleRuins", 0, [[[-1]]]),
+        terrainCard("OutpostRuins", 0, [[[-1]]])
+    ]
+
+    monster_deck = [
+        terrainCard("GoblinAttack", 0, [["Monster", 0, 0], [0, "Monster", 0], [0, 0, "Monster"]]),
+        terrainCard("GnollRaid", 0, [["Monster", "Monster"], ["Monster", 0], ["Monster", "Monster"]]),
+        terrainCard("BugbearAssault", 0, [["Monster", 0, "Monster"], ["Monster", 0, "Monster"]]),
+        terrainCard("KoboldOnslaught", 0, [["Monster", 0], ["Monster", "Monster"], ["Monster", 0]])
+    ]
+
+    random.shuffle(monster_deck)
+    return deck, monster_deck
+
+
+def select_scoring_cards():
+    green = [scoringCards.greenbough, scoringCards.stonesideForest, scoringCards.sentinelWood, scoringCards.treetower]
+    blue = [scoringCards.goldenGranary, scoringCards.shoresideExpanse, scoringCards.canalLake, scoringCards.magesValley]
+    red = [scoringCards.greengoldPlains, scoringCards.shieldgate, scoringCards.greatCity, scoringCards.wildholds]
+    misc = [scoringCards.borderlands, scoringCards.brokenRoad, scoringCards.cauldrons, scoringCards.lostBarony]
+
+    score_types = [random.choice(green), random.choice(blue), random.choice(red), random.choice(misc)]
+    random.shuffle(score_types)
+    return score_types
+
+def run_season(game_session, deck, monster_deck, score_types, season_index):
+    season_time = 8 - math.ceil((season_index + 1) / 2.0)
+    deck.append(monster_deck[season_index])
+    random.shuffle(deck)
+    index = 0
+    mountain_locations = [(1, 3), (2, 8), (5, 5), (8, 2), (9, 7)]
+
+    while season_time > 0:
+        ruins_flag = False
+        card = deck[index]
+        season_time -= card.cost
+        if card.shape == [[[-1]]]:
+            ruins_flag = True
+            index+=1
+            card = deck[index]
+
+
+        # TODO wait for valid input from all players. Maybe set a flag that validate_placement grants?
+        # Can't implement this now otherwise test will break lol
+        for player in game_session.players.values():
+            prev_grid = player.current_grid
+            new_grid = get_player_submission(player)
+            valid, message = validate_placement(prev_grid, new_grid, card, ruins_flag)
+            if not valid:
+                reject_submission(player.id, message)
+                continue
+
+            player.grid_history.append(copy.deepcopy(prev_grid))
+            player.current_grid = new_grid
+            player.flags["placed_this_turn"] = True
+        # TODO wait for valid input from all players. Maybe set a flag that validate_placement grants?
+
+            for mountain in mountain_locations[:]:
+                y, x = mountain
+                if check_orthogonal_neighbors(player.current_grid, y, x):
+                    player.coins += 1
+                    mountain_locations.remove(mountain)
+
+            if player.flags["used_coin_bonus"]:
+                player.coins += 1
+
+        if card in monster_deck:
+            deck.pop(index)
+            index -= 1
+        index += 1
+
+    for player in game_session.players.values():
+        player.score += score_types[season_index % 4](player.current_grid)
+        player.score += score_types[(season_index + 1) % 4](player.current_grid)
+        player.score += player.coins
+        player.score -= monster_penalty(player.current_grid)
