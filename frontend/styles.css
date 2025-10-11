@@ -7,4 +7,19 @@ body {
 canvas {
   border: 2px solid #00ffcc;
   background-color: #1e1e1e;
+  margin-bottom: 20px;
+}
+#cardOptions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+button {
+  padding: 10px 20px;
+  margin-top: 10px;
+  background-color: #00ffcc;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
 }
