@@ -1,5 +1,5 @@
 import random
-import gameStart
+
 
 def evaluate(strategy):
     score = 0
