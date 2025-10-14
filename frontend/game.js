@@ -45,23 +45,31 @@ async function submitMove() {
 async function drawCard() {
   try {
     const response = await fetch('/api/draw-card', { method: 'POST' });
-    const data = await response.json();
-    console.log('drawCard response:', data);
-    // Update card name
+    const text = await response.text();
+    console.log("Raw response:", text);
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (err) {
+      throw new Error("Invalid JSON: " + text);
+    }
+
+    if (data.error) {
+      throw new Error("Server error: " + data.error);
+    }
+
     document.getElementById("cardName").textContent = `Card: ${data.cardName}`;
     activeShape = data.shape;
     terrain = data.allowedTerrains[0];
-    if (typeof showTerrainButtons === 'function') {
-      showTerrainButtons(data.allowedTerrains);
-    }
-    if (typeof renderShapePreview === 'function') {
-      renderShapePreview(activeShape, terrain);
-    }
+    showTerrainButtons(data.allowedTerrains);
+    renderShapePreview(activeShape, terrain);
     placementLocked = false;
     lastPlacedCells = [];
     drawGrid();
   } catch (err) {
     console.error('Failed to draw card:', err);
+    alert("Error drawing card: " + err.message);
   }
 }
 

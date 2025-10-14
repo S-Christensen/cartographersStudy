@@ -1,9 +1,6 @@
-# /api/draw-card.py
-
 import json
 from backend.gameStart import GameSession, run_season
 
-# Global game session (demo only — not persistent across cold starts)
 game_session = GameSession("session_001")
 current_season = 0
 season_initialized = False
@@ -21,7 +18,6 @@ def handler(request):
     global current_season, season_initialized
 
     try:
-        # Initialize deck if needed
         if not season_initialized or not game_session.deck:
             run_season(game_session, game_session.deck, game_session.monster_deck, game_session.score_types, current_season)
             current_season += 1
