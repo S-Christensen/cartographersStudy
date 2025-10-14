@@ -1,7 +1,3 @@
-let selectedCard = cards[0];
-let activeShape = selectedCard.shapes[0];
-let terrain = selectedCard.terrain;
-
 document.addEventListener("keydown", (e) => {
   if (e.key === "q") rotateLeft();
   if (e.key === "e") rotateRight();
