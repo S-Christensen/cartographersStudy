@@ -85,3 +85,68 @@ function drawPreview(x, y) {
     }
   }
 }
+
+let activeShape = [[1, 1], [1, 1]]; // Default shape, will be set on card draw
+let terrain = "Forest"; // Default terrain, will be set on card draw
+let lastPlacedCells = [];
+let placementLocked = false;
+
+function setActiveShape(shape) {
+  activeShape = shape;
+  drawGrid();
+}
+
+function setTerrain(newTerrain) {
+  terrain = newTerrain;
+  drawGrid();
+}
+
+function canPlaceAt(x, y) {
+  for (let dy = 0; dy < activeShape.length; dy++) {
+    for (let dx = 0; dx < activeShape[0].length; dx++) {
+      if (activeShape[dy][dx]) {
+        const gx = x + dx;
+        const gy = y + dy;
+        if (gx >= gridSize || gy >= gridSize || gridData[gy][gx] !== 0) {
+          return false;
+        }
+      }
+    }
+  }
+  return true;
+}
+
+canvas.addEventListener("click", () => {
+  if (placementLocked) return;
+  if (hoverX === null || hoverY === null) return;
+  if (canPlaceAt(hoverX, hoverY)) {
+    lastPlacedCells = [];
+    for (let dy = 0; dy < activeShape.length; dy++) {
+      for (let dx = 0; dx < activeShape[0].length; dx++) {
+        if (activeShape[dy][dx]) {
+          gridData[hoverY + dy][hoverX + dx] = terrain;
+          lastPlacedCells.push([hoverY + dy, hoverX + dx]);
+        }
+      }
+    }
+    placementLocked = true;
+    drawGrid();
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  const undoBtn = document.getElementById('undoBtn');
+  if (undoBtn) {
+    undoBtn.addEventListener('click', function() {
+      lastPlacedCells.forEach(([y, x]) => {
+        if (gridData[y][x] !== "Mountain") {
+          gridData[y][x] = 0;
+        }
+      });
+      lastPlacedCells = [];
+      placementLocked = false;
+      drawGrid();
+    });
+  }
+  drawCard();
+});
