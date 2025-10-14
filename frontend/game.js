@@ -18,13 +18,13 @@ async function drawCard() {
     // Update card name
     document.getElementById("cardName").textContent = `Card: ${data.cardName}`;
     // Set default shape and terrain for the new card
-  setActiveShape(data.shape);
-  setTerrain(data.allowedTerrains[0]);
+    setActiveShape(data.shape);
+    setTerrain(data.allowedTerrains[0]);
     if (typeof showTerrainButtons === 'function') {
       showTerrainButtons(data.allowedTerrains);
     }
     if (typeof renderShapePreview === 'function') {
-      renderShapePreview(activeShape, terrain);
+      renderShapePreview(data.shape, data.allowedTerrains[0]);
     }
     placementLocked = false;
     lastPlacedCells = [];
