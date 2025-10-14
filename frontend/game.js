@@ -12,7 +12,7 @@ gridData[9][7] = "Mountain";
 
 async function submitMove() {
   try {
-    const response = await fetch('https://cartographersstudy.onrender.com', {
+    const response = await fetch('https://cartographersstudy.onrender.com/api/validate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -23,9 +23,10 @@ async function submitMove() {
           shapes: [activeShape],
           terrainOptions: [terrain]
         },
-        ruins_required: false // or true if needed
+        ruins_required: false
       })
     });
+
     const result = await response.json();
     console.log('Validation result:', result);
 
@@ -44,16 +45,11 @@ async function submitMove() {
 // Function to fetch a new card from the backend
 async function drawCard() {
   try {
-    const response = await fetch('https://cartographersstudy.onrender.com', { method: 'POST' });
-    const text = await response.text();
-    console.log("Raw response:", text);
-
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (err) {
-      throw new Error("Invalid JSON: " + text);
-    }
+    const response = await fetch('https://cartographersstudy.onrender.com/api/draw-card', {
+      method: 'POST'
+    });
+    const data = await response.json();
+    console.log("Card data:", data);
 
     if (data.error) {
       throw new Error("Server error: " + data.error);
