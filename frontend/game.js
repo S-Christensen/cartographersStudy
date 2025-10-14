@@ -10,6 +10,37 @@ gridData[5][5] = "Mountain";
 gridData[8][2] = "Mountain";
 gridData[9][7] = "Mountain";
 
+async function submitMove() {
+  try {
+    const response = await fetch('/api/validate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prev_grid: getPreviousGrid(),
+        new_grid: gridData,
+        card: {
+          id: document.getElementById("cardName").textContent.replace("Card: ", ""),
+          shapes: [activeShape],
+          terrainOptions: [terrain]
+        },
+        ruins_required: false // or true if needed
+      })
+    });
+    const result = await response.json();
+    console.log('Validation result:', result);
+
+    if (result.valid) {
+      alert("Valid placement!");
+      placementLocked = true;
+    } else {
+      alert("Invalid move: " + result.message);
+      undoLastPlacement();
+    }
+  } catch (err) {
+    console.error('Failed to validate move:', err);
+  }
+}
+
 // Function to fetch a new card from the backend
 async function drawCard() {
   try {
@@ -164,6 +195,9 @@ document.addEventListener('DOMContentLoaded', function() {
   if (drawBtn) {
     drawBtn.addEventListener('click', drawCard);
   }
+  if (submitBtn) {
+    submitBtn.addEventListener('click', submitMove);
+  }
   if (undoBtn) {
     undoBtn.addEventListener('click', function() {
       lastPlacedCells.forEach(([y, x]) => {
@@ -181,3 +215,22 @@ document.addEventListener('DOMContentLoaded', function() {
   if (submitBtn) submitBtn.style.display = 'none';
   if (undoBtn) undoBtn.style.display = 'none';
 });
+
+function getPreviousGrid() {
+  const clone = gridData.map(row => [...row]);
+  lastPlacedCells.forEach(([y, x]) => {
+    clone[y][x] = 0;
+  });
+  return clone;
+}
+
+function undoLastPlacement() {
+  lastPlacedCells.forEach(([y, x]) => {
+    if (gridData[y][x] !== "Mountain") {
+      gridData[y][x] = 0;
+    }
+  });
+  lastPlacedCells = [];
+  drawGrid();
+}
+
