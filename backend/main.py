@@ -14,7 +14,7 @@ def get_allowed_terrains(card):
                     terrains.add(cell)
     return list(terrains)
 
-'''def handler(request):
+def handler(request):
     global current_season, season_initialized
 
     try:
@@ -52,15 +52,4 @@ def get_allowed_terrains(card):
             500,
             {"Content-Type": "application/json"},
             json.dumps({"error": str(e)})
-        )'''
-
-def handler(request):
-    return (
-        200,
-        {"Content-Type": "application/json"},
-        json.dumps({
-            "cardName": "TestCard",
-            "allowedTerrains": ["Forest"],
-            "shape": [[1, 1], [1, 0]]
-        })
-    )
+        )
