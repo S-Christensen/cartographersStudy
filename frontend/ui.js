@@ -17,5 +17,19 @@ document.querySelectorAll("#colorOptions button").forEach(btn => {
   });
 });
 
+function showTerrainButtons(allowedTerrains) {
+    const container = document.getElementById('terrain-buttons');
+    container.innerHTML = ''; // Clear previous buttons
+
+    allowedTerrains.forEach(type => {
+        const btn = document.createElement('button');
+        btn.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+        btn.className = 'terrain-btn ' + type;
+        container.appendChild(btn);
+    });
+}
+
+showTerrainButtons(['forest', 'village']);
+
 document.getElementById("cardName").textContent = `Card: ${selectedCard.id}`;
 renderShapePreview(activeShape, terrain);

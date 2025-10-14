@@ -1,8 +1,40 @@
+
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const gridSize = 11;
 const cellSize = canvas.width / gridSize;
 let gridData = Array.from({ length: gridSize }, () => Array(gridSize).fill(0));
+gridData[1][3] = "Mountain";
+gridData[2][8] = "Mountain";
+gridData[5][5] = "Mountain";
+gridData[8][2] = "Mountain";
+gridData[9][7] = "Mountain";
+
+// Function to fetch a new card from the backend
+async function drawCard() {
+  try {
+    const response = await fetch('/api/draw-card', { method: 'POST' });
+    const data = await response.json();
+    // Update card name
+    document.getElementById("cardName").textContent = `Card: ${data.cardName}`;
+    // Show only allowed terrain buttons
+    if (typeof showTerrainButtons === 'function') {
+      showTerrainButtons(data.allowedTerrains);
+    } else if (typeof renderColorOptions === 'function') {
+      renderColorOptions(data.allowedTerrains);
+    }
+  } catch (err) {
+    console.error('Failed to draw card:', err);
+  }
+}
+
+// Attach event listener to the draw card button
+document.addEventListener('DOMContentLoaded', function() {
+  const drawBtn = document.getElementById('drawCardBtn');
+  if (drawBtn) {
+    drawBtn.addEventListener('click', drawCard);
+  }
+});
 
 function getColor(value) {
   if (value === "Forest") return "#228B22";

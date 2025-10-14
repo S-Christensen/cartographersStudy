@@ -25,7 +25,10 @@ class Player:
 class GameSession:
     def __init__(self, session_id):
         self.id = session_id
-        self.players = {}  # player_id → Player
+        self.players = {}
+        self.deck, self.monster_deck = build_decks()
+        self.score_types = select_scoring_cards()
+        self.current_card = self.deck[0]
 
 def check_orthogonal_neighbors(grid, x, y):
     # Dimensions of the grid
@@ -383,7 +386,7 @@ def run_season(game_session, deck, monster_deck, score_types, season_index):
         ruins_flag = False
         card = deck[index]
         season_time -= card.cost
-        if card.shape == [[[-1]]]:
+        if card.name in ["TempleRuins", "OutpostRuins"]:
             ruins_flag = True
             index+=1
             card = deck[index]
@@ -413,7 +416,7 @@ def run_season(game_session, deck, monster_deck, score_types, season_index):
             if player.flags["used_coin_bonus"]:
                 player.coins += 1
 
-        if card in monster_deck:
+        if card.name in [m.name for m in monster_deck]:
             deck.pop(index)
             index -= 1
         index += 1
