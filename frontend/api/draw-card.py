@@ -1,5 +1,5 @@
 import json
-from backend.gameStart import GameSession, run_season
+from api.gameStart import GameSession, run_season
 
 game_session = GameSession("session_001")
 current_season = 0
