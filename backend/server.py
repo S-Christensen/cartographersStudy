@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from typing import List, Any
 from backend.gameStart import GameSession, run_season
 
 
@@ -13,6 +14,7 @@ season_initialized = False
 class CardResponse(BaseModel):
     cardName: str
     allowedTerrains: list
+    shape: List[List[Any]]
 
 def get_allowed_terrains(card):
     # Example: extract unique terrain types from card.shapes
@@ -33,11 +35,14 @@ def draw_card():
         current_season += 1
         season_initialized = True
         if not game_session.deck:
-            return {"cardName": "None", "allowedTerrains": []}
+            return {"cardName": "None", "allowedTerrains": [], "shape": [[0]]}
     card = game_session.deck.pop(0)
     allowed_terrains = get_allowed_terrains(card)
+    # Pick the first shape for now; you can randomize or let the user choose
+    shape = card.shapes[0] if hasattr(card, 'shapes') and card.shapes else [[1]]
     game_session.current_card = card
     return {
         "cardName": card.name,
-        "allowedTerrains": allowed_terrains
+        "allowedTerrains": allowed_terrains,
+        "shape": shape
     }

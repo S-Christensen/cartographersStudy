@@ -17,12 +17,18 @@ async function drawCard() {
     const data = await response.json();
     // Update card name
     document.getElementById("cardName").textContent = `Card: ${data.cardName}`;
-    // Show only allowed terrain buttons
+    // Set default shape and terrain for the new card
+  setActiveShape(data.shape);
+  setTerrain(data.allowedTerrains[0]);
     if (typeof showTerrainButtons === 'function') {
       showTerrainButtons(data.allowedTerrains);
-    } else if (typeof renderColorOptions === 'function') {
-      renderColorOptions(data.allowedTerrains);
     }
+    if (typeof renderShapePreview === 'function') {
+      renderShapePreview(activeShape, terrain);
+    }
+    placementLocked = false;
+    lastPlacedCells = [];
+    drawGrid();
   } catch (err) {
     console.error('Failed to draw card:', err);
   }
