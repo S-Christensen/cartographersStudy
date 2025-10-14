@@ -12,7 +12,7 @@ gridData[9][7] = "Mountain";
 
 async function submitMove() {
   try {
-    const response = await fetch('/api/validate', {
+    const response = await fetch('https://cartographersstudy.onrender.com', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -44,7 +44,7 @@ async function submitMove() {
 // Function to fetch a new card from the backend
 async function drawCard() {
   try {
-    const response = await fetch('/api/draw-card', { method: 'POST' });
+    const response = await fetch('https://cartographersstudy.onrender.com', { method: 'POST' });
     const text = await response.text();
     console.log("Raw response:", text);
 
