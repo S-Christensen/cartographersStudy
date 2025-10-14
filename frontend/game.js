@@ -15,16 +15,16 @@ async function drawCard() {
   try {
     const response = await fetch('/api/draw-card', { method: 'POST' });
     const data = await response.json();
+    console.log('drawCard response:', data);
     // Update card name
     document.getElementById("cardName").textContent = `Card: ${data.cardName}`;
-    // Set default shape and terrain for the new card
-    setActiveShape(data.shape);
-    setTerrain(data.allowedTerrains[0]);
+    activeShape = data.shape;
+    terrain = data.allowedTerrains[0];
     if (typeof showTerrainButtons === 'function') {
       showTerrainButtons(data.allowedTerrains);
     }
     if (typeof renderShapePreview === 'function') {
-      renderShapePreview(data.shape, data.allowedTerrains[0]);
+      renderShapePreview(activeShape, terrain);
     }
     placementLocked = false;
     lastPlacedCells = [];
