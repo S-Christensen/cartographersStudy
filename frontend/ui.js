@@ -19,12 +19,17 @@ document.querySelectorAll("#colorOptions button").forEach(btn => {
 
 function showTerrainButtons(allowedTerrains) {
     const container = document.getElementById('terrain-buttons');
-    container.innerHTML = ''; // Clear previous buttons
+    container.innerHTML = '';
 
     allowedTerrains.forEach(type => {
         const btn = document.createElement('button');
         btn.textContent = type.charAt(0).toUpperCase() + type.slice(1);
         btn.className = 'terrain-btn ' + type;
+        btn.dataset.color = type;
+        btn.addEventListener('click', () => {
+            terrain = type;
+            renderShapePreview(activeShape, terrain);
+        });
         container.appendChild(btn);
     });
 }

@@ -84,21 +84,52 @@ function drawPreview(x, y) {
       }
     }
   }
-}
+  // Track last placed shape's cells and placement lock
+  let lastPlacedCells = [];
+  let placementLocked = false;
 
-function canPlaceAt(x, y) {
-  for (let dy = 0; dy < activeShape.length; dy++) {
-    for (let dx = 0; dx < activeShape[0].length; dx++) {
-      if (activeShape[dy][dx]) {
-        const gx = x + dx;
-        const gy = y + dy;
-        if (gx >= gridSize || gy >= gridSize || gridData[gy][gx] !== 0) {
-          return false;
+  canvas.addEventListener("click", () => {
+    if (placementLocked) return;
+    if (canPlaceAt(hoverX, hoverY)) {
+      // Place new shape and record its cells
+      lastPlacedCells = [];
+      for (let dy = 0; dy < activeShape.length; dy++) {
+        for (let dx = 0; dx < activeShape[0].length; dx++) {
+          if (activeShape[dy][dx]) {
+            gridData[hoverY + dy][hoverX + dx] = terrain;
+            lastPlacedCells.push([hoverY + dy, hoverX + dx]);
+          }
         }
       }
+      placementLocked = true;
+      drawGrid();
     }
-  }
-  return true;
+  });
+
+  // Add Undo button functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // ...existing code...
+    // Add Undo button if not present
+    let undoBtn = document.getElementById('undoBtn');
+    if (!undoBtn) {
+      undoBtn = document.createElement('button');
+      undoBtn.id = 'undoBtn';
+      undoBtn.textContent = 'Undo';
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.appendChild(undoBtn);
+    }
+    undoBtn.addEventListener('click', function() {
+      // Remove last placed shape
+      lastPlacedCells.forEach(([y, x]) => {
+        if (gridData[y][x] !== "Mountain") {
+          gridData[y][x] = 0;
+        }
+      });
+      lastPlacedCells = [];
+      placementLocked = false;
+      drawGrid();
+    });
+  });
 }
 
 canvas.addEventListener("click", () => {
