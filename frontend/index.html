@@ -1,14 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Cartographers</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
 <body>
   <h1>Cartographers</h1>
-  <canvas id="gameCanvas" width="600" height="600"></canvas>
-  <script src="pieces.js"></script>
+  <div id="container">
+    <canvas id="gameCanvas" width="550" height="550"></canvas>
+    <div id="sidebar">
+      <div class="card-suite">
+  <h2 id="cardName">Card: ...</h2>
+        <div id="shapePreview"></div>
+        <div id="terrain-buttons"></div>
+        <div class="button-row">
+          <button id="startBtn">Start</button>
+          <button id="drawCardBtn">Draw Card</button>
+          <button id="submitBtn">Submit</button>
+          <button id="undoBtn">Undo</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <script src="game.js"></script>
+  <script src="ui.js"></script>
+  <script src="input.js"></script>
 </body>
-</html>

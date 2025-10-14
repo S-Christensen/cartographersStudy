@@ -1,10 +1,103 @@
+
 body {
-  background-color: #121212;
+  background: linear-gradient(135deg, #232526 0%, #414345 100%);
+  min-height: 100vh;
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
   color: #f0f0f0;
-  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  margin-top: 32px;
+  font-size: 2.5rem;
+  letter-spacing: 2px;
+  color: #00ffc8;
+  text-shadow: 0 2px 8px #000a;
+}
+
+#container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+#gameCanvas {
+  border-radius: 16px;
+  box-shadow: 0 4px 32px #0008;
+  border: 3px solid #00ffc8;
+  background: #232526;
+}
+
+#sidebar {
+  min-width: 260px;
+  background: rgba(30, 30, 30, 0.98);
+  padding: 24px 20px 20px 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 32px #0008;
+  border: 2px solid #00ffc8;
+  color: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-suite h2 {
+  margin: 0 0 18px 0;
+  font-size: 1.3rem;
+  color: #00ffc8;
   text-align: center;
 }
-canvas {
-  border: 2px solid #00ffcc;
-  background-color: #1e1e1e;
+
+#shapePreview {
+  display: grid;
+  grid-template-columns: repeat(5, 28px);
+  grid-auto-rows: 28px;
+  gap: 3px;
+  margin-bottom: 18px;
+  justify-content: center;
+}
+#shapePreview div {
+  width: 28px;
+  height: 28px;
+  background-color: #333;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px #0006;
+}
+
+#terrain-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+  justify-content: center;
+}
+
+#terrain-buttons button, .button-row button {
+  margin: 0 4px 8px 0;
+  padding: 8px 18px;
+  background: linear-gradient(90deg, #00ffc8 0%, #00bfff 100%);
+  color: #232526;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #0003;
+  transition: background 0.2s, transform 0.1s;
+}
+#terrain-buttons button:hover, .button-row button:hover {
+  background: linear-gradient(90deg, #00bfff 0%, #00ffc8 100%);
+  transform: translateY(-2px) scale(1.05);
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
 }
