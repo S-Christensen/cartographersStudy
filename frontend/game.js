@@ -135,7 +135,29 @@ canvas.addEventListener("click", () => {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
+  const startBtn = document.getElementById('startBtn');
+  const drawBtn = document.getElementById('drawCardBtn');
+  const submitBtn = document.getElementById('submitBtn');
   const undoBtn = document.getElementById('undoBtn');
+
+  // Hide game controls until Start is pressed
+  function showGameControls() {
+    if (drawBtn) drawBtn.style.display = '';
+    if (submitBtn) submitBtn.style.display = '';
+    if (undoBtn) undoBtn.style.display = '';
+    if (startBtn) startBtn.style.display = 'none';
+  }
+
+  if (startBtn) {
+    startBtn.addEventListener('click', function() {
+      showGameControls();
+      drawCard();
+    });
+  }
+
+  if (drawBtn) {
+    drawBtn.addEventListener('click', drawCard);
+  }
   if (undoBtn) {
     undoBtn.addEventListener('click', function() {
       lastPlacedCells.forEach(([y, x]) => {
@@ -148,5 +170,8 @@ document.addEventListener('DOMContentLoaded', function() {
       drawGrid();
     });
   }
-  drawCard();
+  // Hide controls initially
+  if (drawBtn) drawBtn.style.display = 'none';
+  if (submitBtn) submitBtn.style.display = 'none';
+  if (undoBtn) undoBtn.style.display = 'none';
 });
