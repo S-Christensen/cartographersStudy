@@ -2,7 +2,9 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from gameStart import GameSession, run_season
+import gameStart
+import math
+import random
 
 app = FastAPI()
 
@@ -29,6 +31,39 @@ def get_allowed_terrains(card):
 
 @app.post("/api/draw-card")
 async def draw_card():
+    global game_session, season_initialized, season_time, index
+
+    if not season_initialized:
+        game_session = gameStart.initialize_session()
+        deck, monster_deck = gameStart.build_decks()
+        score_types = gameStart.select_scoring_cards()
+        game_session.deck = deck
+        game_session.monster_deck = monster_deck
+        game_session.score_types = score_types
+        game_session.index = 0
+        game_session.season_time = 8 - math.ceil((game_session.season + 1) / 2.0)
+        game_session.season_initialized = True
+        game_session.mountain_locations = [(1, 3), (2, 8), (5, 5), (8, 2), (9, 7)]
+
+    if game_session.season_time <= 0 or game_session.index >= len(game_session.deck):
+        return {"error": "Season over or deck exhausted"}
+
+    card = game_session.deck[game_session.index]
+    game_session.index += 1
+
+    if card.name in ["TempleRuins", "OutpostRuins"]:
+        ruins_flag = True
+        if game_session.index < len(game_session.deck):
+            card = game_session.deck[game_session.index]
+            game_session.index += 1
+        else:
+            return {"error": "Deck exhausted after ruins"}
+
+    game_session.season_time -= card.cost
+    game_session.current_card = card
+
+    return card.to_dict()
+    '''
     global current_season, season_initialized
 
     try:
@@ -69,7 +104,8 @@ async def draw_card():
             "cardName": card.name,
             "allowedTerrains": allowed_terrains,
             "shape": shape
-        }
+        }        '''
+
 
     except Exception as e:
         return {"error": str(e)}
