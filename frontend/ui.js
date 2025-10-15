@@ -62,7 +62,7 @@ export function renderShapePreview(shape, terrain, cost = null) {
       btn.dataset.color = type;
       btn.addEventListener('click', () => {
         setTerrain(type);
-        renderShapePreview(activeShape, type);
+        renderShapePreview(activeShape, type, currentCardCost);
       });
       container.appendChild(btn);
     });
