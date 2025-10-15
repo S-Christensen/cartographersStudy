@@ -1,9 +1,9 @@
 class terrainCard:
-    def __init__(self, name, cost, shape):
+    def __init__(self, name, cost, shape, cardType):
         self.name = name
         self.cost = cost
         self.shape = shape
-        self.is_ruin = shape == [[[-1]]]
+        self.type = cardType
 
     def __str__(self):
         return f"{self.name}"
@@ -14,7 +14,7 @@ class terrainCard:
             "cost": self.cost,
             "shape": self.shape,
             "terrainOptions": self.get_terrain_types(),
-            "isRuin": self.is_ruin
+            "type": self.type
         }
 
     def get_terrain_types(self):

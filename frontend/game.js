@@ -18,6 +18,12 @@ gridData[2][8] = "Mountain";
 gridData[5][5] = "Mountain";
 gridData[8][2] = "Mountain";
 gridData[9][7] = "Mountain";
+gridData[1][5] = "Ruins";
+gridData[2][1] = "Ruins";
+gridData[2][9] = "Ruins";
+gridData[8][1] = "Ruins";
+gridData[8][9] = "Ruins";
+gridData[9][5] = "Ruins";
 
 export function setGameStarted(started) {
   gameStarted = started;
@@ -71,8 +77,15 @@ export function drawGrid() {
 
       // Fill terrain if present
       if (cell && cell !== 0) {
-        ctx.fillStyle = getColor(cell);
-        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        if (cell === "Ruins") {
+          ctx.fillStyle = "#888"; // grayish ruins
+          ctx.globalAlpha = 0.3;   // semi-transparent
+          ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+          ctx.globalAlpha = 1.0;
+        } else {
+          ctx.fillStyle = getColor(cell);
+          ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        }
       }
     }
   }
@@ -128,31 +141,42 @@ export async function drawCard() {
     setAvailableShapes(card.shape);
     setActiveShape(card.shape[0]);
     terrain = card.terrainOptions[0]; // default
-
-    if (card.cost === 1 && card.shape.length > 1) {
-      // Show shape buttons only
-      renderShapePreview(activeShape, terrain, card.cost);
+    if (card.type === "Monster") {
+      terrain = "Monster";
+      renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
       showShapeButtons(card.shape);
       document.getElementById('terrain-buttons').style.display = 'none';
-    } else if (card.terrainOptions.length > 1) {
-      // Show terrain buttons only
+    } else if (card.type === "Ruins") {
+      // Ruins cards don’t require placement — just enforce ruins logic
+      alert("Ruins card drawn! You must place over a ruins tile.");
+      renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
       showTerrainButtons(card.terrainOptions);
-      renderShapePreview(activeShape, terrain, card.cost);
-      document.getElementById('shape-buttons').innerHTML = '';
-      document.getElementById('terrain-buttons').style.display = '';
     } else {
-      // Fallback: show terrain buttons
+      if (card.cost === 1 && card.shape.length > 1) {
+        // Show shape buttons only
+        renderShapePreview(activeShape, terrain, card.cost);
+        showShapeButtons(card.shape);
+        document.getElementById('terrain-buttons').style.display = 'none';
+      } else if (card.terrainOptions.length > 1) {
+        // Show terrain buttons only
+        showTerrainButtons(card.terrainOptions);
+        renderShapePreview(activeShape, terrain, card.cost);
+        document.getElementById('shape-buttons').innerHTML = '';
+        document.getElementById('terrain-buttons').style.display = '';
+      } else {
+        // Fallback: show terrain buttons
+        showTerrainButtons(card.terrainOptions);
+        renderShapePreview(activeShape, terrain, card.cost);
+      }
       showTerrainButtons(card.terrainOptions);
-      renderShapePreview(activeShape, terrain, card.cost);
+      renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
+      placementLocked = false;
+      lastPlacedCells = [];
+      drawGrid();
     }
-    showTerrainButtons(card.terrainOptions);
-    renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
-    placementLocked = false;
-    lastPlacedCells = [];
-    drawGrid();
   } catch (err) {
-    console.error('Failed to draw card:', err);
-    alert("Error drawing card: " + err.message);
+      console.error('Failed to draw card:', err);
+      alert("Error drawing card: " + err.message);
   }
 }
 
@@ -207,7 +231,7 @@ export function canPlaceAt(x, y) {
       if (activeShape[dy][dx]) {
         const gx = x + dx;
         const gy = y + dy;
-        if (gx >= gridSize || gy >= gridSize || gridData[gy][gx] !== 0) {
+        if (gx >= gridSize || gy >= gridSize || (gridData[gy][gx] !== 0 && gridData[gy][gx] !== "Ruins")) {
           return false;
         }
       }
