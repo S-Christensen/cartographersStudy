@@ -6,7 +6,8 @@ export function showShapeButtons(shapes) {
 
   shapes.forEach((shape, index) => {
     const btn = document.createElement('button');
-    btn.textContent = `Shape ${index + 1}`;
+    if (index === 0) btn.textContent = 'Shape + Coin';
+    else btn.textContent = `Shape`;
     btn.addEventListener('click', () => {
       setActiveShape(shape);
       renderShapePreview(shape, terrain, currentCardCost);
