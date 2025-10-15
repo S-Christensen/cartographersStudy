@@ -16,7 +16,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-game_session = GameSession("session_001")
+game_session = gameStart.GameSession("session_001")
 current_season = 0
 season_initialized = False
 
