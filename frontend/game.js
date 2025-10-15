@@ -4,7 +4,7 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const gridSize = 11;
 const cellSize = canvas.width / gridSize;
-let gridData = Array.from({ length: gridSize }, () => Array(gridSize).fill(0));
+export let gridData = Array.from({ length: gridSize }, () => Array(gridSize).fill(0));
 let hoverX = null;
 let hoverY = null;
 gridData[1][3] = "Mountain";
@@ -109,12 +109,12 @@ function drawPreview(x, y) {
   }
 }
 
-let activeShape = [[1, 1], [1, 1]]; // Default shape, will be set on card draw
-let terrain = "Forest"; // Default terrain, will be set on card draw
-let lastPlacedCells = [];
-let placementLocked = false;
+export let activeShape = [[1, 1], [1, 1]]; // Default shape, will be set on card draw
+export let terrain = "Forest"; // Default terrain, will be set on card draw
+export let lastPlacedCells = [];
+export let placementLocked = false;
 
-function setActiveShape(shape) {
+export function setActiveShape(shape) {
   activeShape = shape;
   drawGrid();
 }
