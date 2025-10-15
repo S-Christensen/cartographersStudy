@@ -26,7 +26,7 @@ def get_allowed_terrains(card):
                 if isinstance(cell, str):
                     terrains.add(cell)
     return list(terrains)
-
+'''
 @app.post("/api/draw-card")
 async def draw_card():
     global current_season, season_initialized
@@ -52,4 +52,12 @@ async def draw_card():
         "cardName": card.name,
         "allowedTerrains": allowed_terrains,
         "shape": shape
+    }
+    '''
+@app.post("/api/draw-card")
+async def draw_card():
+    return {
+        "cardName": "TestCard",
+        "allowedTerrains": ["Forest", "Village"],
+        "shape": [[1, 0], [1, 1]]
     }
