@@ -3,6 +3,7 @@ import {
   canPlaceAt,
   canvas,
   cellSize,
+  drawCard,
   drawGrid,
   gridData,
   gridSize,
