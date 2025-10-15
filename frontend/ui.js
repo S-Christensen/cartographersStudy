@@ -57,6 +57,21 @@ export function renderShapePreview(shape, terrain, cost = null, seasonRemaining 
   });
 }
 
+export function renderScoringCards() {
+  const container = document.getElementById("scoringDisplay");
+  container.innerHTML = "";
+
+  scoreTypes.forEach((card, index) => {
+    const div = document.createElement("div");
+    div.className = "scoring-card";
+    if (index !== currentSeason && index !== (currentSeason + 1) % 4) {
+      div.classList.add("inactive");
+    }
+    div.textContent = card;
+    container.appendChild(div);
+  });
+}
+
   export function showTerrainButtons(allowedTerrains) {
     const container = document.getElementById('terrain-buttons');
     container.innerHTML = '';

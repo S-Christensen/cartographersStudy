@@ -11,6 +11,8 @@ export let availableShapes = [];
 export let currentCardCost = null;
 export let gameStarted = false;
 export let seasonRemaining = 8;
+export let scoreTypes = [];
+export let currentSeason = 0;
 gridData[1][3] = "Mountain";
 gridData[2][8] = "Mountain";
 gridData[5][5] = "Mountain";
@@ -227,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
     startBtn.addEventListener('click', function() {
       showGameControls();
       setGameStarted(true);
-      drawCard();
+      renderScoringCards();
     });
   }
 
