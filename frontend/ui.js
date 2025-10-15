@@ -1,4 +1,15 @@
-  export function renderShapePreview(shape, terrain) {
+function getColor(terrain) {
+  const colors = {
+    Forest: "#228B22",
+    Village: "#8B0000",
+    Water: "#1E90FF",
+    Farm: "#DAA520",
+    Monster: "#800080"
+  };
+  return colors[terrain] || "#000000";
+}
+
+ export function renderShapePreview(shape, terrain) {
     const preview = document.getElementById("shapePreview");
     preview.innerHTML = "";
     shape.forEach((row, y) => {
