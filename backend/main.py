@@ -62,7 +62,9 @@ async def draw_card():
 
         game_session.season_time -= card.cost
         game_session.current_card = card
-
+        print(f"Drew card: {card.name}, Cost: {card.cost}, Remaining Season Time: {game_session.season_time}")
+        print(f"Deck: {[c.name for c in game_session.deck[game_session.index:]]}")
+        
         return card.to_dict()
     except Exception as e:
         return {"error": str(e)}  
