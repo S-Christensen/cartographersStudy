@@ -26,13 +26,6 @@ function rotateMatrix(matrix, direction) {
   return rotated;
 }
 
-// Drag/drop logic placeholder
-canvas.addEventListener("click", (e) => {
-  const x = Math.floor(e.offsetX / cellSize);
-  const y = Math.floor(e.offsetY / cellSize);
-  placeShapeAt(x, y);
-});
-
 function placeShapeAt(x, y) {
   for (let dy = 0; dy < activeShape.length; dy++) {
     for (let dx = 0; dx < activeShape[0].length; dx++) {
