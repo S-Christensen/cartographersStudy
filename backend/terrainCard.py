@@ -12,7 +12,7 @@ class terrainCard:
         return {
             "id": self.name,
             "cost": self.cost,
-            "shapes": self.shape,
+            "shape": self.shape,
             "terrainOptions": self.get_terrain_types(),
             "isRuin": self.is_ruin
         }
