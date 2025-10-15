@@ -7,11 +7,22 @@ export const cellSize = canvas.width / gridSize;
 export let gridData = Array.from({ length: gridSize }, () => Array(gridSize).fill(0));
 export let hoverX = null;
 export let hoverY = null;
+export let availableShapes = [];
 gridData[1][3] = "Mountain";
 gridData[2][8] = "Mountain";
 gridData[5][5] = "Mountain";
 gridData[8][2] = "Mountain";
 gridData[9][7] = "Mountain";
+
+export let gameStarted = false;
+
+export function setGameStarted(started) {
+  gameStarted = started;
+}
+
+export function setAvailableShapes(shapes) {
+  availableShapes = shapes;
+}
 
 export function drawGrid() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -32,7 +43,7 @@ export function drawGrid() {
     }
   }
 
-  if (!placementLocked && hoverX !== null && hoverY !== null) {
+  if (gameStarted && !placementLocked && hoverX !== null && hoverY !== null) {
     drawPreview(hoverX, hoverY);
   }
 }
@@ -82,18 +93,19 @@ export async function drawCard() {
     activeShape = card.shape[0]; // default
 
     if (card.cost === 1 && card.shape.length > 1) {
-      availableShapes = card.shape;
-      activeShape = availableShapes[0]; // default
-      renderShapePreview(activeShape, terrain);
-      showShapeButtons(availableShapes);
+      // Let player choose shape
+      setAvailableShapes(card.shape);
+      setActiveShape(card.shape[0]);
+      renderShapePreview(activeShape, terrain, card.cost);
+      showShapeButtons(card.shape);
     } else if (card.cost === 2 && card.terrainOptions.length > 1) {
       // Let player choose terrain
       terrain = card.terrainOptions[0];
       showTerrainButtons(card.terrainOptions);
-      renderShapePreview(activeShape, terrain);
+      renderShapePreview(activeShape, terrain, card.cost);
     }
     showTerrainButtons(card.terrainOptions);
-    renderShapePreview(activeShape, terrain);
+    renderShapePreview(activeShape, terrain, card.cost);
     placementLocked = false;
     lastPlacedCells = [];
     drawGrid();
@@ -198,6 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (startBtn) {
     startBtn.addEventListener('click', function() {
       showGameControls();
+      setGameStarted(true);
       drawCard();
     });
   }

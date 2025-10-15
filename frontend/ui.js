@@ -28,17 +28,29 @@ export function getColor(terrain) {
   return colors[terrain] || "#000000";
 }
 
- export function renderShapePreview(shape, terrain) {
-    const preview = document.getElementById("shapePreview");
-    preview.innerHTML = "";
-    shape.forEach((row, y) => {
-      row.forEach((cell, x) => {
-        const div = document.createElement("div");
-        if (cell) div.style.backgroundColor = getColor(terrain);
-        preview.appendChild(div);
-      });
-    });
+export function renderShapePreview(shape, terrain, cost = null) {
+  const preview = document.getElementById("shapePreview");
+  preview.innerHTML = "";
+
+  if (cost !== null) {
+    const costLabel = document.createElement("div");
+    costLabel.textContent = `Cost: ${cost}`;
+    costLabel.className = "shape-cost";
+    preview.appendChild(costLabel);
   }
+
+  shape.forEach(row => {
+    const rowDiv = document.createElement("div");
+    rowDiv.className = "shape-row";
+    row.forEach(cell => {
+      const div = document.createElement("div");
+      div.className = "shape-cell";
+      if (cell) div.style.backgroundColor = getColor(terrain);
+      rowDiv.appendChild(div);
+    });
+    preview.appendChild(rowDiv);
+  });
+}
 
   export function showTerrainButtons(allowedTerrains) {
     const container = document.getElementById('terrain-buttons');
