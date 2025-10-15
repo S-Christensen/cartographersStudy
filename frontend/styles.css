@@ -58,13 +58,6 @@ h1 {
   align-items: center;
   margin-bottom: 18px;
 }
-#shapePreview div {
-  width: 28px;
-  height: 28px;
-  background-color: #333;
-  border-radius: 6px;
-  box-shadow: 0 1px 4px #0006;
-}
 
 #terrain-buttons {
   display: flex;
