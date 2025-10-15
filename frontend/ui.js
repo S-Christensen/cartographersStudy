@@ -1,3 +1,21 @@
+import { activeShape, drawGrid, setActiveShape, setTerrain, terrain } from './game.js';
+
+export function showShapeButtons(shapes) {
+  const container = document.getElementById('shape-buttons');
+  container.innerHTML = '';
+
+  shapes.forEach((shape, index) => {
+    const btn = document.createElement('button');
+    btn.textContent = `Shape ${index + 1}`;
+    btn.addEventListener('click', () => {
+      setActiveShape(shape);
+      renderShapePreview(shape, terrain);
+      drawGrid();
+    });
+    container.appendChild(btn);
+  });
+}
+
 export function getColor(terrain) {
   const colors = {
     Forest: "#228B22",
@@ -31,8 +49,8 @@ export function getColor(terrain) {
       btn.className = 'terrain-btn ' + type;
       btn.dataset.color = type;
       btn.addEventListener('click', () => {
-        if (typeof setTerrain === 'function') setTerrain(type);
-        renderShapePreview(typeof activeShape !== 'undefined' ? activeShape : [[1]], type);
+        setTerrain(type);
+        renderShapePreview(activeShape, type);
       });
       container.appendChild(btn);
     });

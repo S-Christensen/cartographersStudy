@@ -329,8 +329,8 @@ def initialize_session():
 
 def build_decks():
     deck = [
-        terrainCard("TreetopVillage", 2, [[[0, 0, 0, "Forest", "Forest"], ["Forest", "Forest", "Forest", 0, 0]],
-                                          [[0, 0, 0, "Village", "Village"], ["Village", "Village", "Village", 0, 0]]]),
+        terrainCard("TreetopVillage", 2, [[[0, 0, "Forest", "Forest"], ["Forest", "Forest", "Forest", 0]],
+                                          [[0, 0, "Village", "Village"], ["Village", "Village", "Village", 0]]]),
         terrainCard("FishingVillage", 2, [[["Village", "Village", "Village", "Village"]],
                                           [["Water", "Water", "Water", "Water"]]]),
         terrainCard("HinterlandStream", 2, [[["Farm", "Farm", "Farm"], ["Farm", 0, 0], ["Farm", 0, 0]],

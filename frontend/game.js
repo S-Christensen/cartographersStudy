@@ -79,8 +79,19 @@ export async function drawCard() {
     console.log("Card object:", card);
 
     document.getElementById("cardName").textContent = `Card: ${card.id}`;
-    activeShape = card.shape[0];
-    terrain = card.terrainOptions[0];
+    activeShape = card.shape[0]; // default
+
+    if (card.cost === 1 && card.shape.length > 1) {
+      availableShapes = card.shape;
+      activeShape = availableShapes[0]; // default
+      renderShapePreview(activeShape, terrain);
+      showShapeButtons(availableShapes);
+    } else if (card.cost === 2 && card.terrainOptions.length > 1) {
+      // Let player choose terrain
+      terrain = card.terrainOptions[0];
+      showTerrainButtons(card.terrainOptions);
+      renderShapePreview(activeShape, terrain);
+    }
     showTerrainButtons(card.terrainOptions);
     renderShapePreview(activeShape, terrain);
     placementLocked = false;
@@ -126,7 +137,7 @@ export function setPlacementLocked(locked) {
   placementLocked = locked;
 }
 
-function setTerrain(newTerrain) {
+export function setTerrain(newTerrain) {
   terrain = newTerrain;
   drawGrid();
 }
