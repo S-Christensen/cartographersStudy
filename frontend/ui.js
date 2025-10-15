@@ -1,4 +1,4 @@
-import { activeShape, drawGrid, setActiveShape, setTerrain, terrain } from './game.js';
+import { activeShape, currentCardCost, drawGrid, setActiveShape, setTerrain, terrain } from './game.js';
 
 export function showShapeButtons(shapes) {
   const container = document.getElementById('shape-buttons');
@@ -9,7 +9,7 @@ export function showShapeButtons(shapes) {
     btn.textContent = `Shape ${index + 1}`;
     btn.addEventListener('click', () => {
       setActiveShape(shape);
-      renderShapePreview(shape, terrain);
+      renderShapePreview(shape, terrain, currentCardCost);
       drawGrid();
     });
     container.appendChild(btn);

@@ -107,6 +107,7 @@ h1 {
   margin-bottom: 18px;
   justify-content: center;
 }
+
 #shape-buttons button {
   padding: 6px 12px;
   background: #444;
@@ -114,6 +115,7 @@ h1 {
   border-radius: 6px;
   cursor: pointer;
 }
+
 .shape-cost {
   font-weight: bold;
   margin-bottom: 8px;
@@ -124,7 +126,7 @@ h1 {
 .shape-row {
   display: flex;
   justify-content: center;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .shape-cell {
@@ -133,5 +135,5 @@ h1 {
   background-color: #333;
   border-radius: 6px;
   box-shadow: 0 1px 4px #0006;
-  margin: 0 2px;
+  margin: 0 3px;
 }

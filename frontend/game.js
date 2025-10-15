@@ -8,16 +8,21 @@ export let gridData = Array.from({ length: gridSize }, () => Array(gridSize).fil
 export let hoverX = null;
 export let hoverY = null;
 export let availableShapes = [];
+export let currentCardCost = null;
+export let gameStarted = false;
 gridData[1][3] = "Mountain";
 gridData[2][8] = "Mountain";
 gridData[5][5] = "Mountain";
 gridData[8][2] = "Mountain";
 gridData[9][7] = "Mountain";
 
-export let gameStarted = false;
-
 export function setGameStarted(started) {
   gameStarted = started;
+}
+
+
+export function setCurrentCardCost(cost) {
+  currentCardCost = cost;
 }
 
 export function setAvailableShapes(shapes) {
@@ -90,17 +95,24 @@ export async function drawCard() {
     console.log("Card object:", card);
 
     document.getElementById("cardName").textContent = `Card: ${card.id}`;
-    activeShape = card.shape[0]; // default
+    setCurrentCardCost(card.cost);
+    setAvailableShapes(card.shape);
+    setActiveShape(card.shape[0]);
+    terrain = card.terrainOptions[0]; // default
 
     if (card.cost === 1 && card.shape.length > 1) {
-      // Let player choose shape
-      setAvailableShapes(card.shape);
-      setActiveShape(card.shape[0]);
+      // Show shape buttons only
       renderShapePreview(activeShape, terrain, card.cost);
       showShapeButtons(card.shape);
+      document.getElementById('terrain-buttons').style.display = 'none';
     } else if (card.cost === 2 && card.terrainOptions.length > 1) {
-      // Let player choose terrain
-      terrain = card.terrainOptions[0];
+      // Show terrain buttons only
+      showTerrainButtons(card.terrainOptions);
+      renderShapePreview(activeShape, terrain, card.cost);
+      document.getElementById('shape-buttons').innerHTML = '';
+      document.getElementById('terrain-buttons').style.display = '';
+    } else {
+      // Fallback: show terrain buttons
       showTerrainButtons(card.terrainOptions);
       renderShapePreview(activeShape, terrain, card.cost);
     }
