@@ -6,7 +6,6 @@ import {
   drawGrid,
   gridData,
   gridSize,
-  lastPlacedCells,
   placementLocked,
   setLastPlacedCells,
   setPlacementLocked,
@@ -88,16 +87,19 @@ canvas.addEventListener("click", () => {
   if (placementLocked) return;
   if (hoverX === null || hoverY === null) return;
   if (canPlaceAt(hoverX, hoverY)) {
-    lastPlacedCells = [];
+    const placed = [];
     for (let dy = 0; dy < activeShape.length; dy++) {
       for (let dx = 0; dx < activeShape[0].length; dx++) {
         if (activeShape[dy][dx]) {
-          gridData[hoverY + dy][hoverX + dx] = terrain;
-          lastPlacedCells.push([hoverY + dy, hoverX + dx]);
+          const gx = hoverX + dx;
+          const gy = hoverY + dy;
+          gridData[gy][gx] = terrain;
+          placed.push([gy, gx]);
         }
       }
     }
-    placementLocked = true;
+    setLastPlacedCells(placed);
+    setPlacementLocked(true);
     drawGrid();
   }
 });
