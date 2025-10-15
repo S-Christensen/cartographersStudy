@@ -1,4 +1,4 @@
-function getColor(terrain) {
+export function getColor(terrain) {
   const colors = {
     Forest: "#228B22",
     Village: "#8B0000",
