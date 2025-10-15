@@ -8,7 +8,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://cartographers-study-nq81drdbe-samuel-christensens-projects.vercel.app"],
+    allow_origins=["https://cartographers-study-3olpvzq2w-samuel-christensens-projects.vercel.app/"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
