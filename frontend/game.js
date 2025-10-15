@@ -1,4 +1,4 @@
-import { showTerrainButtons } from './ui.js';
+import { getColor, renderShapePreview, showTerrainButtons } from './ui.js';
 
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");

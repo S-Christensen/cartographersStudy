@@ -1,4 +1,4 @@
-  function renderShapePreview(shape, terrain) {
+  export function renderShapePreview(shape, terrain) {
     const preview = document.getElementById("shapePreview");
     preview.innerHTML = "";
     shape.forEach((row, y) => {

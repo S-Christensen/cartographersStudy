@@ -1,5 +1,3 @@
-import { drawGrid } from './game.js';
-
 document.addEventListener("keydown", (e) => {
   if (e.key === "q") rotateLeft();
   if (e.key === "e") rotateRight();
