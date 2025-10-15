@@ -42,7 +42,7 @@ async def draw_card():
             game_session.monster_deck = monster_deck
             game_session.score_types = score_types
             game_session.index = 0
-            game_session.season_time = 8 - math.ceil((game_session.season_index + 1) / 2.0)
+            game_session.season_time = 8
             game_session.season_initialized = True
             game_session.mountain_locations = [(1, 3), (2, 8), (5, 5), (8, 2), (9, 7)]
 

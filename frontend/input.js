@@ -1,4 +1,4 @@
-let selectedCard = cards[0];
+import { drawGrid } from './game.js';
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "q") rotateLeft();
