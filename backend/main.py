@@ -60,6 +60,16 @@ async def draw_card():
             "allowedTerrains": allowed_terrains,
             "shape": shape
         }
+        card = game_session.deck.pop(0)
+        allowed_terrains = get_allowed_terrains(card)
+        shape = card.shapes[0] if hasattr(card, 'shapes') and card.shapes else [[1]]
+        game_session.current_card = card
+
+        return {
+            "cardName": card.name,
+            "allowedTerrains": allowed_terrains,
+            "shape": shape
+        }
 
     except Exception as e:
         return {"error": str(e)}

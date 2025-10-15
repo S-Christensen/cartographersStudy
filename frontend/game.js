@@ -48,17 +48,13 @@ async function drawCard() {
     const response = await fetch('https://cartographersstudy.onrender.com/api/draw-card', {
       method: 'POST'
     });
-    const data = await response.json();
-    console.log("Card data:", data);
+    const card = await response.json();
+    console.log("Card object:", card);
 
-    if (data.error) {
-      throw new Error("Server error: " + data.error);
-    }
-
-    document.getElementById("cardName").textContent = `Card: ${data.cardName}`;
-    activeShape = data.shape;
-    terrain = data.allowedTerrains[0];
-    showTerrainButtons(data.allowedTerrains);
+    document.getElementById("cardName").textContent = `Card: ${card.id}`;
+    activeShape = card.shapes[0]; // still using first shape variant
+    terrain = card.terrainOptions[0]; // default terrain
+    showTerrainButtons(card.terrainOptions);
     renderShapePreview(activeShape, terrain);
     placementLocked = false;
     lastPlacedCells = [];
@@ -66,47 +62,6 @@ async function drawCard() {
   } catch (err) {
     console.error('Failed to draw card:', err);
     alert("Error drawing card: " + err.message);
-  }
-}
-
-// Attach event listener to the draw card button
-document.addEventListener('DOMContentLoaded', function() {
-  const drawBtn = document.getElementById('drawCardBtn');
-  if (drawBtn) {
-    drawBtn.addEventListener('click', drawCard);
-  }
-});
-
-function getColor(value) {
-  if (value === "Forest") return "#228B22";
-  if (value === "Water") return "#1E90FF";
-  if (value === "Farm") return "#DAA520";
-  if (value === "Village") return "#8B0000";
-  if (value === "Mountain") return "#8D6F64";
-  if (value === "Monster") return "#CC6CE7";
-  return "#1e1e1e";
-}
-
-let hoverX = null, hoverY = null;
-
-canvas.addEventListener("mousemove", (e) => {
-  hoverX = Math.floor(e.offsetX / cellSize);
-  hoverY = Math.floor(e.offsetY / cellSize);
-  drawGrid();
-});
-
-function drawGrid() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  for (let y = 0; y < gridSize; y++) {
-    for (let x = 0; x < gridSize; x++) {
-      ctx.fillStyle = getColor(gridData[y][x]);
-      ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-      ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
-    }
-  }
-
-  if (hoverX !== null && hoverY !== null) {
-    drawPreview(hoverX, hoverY);
   }
 }
 
