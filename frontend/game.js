@@ -119,6 +119,10 @@ export function setActiveShape(shape) {
   drawGrid();
 }
 
+export function setLastPlacedCells(cells) {
+  lastPlacedCells = cells;
+}
+
 function setTerrain(newTerrain) {
   terrain = newTerrain;
   drawGrid();
