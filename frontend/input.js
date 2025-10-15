@@ -6,7 +6,11 @@ import {
   drawGrid,
   gridData,
   gridSize,
+  hoverX,
+  hoverY,
   placementLocked,
+  setActiveShape,
+  setHover,
   setLastPlacedCells,
   setPlacementLocked,
   terrain
@@ -19,17 +23,17 @@ document.addEventListener("keydown", (e) => {
 });
 
 function rotateLeft() {
-  activeShape = rotateMatrix(activeShape, -1);
+  setActiveShape(rotateMatrix(activeShape, -1));
   drawGrid();
 }
 
 function rotateRight() {
-  activeShape = rotateMatrix(activeShape, 1);
+  setActiveShape(rotateMatrix(activeShape, 1));
   drawGrid();
 }
 
 function flipShape() {
-  activeShape = activeShape.map(row => [...row].reverse());
+  setActiveShape(activeShape.map(row => [...row].reverse()));
   drawGrid();
 }
 
@@ -68,17 +72,13 @@ document.getElementById("submitBtn").addEventListener("click", () => {
   // TODO: send gridData to backend for validation
 });
 
-let hoverX = null;
-let hoverY = null;
-
 canvas.addEventListener("mousemove", (e) => {
   const rect = canvas.getBoundingClientRect();
   const x = Math.floor((e.clientX - rect.left) / cellSize);
   const y = Math.floor((e.clientY - rect.top) / cellSize);
 
   if (x !== hoverX || y !== hoverY) {
-    hoverX = x;
-    hoverY = y;
+    setHover(x, y);
     drawGrid(); // triggers preview
   }
 });

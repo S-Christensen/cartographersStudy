@@ -4,6 +4,7 @@ export function getColor(terrain) {
     Village: "#8B0000",
     Water: "#1E90FF",
     Farm: "#DAA520",
+    Mountain: "#a0522d",
     Monster: "#800080"
   };
   return colors[terrain] || "#000000";

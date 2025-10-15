@@ -5,8 +5,8 @@ const ctx = canvas.getContext("2d");
 export const gridSize = 11;
 export const cellSize = canvas.width / gridSize;
 export let gridData = Array.from({ length: gridSize }, () => Array(gridSize).fill(0));
-let hoverX = null;
-let hoverY = null;
+export let hoverX = null;
+export let hoverY = null;
 gridData[1][3] = "Mountain";
 gridData[2][8] = "Mountain";
 gridData[5][5] = "Mountain";
@@ -130,6 +130,12 @@ function setTerrain(newTerrain) {
   terrain = newTerrain;
   drawGrid();
 }
+
+export function setHover(x, y) {
+  hoverX = x;
+  hoverY = y;
+}
+
 
 export function canPlaceAt(x, y) {
   for (let dy = 0; dy < activeShape.length; dy++) {
