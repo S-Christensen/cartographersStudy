@@ -1,3 +1,5 @@
+let selectedCard = cards[0];
+
 document.addEventListener("keydown", (e) => {
   if (e.key === "q") rotateLeft();
   if (e.key === "e") rotateRight();

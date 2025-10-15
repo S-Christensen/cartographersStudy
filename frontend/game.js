@@ -4,6 +4,8 @@ const ctx = canvas.getContext("2d");
 const gridSize = 11;
 const cellSize = canvas.width / gridSize;
 let gridData = Array.from({ length: gridSize }, () => Array(gridSize).fill(0));
+let hoverX = null;
+let hoverY = null;
 gridData[1][3] = "Mountain";
 gridData[2][8] = "Mountain";
 gridData[5][5] = "Mountain";
