@@ -20,7 +20,7 @@ season_initialized = False
 
 def get_allowed_terrains(card):
     terrains = set()
-    for shape in card.shapes:
+    for shape in card.shape:
         for row in shape:
             for cell in row:
                 if isinstance(cell, str):
@@ -52,7 +52,7 @@ async def draw_card():
 
         card = game_session.deck.pop(0)
         allowed_terrains = get_allowed_terrains(card)
-        shape = card.shapes[0] if hasattr(card, 'shapes') and card.shapes else [[1]]
+        shape = card.shape[0] if hasattr(card, 'shape') and card.shape else [[1]]
         game_session.current_card = card
 
         return {
@@ -62,7 +62,7 @@ async def draw_card():
         }
         card = game_session.deck.pop(0)
         allowed_terrains = get_allowed_terrains(card)
-        shape = card.shapes[0] if hasattr(card, 'shapes') and card.shapes else [[1]]
+        shape = card.shape[0] if hasattr(card, 'shape') and card.shape else [[1]]
         game_session.current_card = card
 
         return {

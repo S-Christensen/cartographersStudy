@@ -20,7 +20,7 @@ async function submitMove() {
         new_grid: gridData,
         card: {
           id: document.getElementById("cardName").textContent.replace("Card: ", ""),
-          shapes: [activeShape],
+          shape: [activeShape],
           terrainOptions: [terrain]
         },
         ruins_required: false
@@ -52,8 +52,8 @@ async function drawCard() {
     console.log("Card object:", card);
 
     document.getElementById("cardName").textContent = `Card: ${card.id}`;
-    activeShape = card.shapes[0]; // still using first shape variant
-    terrain = card.terrainOptions[0]; // default terrain
+    activeShape = card.shape[0];
+    terrain = card.terrainOptions[0];
     showTerrainButtons(card.terrainOptions);
     renderShapePreview(activeShape, terrain);
     placementLocked = false;
