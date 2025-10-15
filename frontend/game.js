@@ -13,6 +13,30 @@ gridData[5][5] = "Mountain";
 gridData[8][2] = "Mountain";
 gridData[9][7] = "Mountain";
 
+export function drawGrid() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (let y = 0; y < gridSize; y++) {
+    for (let x = 0; x < gridSize; x++) {
+      const cell = gridData[y][x];
+
+      // Draw cell border
+      ctx.strokeStyle = "#000";
+      ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
+
+      // Fill terrain if present
+      if (cell && cell !== 0) {
+        ctx.fillStyle = getColor(cell);
+        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+      }
+    }
+  }
+
+  if (!placementLocked && hoverX !== null && hoverY !== null) {
+    drawPreview(hoverX, hoverY);
+  }
+}
+
 async function submitMove() {
   try {
     const response = await fetch('https://cartographersstudy.onrender.com/api/validate', {
