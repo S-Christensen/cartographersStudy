@@ -31,6 +31,8 @@ def get_allowed_terrains(card):
 
 @app.post("/api/reset-game")
 def reset_game():
+    global game_session
+
     game_session = gameStart.initialize_session()
     deck, monster_deck = gameStart.build_decks()
     score_types = gameStart.select_scoring_cards()
@@ -45,7 +47,6 @@ def reset_game():
     game_session.season_time = 8
     game_session.season_initialized = True
     game_session.mountain_locations = [(1, 3), (2, 8), (5, 5), (8, 2), (9, 7)]
-
     return {"status": "reset", "message": "Game session initialized"}
 
 @app.post("/api/draw-card")

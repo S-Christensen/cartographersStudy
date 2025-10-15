@@ -20,7 +20,6 @@ export function setGameStarted(started) {
   gameStarted = started;
 }
 
-
 export function setCurrentCardCost(cost) {
   currentCardCost = cost;
 }
@@ -105,7 +104,7 @@ export async function drawCard() {
       renderShapePreview(activeShape, terrain, card.cost);
       showShapeButtons(card.shape);
       document.getElementById('terrain-buttons').style.display = 'none';
-    } else if (card.cost === 2 && card.terrainOptions.length > 1) {
+    } else if (card.terrainOptions.length > 1) {
       // Show terrain buttons only
       showTerrainButtons(card.terrainOptions);
       renderShapePreview(activeShape, terrain, card.cost);
