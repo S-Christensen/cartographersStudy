@@ -72,6 +72,22 @@ document.getElementById("submitBtn").addEventListener("click", () => {
   // TODO: send gridData to backend for validation
 });
 
+startBtn.addEventListener('click', async function () {
+  try {
+    const response = await fetch('https://cartographersstudy.onrender.com/api/reset-game', {
+      method: 'POST'
+    });
+    const result = await response.json();
+    console.log("Game reset:", result);
+
+    // Now draw the first card
+    drawCard();
+  } catch (err) {
+    console.error("Failed to reset game:", err);
+    alert("Error resetting game: " + err.message);
+  }
+});
+
 canvas.addEventListener("mousemove", (e) => {
   const rect = canvas.getBoundingClientRect();
   const x = Math.floor((e.clientX - rect.left) / cellSize);
