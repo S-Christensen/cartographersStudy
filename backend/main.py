@@ -31,13 +31,18 @@ def get_allowed_terrains(card):
 
 @app.post("/api/draw-card")
 async def draw_card():
-    global game_session, season_initialized, season_time, index
+    global game_session
 
     try:
-        if not season_initialized:
+        # Initialize game session if needed
+        if not hasattr(game_session, "season_initialized") or not game_session.season_initialized:
             game_session = gameStart.initialize_session()
             deck, monster_deck = gameStart.build_decks()
             score_types = gameStart.select_scoring_cards()
+
+            deck.append(monster_deck[0])
+            random.shuffle(deck)
+
             game_session.deck = deck
             game_session.monster_deck = monster_deck
             game_session.score_types = score_types
@@ -46,14 +51,17 @@ async def draw_card():
             game_session.season_initialized = True
             game_session.mountain_locations = [(1, 3), (2, 8), (5, 5), (8, 2), (9, 7)]
 
+        # Check if season is over or deck is exhausted
         if game_session.season_time <= 0 or game_session.index >= len(game_session.deck):
             return {"error": "Season over or deck exhausted"}
 
+        # Draw card
         card = game_session.deck[game_session.index]
         game_session.index += 1
 
+        # Handle ruins logic
         if card.name in ["TempleRuins", "OutpostRuins"]:
-            ruins_flag = True
+            game_session.ruins_required = True
             if game_session.index < len(game_session.deck):
                 card = game_session.deck[game_session.index]
                 game_session.index += 1
@@ -62,10 +70,12 @@ async def draw_card():
 
         game_session.season_time -= card.cost
         game_session.current_card = card
+
         print(f"Drew card: {card.name}, Cost: {card.cost}, Remaining Season Time: {game_session.season_time}")
         print(f"Deck: {[c.name for c in game_session.deck[game_session.index:]]}")
-        
+
         return card.to_dict()
+
     except Exception as e:
         return {"error": str(e)}  
     '''
