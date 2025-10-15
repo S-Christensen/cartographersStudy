@@ -1,9 +1,9 @@
 import { getColor, renderShapePreview, showTerrainButtons } from './ui.js';
 
-const canvas = document.getElementById("gameCanvas");
+export const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-const gridSize = 11;
-const cellSize = canvas.width / gridSize;
+export const gridSize = 11;
+export const cellSize = canvas.width / gridSize;
 export let gridData = Array.from({ length: gridSize }, () => Array(gridSize).fill(0));
 let hoverX = null;
 let hoverY = null;

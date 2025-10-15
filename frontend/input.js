@@ -1,8 +1,11 @@
 import {
   activeShape,
   canPlaceAt,
+  canvas,
+  cellSize,
   drawGrid,
   gridData,
+  gridSize,
   lastPlacedCells,
   placementLocked,
   setLastPlacedCells,
