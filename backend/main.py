@@ -50,6 +50,14 @@ def reset_game():
     game_session.mountain_locations = [(1, 3), (2, 8), (5, 5), (8, 2), (9, 7)]
     return {"status": "reset", "message": "Game session initialized"}
 
+@app.get("/api/session")
+def get_session():
+    return {
+        "scoreTypes": game_session.score_types,
+        "seasonTime": game_session.season_time,
+        "currentSeason": game_session.season_index
+    }
+
 @app.post("/api/draw-card")
 async def draw_card():
     global game_session

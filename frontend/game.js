@@ -35,6 +35,29 @@ export function setAvailableShapes(shapes) {
   availableShapes = shapes;
 }
 
+export function setScoreTypes(types) {
+  scoreTypes = types;
+}
+
+export function setCurrentSeason(index) {
+  currentSeason = index;
+}
+
+export async function fetchSession() {
+  try {
+    const response = await fetch('https://cartographersstudy.onrender.com/api/session');
+    const data = await response.json();
+
+    setScoreTypes(data.scoreTypes);
+    setCurrentSeason(data.currentSeason);
+    setSeasonRemaining(data.seasonTime);
+
+    renderScoringCards(data.scoreTypes, data.currentSeason);
+  } catch (err) {
+    console.error('Failed to fetch session:', err);
+  }
+}
+
 export function drawGrid() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -123,7 +146,7 @@ export async function drawCard() {
       renderShapePreview(activeShape, terrain, card.cost);
     }
     showTerrainButtons(card.terrainOptions);
-    renderShapePreview(activeShape, terrain, card.cost);
+    renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
     placementLocked = false;
     lastPlacedCells = [];
     drawGrid();
@@ -229,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
     startBtn.addEventListener('click', function() {
       showGameControls();
       setGameStarted(true);
-      renderScoringCards();
+      fetchSession();
     });
   }
 

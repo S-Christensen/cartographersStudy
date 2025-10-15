@@ -58,7 +58,7 @@ export function renderShapePreview(shape, terrain, cost = null, seasonRemaining 
   });
 }
 
-export function renderScoringCards() {
+export function renderScoringCards(scoreTypes, currentSeason) {
   const container = document.getElementById("scoringDisplay");
   container.innerHTML = "";
 

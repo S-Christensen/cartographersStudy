@@ -30,7 +30,7 @@ class GameSession:
         self.score_types = select_scoring_cards()
         self.current_card = self.deck[0]
         self.season_time = 8
-        self.current_season = 0
+        self.season_index = 0
         self.season_initialized = False
 
 def check_orthogonal_neighbors(grid, x, y):
