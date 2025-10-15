@@ -10,6 +10,7 @@ export let hoverY = null;
 export let availableShapes = [];
 export let currentCardCost = null;
 export let gameStarted = false;
+export let seasonRemaining = 8;
 gridData[1][3] = "Mountain";
 gridData[2][8] = "Mountain";
 gridData[5][5] = "Mountain";
@@ -18,6 +19,10 @@ gridData[9][7] = "Mountain";
 
 export function setGameStarted(started) {
   gameStarted = started;
+}
+
+export function setSeasonRemaining(value) {
+  seasonRemaining = value;
 }
 
 export function setCurrentCardCost(cost) {

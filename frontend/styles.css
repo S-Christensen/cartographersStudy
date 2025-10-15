@@ -94,17 +94,29 @@ h1 {
 
 #shape-buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 18px;
   justify-content: center;
 }
 
 #shape-buttons button {
-  padding: 6px 12px;
-  background: #444;
-  color: #fff;
-  border-radius: 6px;
+  margin: 0 4px 8px 0;
+  padding: 8px 18px;
+  background: linear-gradient(90deg, #00ffc8 0%, #00bfff 100%);
+  color: #232526;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
+  box-shadow: 0 2px 8px #0003;
+  transition: background 0.2s, transform 0.1s;
+}
+
+#shape-buttons button:hover {
+  background: linear-gradient(90deg, #00bfff 0%, #00ffc8 100%);
+  transform: translateY(-2px) scale(1.05);
 }
 
 .shape-cost {

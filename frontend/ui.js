@@ -28,14 +28,19 @@ export function getColor(terrain) {
   return colors[terrain] || "#000000";
 }
 
-export function renderShapePreview(shape, terrain, cost = null) {
+export function renderShapePreview(shape, terrain, cost = null, seasonRemaining = null) {
   const preview = document.getElementById("shapePreview");
   preview.innerHTML = "";
 
-  if (cost !== null) {
+  if (cost !== null || seasonRemaining !== null) {
     const costLabel = document.createElement("div");
-    costLabel.textContent = `Cost: ${cost}`;
     costLabel.className = "shape-cost";
+
+    let text = "";
+    if (cost !== null) text += `Card Cost: ${cost}`;
+    if (seasonRemaining !== null) text += ` | Season Remaining: ${seasonRemaining}`;
+
+    costLabel.textContent = text;
     preview.appendChild(costLabel);
   }
 
