@@ -1,3 +1,4 @@
+import { showTerrainButtons } from './ui.js';
 
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
@@ -45,7 +46,7 @@ async function submitMove() {
 }
 
 // Function to fetch a new card from the backend
-async function drawCard() {
+export async function drawCard() {
   try {
     const response = await fetch('https://cartographersstudy.onrender.com/api/draw-card', {
       method: 'POST'

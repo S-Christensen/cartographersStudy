@@ -10,7 +10,7 @@
     });
   }
 
-  function showTerrainButtons(allowedTerrains) {
+  export function showTerrainButtons(allowedTerrains) {
     const container = document.getElementById('terrain-buttons');
     container.innerHTML = '';
     allowedTerrains.forEach(type => {
