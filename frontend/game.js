@@ -124,7 +124,7 @@ function setTerrain(newTerrain) {
   drawGrid();
 }
 
-function canPlaceAt(x, y) {
+export function canPlaceAt(x, y) {
   for (let dy = 0; dy < activeShape.length; dy++) {
     for (let dx = 0; dx < activeShape[0].length; dx++) {
       if (activeShape[dy][dx]) {
