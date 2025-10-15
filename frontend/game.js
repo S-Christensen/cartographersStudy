@@ -122,6 +122,9 @@ export function setActiveShape(shape) {
 export function setLastPlacedCells(cells) {
   lastPlacedCells = cells;
 }
+export function setPlacementLocked(locked) {
+  placementLocked = locked;
+}
 
 function setTerrain(newTerrain) {
   terrain = newTerrain;
