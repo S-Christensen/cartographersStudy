@@ -189,8 +189,18 @@ export async function drawCard() {
 
       if (card.type === "Monster") {
         terrain = "Monster";
-        showShapeButtons(card.shape);
+        setCurrentCardCost(card.cost);
+        setAvailableShapes(card.shape);
+        setActiveShape(card.shape[0]); // only one shape
+        document.getElementById("ruinsCardName").textContent = "";
+        document.getElementById("activeCardName").textContent = `Card: ${card.id}`;
         document.getElementById('terrain-buttons').style.display = 'none';
+
+        renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
+        placementLocked = false;
+        lastPlacedCells = [];
+        drawGrid();
+        return;
       } else if (card.cost === 1 && card.shape.length > 1) {
         showShapeButtons(card.shape);
         document.getElementById('terrain-buttons').style.display = 'none';
