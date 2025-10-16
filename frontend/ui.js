@@ -59,16 +59,21 @@ export function renderShapePreview(shape, terrain, cost = null, seasonRemaining 
 }
 
 function formatName(name) {
+  if (typeof name !== "string") return "Unknown";
   return name
-    .replace(/([A-Z])/g, ' $1') // insert space before capital letters
-    .replace(/^./, str => str.toUpperCase()); // capitalize first letter
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/^./, match => match.toUpperCase());
 }
 
 export function renderScoringCards(scoreTypes, currentSeason) {
   if (!Array.isArray(scoreTypes) || scoreTypes.length === 0) return;
   const container = document.getElementById("scoringDisplay");
   container.innerHTML = "";
-  const scoreNames = scoreTypes.map(fn => fn.name);
+  const scoreNames = scoreTypes.map(item => {
+    if (typeof item === "function" && item.name) return item.name;
+    if (typeof item === "string") return item;
+    return "Unknown";
+  });
   scoreNames.forEach((card, index) => {
     const div = document.createElement("div");
     div.className = "scoring-card";
