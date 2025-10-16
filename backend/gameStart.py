@@ -332,11 +332,11 @@ def initialize_session():
 
 def build_decks():
     deck = [
-        terrainCard("TreetopVillage", 2, [[[0, 0, "Forest", "Forest"], ["Forest", "Forest", "Forest", 0]],
+        terrainCard("Treetop Village", 2, [[[0, 0, "Forest", "Forest"], ["Forest", "Forest", "Forest", 0]],
                                           [[0, 0, "Village", "Village"], ["Village", "Village", "Village", 0]]], "Standard"),
-        terrainCard("FishingVillage", 2, [[["Village", "Village", "Village", "Village"]],
+        terrainCard("Fishing Village", 2, [[["Village", "Village", "Village", "Village"]],
                                           [["Water", "Water", "Water", "Water"]]], "Standard"),
-        terrainCard("HinterlandStream", 2, [[["Farm", "Farm", "Farm"], ["Farm", 0, 0], ["Farm", 0, 0]],
+        terrainCard("Hinterland Stream", 2, [[["Farm", "Farm", "Farm"], ["Farm", 0, 0], ["Farm", 0, 0]],
                                             [["Water", "Water", "Water"], ["Water", 0, 0], ["Water", 0, 0]]], "Standard"),
         terrainCard("Orchard", 2, [[[0, 0, "Forest"], ["Forest", "Forest", "Forest"]],
                                    [[0, 0, "Farm"], ["Farm", "Farm", "Farm"]]], "Standard"),
@@ -346,22 +346,22 @@ def build_decks():
                                      [[0, "Farm", 0], ["Farm", "Farm", "Farm"]]], "Standard"),
         terrainCard("Farmland", 1, [[["Farm", "Farm"]],
                                     [[0, "Farm", 0], ["Farm", "Farm", "Farm"], [0, "Farm", 0]]], "Standard"),
-        terrainCard("ForgottenForest", 1, [[["Forest", 0], [0, "Forest"]],
+        terrainCard("Forgotten Forest", 1, [[["Forest", 0], [0, "Forest"]],
                                            [["Forest", "Forest", 0], [0, "Forest", "Forest"]]], "Standard"),
-        terrainCard("GreatRiver", 1, [[["Water", "Water", "Water"]],
+        terrainCard("Great River", 1, [[["Water", "Water", "Water"]],
                                       [[0, 0, "Water"], [0, "Water", "Water"], ["Water", "Water", 0]]], "Standard"),
         terrainCard("Hamlet", 1, [[["Village", 0], ["Village", "Village"]],
                                   [["Village", "Village", "Village"], ["Village", "Village", 0]]], "Standard"),
-        terrainCard("RiftLands", 0, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard"),
-        terrainCard("TempleRuins", 0, [[[-1]]], "Ruins"),
-        terrainCard("OutpostRuins", 0, [[[-1]]], "Ruins")
+        terrainCard("Rift Lands", 0, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard"),
+        terrainCard("Temple Ruins", 0, [[[-1]]], "Ruins"),
+        terrainCard("Outpost Ruins", 0, [[[-1]]], "Ruins")
     ]
 
     monster_deck = [
-        terrainCard("GoblinAttack", 0, [["Monster", 0, 0], [0, "Monster", 0], [0, 0, "Monster"]], "Monster"),
-        terrainCard("GnollRaid", 0, [["Monster", "Monster"], ["Monster", 0], ["Monster", "Monster"]], "Monster"),
-        terrainCard("BugbearAssault", 0, [["Monster", 0, "Monster"], ["Monster", 0, "Monster"]], "Monster"),
-        terrainCard("KoboldOnslaught", 0, [["Monster", 0], ["Monster", "Monster"], ["Monster", 0]], "Monster")
+        terrainCard("Goblin Attack", 0, [["Monster", 0, 0], [0, "Monster", 0], [0, 0, "Monster"]], "Monster"),
+        terrainCard("Gnoll Raid", 0, [["Monster", "Monster"], ["Monster", 0], ["Monster", "Monster"]], "Monster"),
+        terrainCard("Bugbear Assault", 0, [["Monster", 0, "Monster"], ["Monster", 0, "Monster"]], "Monster"),
+        terrainCard("Kobold Onslaught", 0, [["Monster", 0], ["Monster", "Monster"], ["Monster", 0]], "Monster")
     ]
 
     random.shuffle(monster_deck)

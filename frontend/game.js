@@ -154,19 +154,19 @@ export async function drawCard() {
     } else {
       if (card.cost === 1 && card.shape.length > 1) {
         // Show shape buttons only
-        renderShapePreview(activeShape, terrain, card.cost);
+        renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
         showShapeButtons(card.shape);
         document.getElementById('terrain-buttons').style.display = 'none';
       } else if (card.terrainOptions.length > 1) {
         // Show terrain buttons only
         showTerrainButtons(card.terrainOptions);
-        renderShapePreview(activeShape, terrain, card.cost);
+        renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
         document.getElementById('shape-buttons').innerHTML = '';
         document.getElementById('terrain-buttons').style.display = '';
       } else {
         // Fallback: show terrain buttons
         showTerrainButtons(card.terrainOptions);
-        renderShapePreview(activeShape, terrain, card.cost);
+        renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
       }
       showTerrainButtons(card.terrainOptions);
       renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
@@ -320,11 +320,12 @@ function getPreviousGrid() {
 }
 
 function undoLastPlacement() {
-  lastPlacedCells.forEach(([y, x]) => {
-    if (gridData[y][x] !== "Mountain") {
-      gridData[y][x] = 0;
+  const previous = getPreviousGrid();
+  for (let y = 0; y < gridSize; y++) {
+    for (let x = 0; x < gridSize; x++) {
+      gridData[y][x] = previous[y][x];
     }
-  });
+  }
   lastPlacedCells = [];
   drawGrid();
 }
