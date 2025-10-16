@@ -98,9 +98,9 @@ h1 {
   transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
 }
 
-.button-row button,
-#terrain-buttons button,
-#shape-buttons button {
+.button-row button:hover,
+#terrain-buttons button:hover,
+#shape-buttons button:hover {
   background: linear-gradient(90deg, #7a5c3b 0%, #5c3d2e 100%);
   transform: translateY(-2px) scale(1.05);
   box-shadow: 0 0 8px #c9a94d;
