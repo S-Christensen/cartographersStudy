@@ -87,7 +87,7 @@ async def draw_card():
             return {"error": "Season over or deck exhausted"}
 
         # Draw card
-        card = game_session.deck[game_session.index]
+        card = game_session.deck[game_session.season_index]
         game_session.season_index += 1
 
         # Handle ruins logic
