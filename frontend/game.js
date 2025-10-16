@@ -181,6 +181,11 @@ export async function drawCard() {
       } else {
         showTerrainButtons(nextCard.terrainOptions);
       }
+      renderShapePreview(activeShape, terrain, nextCard.cost, seasonRemaining);
+      placementLocked = false;
+      lastPlacedCells = [];
+      drawGrid();
+      return;
     } else {
       // Normal card flow
       document.getElementById("ruinsCardName").textContent = "";
