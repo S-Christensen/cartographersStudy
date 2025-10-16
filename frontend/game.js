@@ -135,49 +135,81 @@ export async function drawCard() {
       method: 'POST'
     });
     const card = await response.json();
+
+    // Refresh seasonRemaining
+    await fetchSession();
+
     if (card.error) {
       alert(card.error);
       return;
     }
-    console.log("Card object:", card);
 
-    document.getElementById("cardName").textContent = `Card: ${card.id}`;
-    setCurrentCardCost(card.cost);
-    setAvailableShapes(card.shape);
-    setActiveShape(card.shape[0]);
-    terrain = card.terrainOptions[0]; // default
-    await fetchSession();
-    if (card.type === "Monster") {
-      terrain = "Monster";
-      showShapeButtons(card.shape);
-      document.getElementById('terrain-buttons').style.display = 'none';
-    } else if (card.type === "Ruins") {
-      // Ruins cards don’t require placement — just enforce ruins logic
-      alert("Ruins card drawn! You must place over a ruins tile.");
-      showTerrainButtons(card.terrainOptions);
+    // Handle Ruins card
+    if (card.type === "Ruins") {
+      alert("Ruins card drawn! The next shape must be placed on a Ruins tile.");
+
+      // Show ruins card name
+      document.getElementById("ruinsCardName").textContent = `Ruins Card: ${card.id}`;
+
+      // Immediately draw the next card
+      const nextResponse = await fetch('https://cartographersstudy.onrender.com/api/draw-card', {
+        method: 'POST'
+      });
+      const nextCard = await nextResponse.json();
+
+      if (nextCard.error) {
+        alert(nextCard.error);
+        return;
+      }
+
+      // Show next card name below ruins card
+      document.getElementById("activeCardName").textContent = `Card: ${nextCard.id}`;
+
+      // Set up terrain and shape
+      setCurrentCardCost(nextCard.cost);
+      setAvailableShapes(nextCard.shape);
+      setActiveShape(nextCard.shape[0]);
+      terrain = nextCard.terrainOptions[0];
+
+      // Show preview and buttons
+      renderShapePreview(activeShape, terrain, nextCard.cost, seasonRemaining);
+      showTerrainButtons(nextCard.terrainOptions);
+      placementLocked = false;
+      lastPlacedCells = [];
+      drawGrid();
     } else {
-      if (card.cost === 1 && card.shape.length > 1) {
-        // Show shape buttons only
+      // Normal card flow
+      document.getElementById("ruinsCardName").textContent = "";
+      document.getElementById("activeCardName").textContent = `Card: ${card.id}`;
+
+      setCurrentCardCost(card.cost);
+      setAvailableShapes(card.shape);
+      setActiveShape(card.shape[0]);
+      terrain = card.terrainOptions[0];
+
+      if (card.type === "Monster") {
+        terrain = "Monster";
+        showShapeButtons(card.shape);
+        document.getElementById('terrain-buttons').style.display = 'none';
+      } else if (card.cost === 1 && card.shape.length > 1) {
         showShapeButtons(card.shape);
         document.getElementById('terrain-buttons').style.display = 'none';
       } else if (card.terrainOptions.length > 1) {
-        // Show terrain buttons only
         showTerrainButtons(card.terrainOptions);
         document.getElementById('shape-buttons').innerHTML = '';
         document.getElementById('terrain-buttons').style.display = '';
       } else {
-        // Fallback: show terrain buttons
         showTerrainButtons(card.terrainOptions);
       }
-      showTerrainButtons(card.terrainOptions);
+
       renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
       placementLocked = false;
       lastPlacedCells = [];
       drawGrid();
     }
   } catch (err) {
-      console.error('Failed to draw card:', err);
-      alert("Error drawing card: " + err.message);
+    console.error('Failed to draw card:', err);
+    alert("Error drawing card: " + err.message);
   }
 }
 

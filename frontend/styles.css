@@ -56,6 +56,11 @@ h1 {
   text-align: center;
 }
 
+#cardNameContainer h2 {
+  font-size: 1.2em;
+  margin: 4px 0;
+}
+
 #shapePreview {
   display: flex;
   flex-direction: column;
