@@ -58,17 +58,23 @@ export function renderShapePreview(shape, terrain, cost = null, seasonRemaining 
   });
 }
 
+function formatName(name) {
+  return name
+    .replace(/([A-Z])/g, ' $1') // insert space before capital letters
+    .replace(/^./, str => str.toUpperCase()); // capitalize first letter
+}
+
 export function renderScoringCards(scoreTypes, currentSeason) {
   const container = document.getElementById("scoringDisplay");
   container.innerHTML = "";
-
-  scoreTypes.forEach((card, index) => {
+  const scoreNames = scoreTypes.map(fn => fn.name);
+  scoreNames.forEach((card, index) => {
     const div = document.createElement("div");
     div.className = "scoring-card";
     if (index !== currentSeason && index !== (currentSeason + 1) % 4) {
       div.classList.add("inactive");
     }
-    div.textContent = card;
+    div.textContent = formatName(card);
     container.appendChild(div);
   });
 }
