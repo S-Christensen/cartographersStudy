@@ -186,7 +186,13 @@ function drawPreview(x, y) {
       if (activeShape[dy][dx]) {
         const gx = x + dx;
         const gy = y + dy;
-        if (gx < gridSize && gy < gridSize && gridData[gy][gx] === 0) {
+        if (gx < gridSize && gy < gridSize && (gridData[gy][gx] === 0 || gridData[gy][gx] === "Ruins")) {
+          if (gridData[gy][gx] === "Ruins") {
+            ctx.fillStyle = "#888"; // ruins base color
+            ctx.globalAlpha = 0.3;
+            ctx.fillRect(gx * cellSize, gy * cellSize, cellSize, cellSize);
+            ctx.globalAlpha = 1.0;
+          }
           ctx.fillStyle = getColor(terrain);
           ctx.globalAlpha = 0.5;
           ctx.fillRect(gx * cellSize, gy * cellSize, cellSize, cellSize);
@@ -277,6 +283,7 @@ document.addEventListener('DOMContentLoaded', function() {
       showGameControls();
       setGameStarted(true);
       fetchSession();
+      document.getElementById("scoringContainer").style.display = "";
     });
   }
 
