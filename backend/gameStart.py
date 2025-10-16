@@ -360,10 +360,10 @@ def build_decks():
     ]
 
     monster_deck = [
-        terrainCard("Goblin Attack", 0, [["Monster", 0, 0], [0, "Monster", 0], [0, 0, "Monster"]], "Monster"),
-        terrainCard("Gnoll Raid", 0, [["Monster", "Monster"], ["Monster", 0], ["Monster", "Monster"]], "Monster"),
-        terrainCard("Bugbear Assault", 0, [["Monster", 0, "Monster"], ["Monster", 0, "Monster"]], "Monster"),
-        terrainCard("Kobold Onslaught", 0, [["Monster", 0], ["Monster", "Monster"], ["Monster", 0]], "Monster")
+        terrainCard("Goblin Attack", 0, [[["Monster", 0, 0], [0, "Monster", 0], [0, 0, "Monster"]]], "Monster"),
+        terrainCard("Gnoll Raid", 0, [[["Monster", "Monster"], ["Monster", 0], ["Monster", "Monster"]]], "Monster"),
+        terrainCard("Bugbear Assault", 0, [[["Monster", 0, "Monster"], ["Monster", 0, "Monster"]]], "Monster"),
+        terrainCard("Kobold Onslaught", 0, [[["Monster", 0], ["Monster", "Monster"], ["Monster", 0]]], "Monster")
     ]
 
     random.shuffle(monster_deck)
