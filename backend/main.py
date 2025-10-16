@@ -77,25 +77,25 @@ async def draw_card():
             game_session.deck = deck
             game_session.monster_deck = monster_deck
             game_session.score_types = score_types
-            game_session.index = 0
+            game_session.season_index = 0
             game_session.season_time = 8
             game_session.season_initialized = True
             game_session.mountain_locations = [(1, 3), (2, 8), (5, 5), (8, 2), (9, 7)]
 
         # Check if season is over or deck is exhausted
-        if game_session.season_time <= 0 or game_session.index >= len(game_session.deck):
+        if game_session.season_time <= 0 or game_session.season_index >= len(game_session.deck):
             return {"error": "Season over or deck exhausted"}
 
         # Draw card
         card = game_session.deck[game_session.index]
-        game_session.index += 1
+        game_session.season_index += 1
 
         # Handle ruins logic
         if card.name in ["TempleRuins", "OutpostRuins"]:
             game_session.ruins_required = True
-            if game_session.index < len(game_session.deck):
-                card = game_session.deck[game_session.index]
-                game_session.index += 1
+            if game_session.season_index < len(game_session.deck):
+                card = game_session.deck[game_session.season_index]
+                game_session.season_index += 1
             else:
                 return {"error": "Deck exhausted after ruins"}
 
@@ -103,7 +103,7 @@ async def draw_card():
         game_session.current_card = card
 
         print(f"Drew card: {card.name}, Cost: {card.cost}, Remaining Season Time: {game_session.season_time}")
-        print(f"Deck: {[c.name for c in game_session.deck[game_session.index:]]}")
+        print(f"Deck: {[c.name for c in game_session.deck[game_session.season_index:]]}")
 
         return card.to_dict()
 
