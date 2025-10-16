@@ -171,15 +171,15 @@ export async function drawCard() {
       setActiveShape(nextCard.shape[0]);
       terrain = nextCard.terrainOptions[0];
       await fetchSession();
-      if (card.cost === 1 && card.shape.length > 1) {
-        showShapeButtons(card.shape);
+      if (nextCard.cost === 1 && nextCard.shape.length > 1) {
+        showShapeButtons(nextCard.shape);
         document.getElementById('terrain-buttons').style.display = 'none';
-      } else if (card.terrainOptions.length > 1) {
-        showTerrainButtons(card.terrainOptions);
+      } else if (nextCard.terrainOptions.length > 1) {
+        showTerrainButtons(nextCard.terrainOptions);
         document.getElementById('shape-buttons').innerHTML = '';
         document.getElementById('terrain-buttons').style.display = '';
       } else {
-        showTerrainButtons(card.terrainOptions);
+        showTerrainButtons(nextCard.terrainOptions);
       }
     } else {
       // Normal card flow

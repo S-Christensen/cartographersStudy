@@ -72,16 +72,16 @@ h1 {
 
 .button-row {
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
   margin-top: 20px;
+  gap: 12px;
   width: 100%;
 }
 
 #terrain-buttons,
 #shape-buttons {
   display: flex;
-  justify-content: space-between;
+  gap: 16px;
   flex-wrap: wrap;
   width: 100%;
 }
