@@ -188,6 +188,7 @@ export async function drawCard() {
       terrain = card.terrainOptions[0];
 
       if (card.type === "Monster") {
+        alert("Monster card drawn! This isn't functional at the moment but might be in 2 weeks.");
         terrain = "Monster";
         setCurrentCardCost(card.cost);
         setAvailableShapes(card.shape);
