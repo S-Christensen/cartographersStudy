@@ -1,5 +1,5 @@
 body {
-  background: linear-gradient(135deg, #232526 0%, #414345 100%);
+  background: radial-gradient(circle at center, #3a3228 0%, #1e1a16 100%);
   min-height: 100vh;
   margin: 0;
   font-family: 'Cinzel', 'Garamond', serif;;
@@ -32,8 +32,9 @@ h1 {
 }
 
 #gameCanvas {
-  border: 2px solid #00ffc8;
-  box-shadow: 0 0 10px #00ffc8;
+  border: 3px ridge #c9a94d;
+  box-shadow: 0 0 12px #000a;
+  background-color: #1e1a16;
 }
 
 #sidebar {
@@ -52,7 +53,8 @@ h1 {
 .card-suite h2 {
   margin: 0 0 18px 0;
   font-size: 1.3rem;
-  color: #00ffc8;
+  color: #c9a94d;
+  text-shadow: 0 1px 2px #000;
   text-align: center;
 }
 
@@ -76,10 +78,13 @@ h1 {
   border: 1px solid #c9a94d;
   font-family: 'Cinzel', serif;
   box-shadow: 0 2px 6px #0006;
+  text-shadow: 0 1px 1px #000;
+  transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
 }
 .button-row button:hover {
   background: linear-gradient(90deg, #7a5c3b 0%, #5c3d2e 100%);
   transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 0 8px #c9a94d;
 }
 
 
@@ -87,7 +92,8 @@ h1 {
   font-weight: bold;
   margin-bottom: 8px;
   text-align: center;
-  color: #00ffc8;
+  color: #c9a94d;
+  text-shadow: 0 1px 2px #000;
 }
 
 .shape-row {
@@ -117,7 +123,8 @@ h1 {
   padding: 10px 16px;
   border-radius: 8px;
   background: #2c2c2c;
-  color: #00ffc8;
+  color: #c9a94d;
+  text-shadow: 0 1px 2px #000;
   font-weight: bold;
   font-size: 1rem;
   box-shadow: 0 2px 6px #0004;
@@ -129,7 +136,8 @@ h1 {
 }
 
 .scoring-title {
-  color: #00ffc8;
+  color: #c9a94d;
+  text-shadow: 0 1px 2px #000;
   font-size: 1.2rem;
   margin-bottom: 8px;
   text-align: center;
