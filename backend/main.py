@@ -35,7 +35,7 @@ def reset_game():
 
     game_session = gameStart.initialize_session()
     deck, monster_deck = gameStart.build_decks()
-    score_types = gameStart.select_scoring_cards()
+    score_types, score_types_names = gameStart.select_scoring_cards()
 
     deck.append(monster_deck[0])
     random.shuffle(deck)
@@ -43,7 +43,8 @@ def reset_game():
     game_session.deck = deck
     game_session.monster_deck = monster_deck
     game_session.score_types = score_types
-    game_session.index = 0
+    game_session.score_types_names = score_types_names
+    game_session.season_index = 0
     game_session.season_time = 8
     game_session.season_initialized = True
     #Change to player in future update
@@ -54,6 +55,7 @@ def reset_game():
 def get_session():
     return {
         "scoreTypes": game_session.score_types,
+        "scoreTypesNames": game_session.score_types_names,
         "seasonTime": game_session.season_time,
         "currentSeason": game_session.season_index
     }

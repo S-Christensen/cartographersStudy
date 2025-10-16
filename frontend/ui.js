@@ -65,15 +65,11 @@ function formatName(name) {
     .replace(/^./, match => match.toUpperCase());
 }
 
-export function renderScoringCards(scoreTypes, currentSeason) {
-  if (!Array.isArray(scoreTypes) || scoreTypes.length === 0) return;
+export function renderScoringCards(scoreNames, currentSeason) {
+  if (!Array.isArray(scoreNames) || scoreNames.length === 0) return;
   const container = document.getElementById("scoringDisplay");
   container.innerHTML = "";
-  const scoreNames = scoreTypes.map(item => {
-    if (typeof item === "function" && item.name) return item.name;
-    if (typeof item === "string") return item;
-    return "Unknown";
-  });
+
   scoreNames.forEach((card, index) => {
     const div = document.createElement("div");
     div.className = "scoring-card";

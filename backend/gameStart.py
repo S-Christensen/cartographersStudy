@@ -27,7 +27,7 @@ class GameSession:
         self.id = session_id
         self.players = {}
         self.deck, self.monster_deck = build_decks()
-        self.score_types = select_scoring_cards()
+        self.score_types, self.score_types_names = select_scoring_cards()
         self.current_card = self.deck[0]
         self.season_time = 8
         self.season_index = 0
@@ -311,7 +311,7 @@ def start():
 def start():
     game_session = initialize_session()
     deck, monster_deck = build_decks()
-    score_types = select_scoring_cards()
+    score_types, score_types_names = select_scoring_cards()
 
     for season_index in range(4):
         run_season(
@@ -319,6 +319,7 @@ def start():
             deck,
             monster_deck,
             score_types,
+            score_types_names,
             season_index,
         )
 
@@ -376,7 +377,10 @@ def select_scoring_cards():
 
     score_types = [random.choice(green), random.choice(blue), random.choice(red), random.choice(misc)]
     random.shuffle(score_types)
-    return score_types
+    score_types_names = []
+    for score in score_types:
+        score_types_names.append(score.__name__)
+    return score_types, score_types_names
 
 def run_season(game_session, deck, monster_deck, score_types, season_index):
     season_time = 8 - math.ceil((season_index + 1) / 2.0)

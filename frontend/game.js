@@ -13,6 +13,7 @@ export let gameStarted = false;
 export let seasonRemaining = 8;
 export let scoreTypes = [];
 export let currentSeason = 0;
+let previousGrid = null;
 gridData[1][3] = "Mountain";
 gridData[2][8] = "Mountain";
 gridData[5][5] = "Mountain";
@@ -58,7 +59,7 @@ export async function fetchSession() {
     setCurrentSeason(data.currentSeason);
     setSeasonRemaining(data.seasonTime);
 
-    renderScoringCards(data.scoreTypes, data.currentSeason);
+    renderScoringCards(data.scoreTypesNames, data.currentSeason);
   } catch (err) {
     console.error('Failed to fetch session:', err);
   }
@@ -250,6 +251,7 @@ canvas.addEventListener("click", () => {
   if (placementLocked) return;
   if (hoverX === null || hoverY === null) return;
   if (canPlaceAt(hoverX, hoverY)) {
+    previousGrid = gridData.map(row => [...row]);
     lastPlacedCells = [];
     for (let dy = 0; dy < activeShape.length; dy++) {
       for (let dx = 0; dx < activeShape[0].length; dx++) {
@@ -312,11 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function getPreviousGrid() {
-  const clone = gridData.map(row => [...row]);
-  lastPlacedCells.forEach(([y, x]) => {
-    clone[y][x] = 0;
-  });
-  return clone;
+  return previousGrid ? previousGrid.map(row => [...row]) : gridData.map(row => [...row]);
 }
 
 function undoLastPlacement() {
@@ -329,4 +327,3 @@ function undoLastPlacement() {
   lastPlacedCells = [];
   drawGrid();
 }
-
