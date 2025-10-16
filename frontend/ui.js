@@ -70,7 +70,7 @@ export function renderScoringCards(scoreTypes, currentSeason) {
   const container = document.getElementById("scoringDisplay");
   container.innerHTML = "";
   const scoreNames = scoreTypes.map(item => {
-    if (typeof item === "function" && item.__name__) return item.__name__;
+    if (typeof item === "function" && item.name) return item.name;
     if (typeof item === "string") return item;
     return "Unknown";
   });
