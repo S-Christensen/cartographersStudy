@@ -297,12 +297,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   if (undoBtn) {
     undoBtn.addEventListener('click', function() {
-      lastPlacedCells.forEach(([y, x]) => {
-        if (gridData[y][x] !== "Mountain") {
-          gridData[y][x] = 0;
-        }
-      });
-      lastPlacedCells = [];
+      undoLastPlacement();
+      placementLocked = false; 
       placementLocked = false;
       drawGrid();
     });
