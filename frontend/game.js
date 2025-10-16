@@ -135,6 +135,10 @@ export async function drawCard() {
       method: 'POST'
     });
     const card = await response.json();
+    if (card.error) {
+      alert(card.error);
+      return;
+    }
     console.log("Card object:", card);
 
     document.getElementById("cardName").textContent = `Card: ${card.id}`;
@@ -142,32 +146,28 @@ export async function drawCard() {
     setAvailableShapes(card.shape);
     setActiveShape(card.shape[0]);
     terrain = card.terrainOptions[0]; // default
+    await fetchSession();
     if (card.type === "Monster") {
       terrain = "Monster";
-      renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
       showShapeButtons(card.shape);
       document.getElementById('terrain-buttons').style.display = 'none';
     } else if (card.type === "Ruins") {
       // Ruins cards don’t require placement — just enforce ruins logic
       alert("Ruins card drawn! You must place over a ruins tile.");
-      renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
       showTerrainButtons(card.terrainOptions);
     } else {
       if (card.cost === 1 && card.shape.length > 1) {
         // Show shape buttons only
-        renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
         showShapeButtons(card.shape);
         document.getElementById('terrain-buttons').style.display = 'none';
       } else if (card.terrainOptions.length > 1) {
         // Show terrain buttons only
         showTerrainButtons(card.terrainOptions);
-        renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
         document.getElementById('shape-buttons').innerHTML = '';
         document.getElementById('terrain-buttons').style.display = '';
       } else {
         // Fallback: show terrain buttons
         showTerrainButtons(card.terrainOptions);
-        renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
       }
       showTerrainButtons(card.terrainOptions);
       renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
