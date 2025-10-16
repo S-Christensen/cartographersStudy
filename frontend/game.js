@@ -171,12 +171,16 @@ export async function drawCard() {
       setActiveShape(nextCard.shape[0]);
       terrain = nextCard.terrainOptions[0];
       await fetchSession();
-      // Show preview and buttons
-      renderShapePreview(activeShape, terrain, nextCard.cost, seasonRemaining);
-      showTerrainButtons(nextCard.terrainOptions);
-      placementLocked = false;
-      lastPlacedCells = [];
-      drawGrid();
+      if (card.cost === 1 && card.shape.length > 1) {
+        showShapeButtons(card.shape);
+        document.getElementById('terrain-buttons').style.display = 'none';
+      } else if (card.terrainOptions.length > 1) {
+        showTerrainButtons(card.terrainOptions);
+        document.getElementById('shape-buttons').innerHTML = '';
+        document.getElementById('terrain-buttons').style.display = '';
+      } else {
+        showTerrainButtons(card.terrainOptions);
+      }
     } else {
       // Normal card flow
       document.getElementById("ruinsCardName").textContent = "";
@@ -212,12 +216,11 @@ export async function drawCard() {
       } else {
         showTerrainButtons(card.terrainOptions);
       }
-
-      renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
-      placementLocked = false;
-      lastPlacedCells = [];
-      drawGrid();
     }
+    renderShapePreview(activeShape, terrain, card.cost, seasonRemaining);
+    placementLocked = false;
+    lastPlacedCells = [];
+    drawGrid();
   } catch (err) {
     console.error('Failed to draw card:', err);
     alert("Error drawing card: " + err.message);
