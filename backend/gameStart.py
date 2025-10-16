@@ -30,6 +30,7 @@ class GameSession:
         self.score_types, self.score_types_names = select_scoring_cards()
         self.current_card = self.deck[0]
         self.season_time = 8
+        self.deck_index = 0
         self.season_index = 0
         self.season_initialized = False
 

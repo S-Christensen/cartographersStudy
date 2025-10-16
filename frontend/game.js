@@ -170,7 +170,7 @@ export async function drawCard() {
       setAvailableShapes(nextCard.shape);
       setActiveShape(nextCard.shape[0]);
       terrain = nextCard.terrainOptions[0];
-
+      await fetchSession();
       // Show preview and buttons
       renderShapePreview(activeShape, terrain, nextCard.cost, seasonRemaining);
       showTerrainButtons(nextCard.terrainOptions);
