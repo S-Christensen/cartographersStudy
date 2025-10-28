@@ -35,6 +35,7 @@ h1 {
   border: 3px ridge #c9a94d;
   box-shadow: 0 0 12px #000a;
   background-color: #1e1a16;
+  margin-bottom: 100px;
 }
 
 #sidebar {
@@ -180,14 +181,14 @@ h1 {
 
 #pointsOverlay {
   position: fixed;
-  top: 0;
+  bottom: 0;
   left: 0;
   right: 0;
   display: flex;
   justify-content: space-around;
   align-items: flex-start;
   background: rgba(46, 42, 36, 0.95);
-  border-bottom: 2px solid #c9a94d;
+  border-top: 2px solid #c9a94d;
   padding: 10px;
   z-index: 1000;
   font-family: 'Cinzel', serif;
