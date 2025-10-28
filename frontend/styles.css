@@ -193,12 +193,14 @@ h1 {
   z-index: 1000;
   font-family: 'Cinzel', serif;
   color: #e0d8c3;
+  height: auto;
+  max-height: 160px;
+  overflow-y: auto; 
 }
 
 .season {
-  flex: 1;
+  flex: 0 0 180px;
   text-align: center;
-  border-right: 1px solid #c9a94d;
   padding: 0 10px;
 }
 
