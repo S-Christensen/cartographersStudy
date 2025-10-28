@@ -64,9 +64,21 @@ async def draw_card():
     try:
         # Initialize game session if needed
         if not hasattr(game_session, "season_initialized") or not game_session.season_initialized:
-            result = start_new_season()
-            if "error" in result:
-                return result
+            game_session = gameStart.initialize_session()
+            deck, monster_deck = gameStart.build_decks()
+            score_types = gameStart.select_scoring_cards()
+
+            deck.append(monster_deck[0])
+            random.shuffle(deck)
+
+            game_session.deck = deck
+            game_session.monster_deck = monster_deck
+            game_session.score_types = score_types
+            game_session.season_index = 0
+            game_session.deck_index = 0
+            game_session.season_time = 8 - math.ceil((game_session.season_index + 1) / 2.0)
+            game_session.season_initialized = True
+            game_session.mountain_locations = [(1, 3), (2, 8), (5, 5), (8, 2), (9, 7)]
 
         # Check if season is over or deck is exhausted
         if game_session.season_time <= 0 or game_session.deck_index >= len(game_session.deck):
@@ -144,17 +156,16 @@ async def draw_card():
 def start_new_season():
     global game_session
 
-    if game_session.season_index >= 3:
-        return {"error": "Game Over"}
     game_session.season_index += 1
+    if game_session.season_index >= 4:
+        return {"error": "Game Over"}
 
-    game_session.deck, game_session.monster_deck = gameStart.build_decks()
+    game_session.deck = gameStart.build_decks()
     game_session.deck.append(game_session.monster_deck[game_session.season_index])
     random.shuffle(game_session.deck)
 
     game_session.deck_index = 0
     game_session.season_time = 8 - math.ceil((game_session.season_index + 1) / 2.0)
-    game_session.season_initialized = True
 
     return {"status": "new season started", "season": game_session.season_index}
 
