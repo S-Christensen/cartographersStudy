@@ -163,7 +163,8 @@ def start_new_season():
     random.shuffle(game_session.deck)
 
     game_session.deck_index = 0
-    game_session.season_time = 8 - math.ceil((game_session.season_index + 1) / 2.0)
+    season_times = [8, 8, 7, 6]
+    game_session.season_time = season_times[game_session.season_index]
 
     return {"status": "new season started", "season": game_session.season_index}
 
