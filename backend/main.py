@@ -158,8 +158,7 @@ def start_new_season():
     game_session.season_index += 1
     if game_session.season_index >= 4:
         return {"error": "Game Over"}
-
-    game_session.deck = gameStart.build_decks()
+    game_session.deck, dummy = gameStart.build_decks()
     game_session.deck.append(game_session.monster_deck[game_session.season_index])
     random.shuffle(game_session.deck)
 
