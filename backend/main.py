@@ -160,6 +160,7 @@ async def end_season():
 
         game_session.season_index += 1
         season_initialized = False
+        draw_card()
         # scores = calculate_scores(player_id, game_session.season_index, grid_state, objectives)
 
         return {"status": "season ended", "currentSeason": game_session.season_index}

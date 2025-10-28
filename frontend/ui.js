@@ -97,10 +97,10 @@ export function renderScoringCards(scoreNames, currentSeason) {
     });
   }
 
-  export function highlightCurrentSeason(seasonId) {
+```  export function highlightCurrentSeason(seasonId) {
   document.querySelectorAll('.season').forEach(div => {
     div.classList.remove('current-season');
   });
   const current = document.getElementById(seasonId);
   if (current) current.classList.add('current-season');
-}
+}```
