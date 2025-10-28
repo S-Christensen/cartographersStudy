@@ -69,7 +69,7 @@ export function renderScoringCards(scoreNames, currentSeason) {
   if (!Array.isArray(scoreNames) || scoreNames.length === 0) return;
   const container = document.getElementById("scoringDisplay");
   container.innerHTML = "";
-  letters = 'ABCD';
+  const letters = 'ABCD';
   scoreNames.forEach((card, index) => {
     const div = document.createElement("div");
     div.className = "scoring-card";
