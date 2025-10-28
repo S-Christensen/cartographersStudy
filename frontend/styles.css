@@ -165,22 +165,6 @@ h1 {
 
 #pointsOverlay {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  background: rgba(46, 42, 36, 0.95);
-  color: #e0d8c3;
-  font-family: 'Cinzel', serif;
-  font-size: 1rem;
-  padding: 14px 20px;
-  border: 2px solid #c9a94d;
-  border-radius: 12px;
-  box-shadow: 0 0 12px #000a;
-  z-index: 1000;
-  min-width: 200px;
-}
-
-#pointsOverlay {
-  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
