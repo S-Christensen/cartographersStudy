@@ -82,8 +82,10 @@ async def draw_card():
 
         # Check if season is over or deck is exhausted
         if game_session.season_time <= 0 or game_session.deck_index >= len(game_session.deck):
-            end_season()
-            return {"error": "Season over or deck exhausted"}
+            if game_session.season_index >=3:
+                # end game
+                return {"error": "Game Over"}
+            return end_season()
 
         # Draw card
         card = game_session.deck[game_session.deck_index]
@@ -160,10 +162,7 @@ async def end_season():
 
         game_session.season_index += 1
         season_initialized = False
-        draw_card()
         # scores = calculate_scores(player_id, game_session.season_index, grid_state, objectives)
-
-        return {"status": "season ended", "currentSeason": game_session.season_index}
-
+        return draw_card()
     except Exception as e:
         return {"error": str(e)}
