@@ -50,6 +50,44 @@ export function setCurrentSeason(index) {
   currentSeason = index;
 }
 
+let totalPoints = 0;
+
+function updateSeasonOverlay(season, scores) {
+  // scores is an object like { A: 5, B: 3, C: 0, D: 0, coins: 2, monsters: -1 }
+
+  const breakdown = document.getElementById("seasonBreakdown");
+  breakdown.innerHTML = "";
+
+  let criteria;
+  switch (season) {
+    case "Spring":
+      criteria = ["A", "B", "coins", "monsters"];
+      break;
+    case "Summer":
+      criteria = ["B", "C", "coins", "monsters"];
+      break;
+    case "Fall":
+      criteria = ["C", "D", "coins", "monsters"];
+      break;
+    case "Winter":
+      criteria = ["D", "A", "coins", "monsters"];
+      break;
+  }
+
+  let seasonTotal = 0;
+  criteria.forEach(key => {
+    const val = scores[key] || 0;
+    seasonTotal += val;
+    const row = document.createElement("div");
+    row.className = "breakdown-row";
+    row.innerHTML = `<span>${key.toUpperCase()}</span><span>${val}</span>`;
+    breakdown.appendChild(row);
+  });
+
+  totalPoints += seasonTotal;
+  document.getElementById("totalPoints").textContent = `Total: ${totalPoints}`;
+}
+
 export async function fetchSession() {
   try {
     const response = await fetch('https://cartographersstudy.onrender.com/api/session');
@@ -128,7 +166,7 @@ async function submitMove() {
   }
 }
 
-// Function to fetch a new card from the backend
+// Fetch a new card from the backend
 export async function drawCard() {
   try {
     const response = await fetch('https://cartographersstudy.onrender.com/api/draw-card', {
@@ -156,6 +194,7 @@ export async function drawCard() {
         method: 'POST'
       });
       const nextCard = await nextResponse.json();
+      // TODO: Handle Monster card if drawn as next card
 
       if (nextCard.error) {
         alert(nextCard.error);
@@ -201,7 +240,7 @@ export async function drawCard() {
         terrain = "Monster";
         setCurrentCardCost(card.cost);
         setAvailableShapes(card.shape);
-        setActiveShape(card.shape[0]); // only one shape
+        setActiveShape(card.shape[0]);
         document.getElementById("ruinsCardName").textContent = "";
         document.getElementById("activeCardName").textContent = `Card: ${card.id}`;
         document.getElementById('terrain-buttons').style.display = 'none';
@@ -256,7 +295,7 @@ function drawPreview(x, y) {
 }
 
 export let activeShape = [[1, 1], [1, 1]]; // Default shape, will be set on card draw
-export let terrain = "Forest"; // Default terrain, will be set on card draw
+export let terrain = "Monster"; // Default terrain, will be set on card draw
 export let lastPlacedCells = [];
 export let placementLocked = false;
 

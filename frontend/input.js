@@ -6,7 +6,6 @@ import {
   drawCard,
   drawGrid,
   gridData,
-  gridSize,
   hoverX,
   hoverY,
   placementLocked,
@@ -45,29 +44,6 @@ function rotateMatrix(matrix, direction) {
   return rotated;
 }
 
-function placeShapeAt(x, y) {
-  if (placementLocked || !canPlaceAt(x, y)) return;
-
-  const placed = [];
-
-  for (let dy = 0; dy < activeShape.length; dy++) {
-    for (let dx = 0; dx < activeShape[0].length; dx++) {
-      if (activeShape[dy][dx]) {
-        const gx = x + dx;
-        const gy = y + dy;
-        if (gx < gridSize && gy < gridSize) {
-          gridData[gy][gx] = terrain;
-          placed.push([gy, gx]);
-        }
-      }
-    }
-  }
-
-  setLastPlacedCells(placed);
-  setPlacementLocked(true);
-  drawGrid();
-}
-
 document.getElementById("submitBtn").addEventListener("click", () => {
   console.log("Submitting grid:", gridData);
   // TODO: send gridData to backend for validation
@@ -81,7 +57,6 @@ startBtn.addEventListener('click', async function () {
     const result = await response.json();
     console.log("Game reset:", result);
 
-    // Now draw the first card
     drawCard();
   } catch (err) {
     console.error("Failed to reset game:", err);
@@ -96,7 +71,7 @@ canvas.addEventListener("mousemove", (e) => {
 
   if (x !== hoverX || y !== hoverY) {
     setHover(x, y);
-    drawGrid(); // triggers preview
+    drawGrid();
   }
 });
 
