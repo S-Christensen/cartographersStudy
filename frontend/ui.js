@@ -69,14 +69,14 @@ export function renderScoringCards(scoreNames, currentSeason) {
   if (!Array.isArray(scoreNames) || scoreNames.length === 0) return;
   const container = document.getElementById("scoringDisplay");
   container.innerHTML = "";
-
+  letters = 'ABCD';
   scoreNames.forEach((card, index) => {
     const div = document.createElement("div");
     div.className = "scoring-card";
     if (index !== currentSeason && index !== (currentSeason + 1) % 4) {
       div.classList.add("inactive");
     }
-    div.textContent = formatName(card);
+    div.textContent = letters[index] + ": " + formatName(card);
     container.appendChild(div);
   });
 }
@@ -96,3 +96,11 @@ export function renderScoringCards(scoreNames, currentSeason) {
       container.appendChild(btn);
     });
   }
+
+  export function highlightCurrentSeason(seasonId) {
+  document.querySelectorAll('.season').forEach(div => {
+    div.classList.remove('current-season');
+  });
+  const current = document.getElementById(seasonId);
+  if (current) current.classList.add('current-season');
+}

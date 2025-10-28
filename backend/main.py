@@ -15,7 +15,6 @@ app.add_middleware(
 )
 
 game_session = gameStart.GameSession("session_001")
-current_season = 0
 season_initialized = False
 
 def get_allowed_terrains(card):
@@ -77,12 +76,13 @@ async def draw_card():
             game_session.score_types = score_types
             game_session.season_index = 0
             game_session.deck_index = 0
-            game_session.season_time = 8
+            game_session.season_time = 8 - math.ceil((game_session.season_index + 1) / 2.0)
             game_session.season_initialized = True
             game_session.mountain_locations = [(1, 3), (2, 8), (5, 5), (8, 2), (9, 7)]
 
         # Check if season is over or deck is exhausted
         if game_session.season_time <= 0 or game_session.deck_index >= len(game_session.deck):
+            end_season()
             return {"error": "Season over or deck exhausted"}
 
         # Draw card
@@ -150,4 +150,19 @@ async def draw_card():
             "allowedTerrains": allowed_terrains,
             "shape": shape
         }        '''
-      
+@app.post("/api/end-season")
+async def end_season():
+    global game_session, season_initialized
+
+    try:
+        if not season_initialized:
+            return {"error": "Season not initialized"}
+
+        game_session.season_index += 1
+        season_initialized = False
+        # scores = calculate_scores(player_id, game_session.season_index, grid_state, objectives)
+
+        return {"status": "season ended", "currentSeason": game_session.season_index}
+
+    except Exception as e:
+        return {"error": str(e)}

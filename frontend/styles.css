@@ -211,3 +211,10 @@ h1 {
   color: #ffd700;
   align-self: center;
 }
+
+.current-season {
+  background: rgba(201, 169, 77, 0.2);
+  border: 2px solid #c9a94d;
+  box-shadow: 0 0 12px #c9a94d;
+  border-radius: 8px;
+}

@@ -1,4 +1,4 @@
-import { getColor, renderScoringCards, renderShapePreview, showShapeButtons, showTerrainButtons } from './ui.js';
+import { getColor, highlightCurrentSeason, renderScoringCards, renderShapePreview, showShapeButtons, showTerrainButtons } from './ui.js';
 
 export const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
@@ -78,6 +78,7 @@ export async function fetchSession() {
     setSeasonRemaining(data.seasonTime);
 
     renderScoringCards(data.scoreTypesNames, data.currentSeason);
+    highlightCurrentSeason(data.currentSeason);
   } catch (err) {
     console.error('Failed to fetch session:', err);
   }
