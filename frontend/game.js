@@ -150,6 +150,27 @@ async function submitMove() {
 // Fetch a new card from the backend
 export async function drawCard() {
   try {
+    // Check current session state
+    const sessionRes = await fetch("https://cartographersstudy.onrender.com/api/session");
+    const session = await sessionRes.json();
+
+    if (session.seasonTime <= 0) {
+      // Trigger backend to start next season
+      const endRes = await fetch("https://cartographersstudy.onrender.com/api/end-season", {
+        method: "POST"
+      });
+      const endData = await endRes.json();
+
+      if (endData.error) {
+        console.error("Season end error:", endData.error);
+        return;
+      }
+
+      // Update UI with new season info
+      highlightCurrentSeason(endData.seasonName?.toLowerCase());
+    }
+
+
     const response = await fetch('https://cartographersstudy.onrender.com/api/draw-card', {
       method: 'POST'
     });

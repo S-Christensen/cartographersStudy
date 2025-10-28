@@ -85,7 +85,6 @@ async def draw_card():
             if game_session.season_index >=3:
                 # end game
                 return {"error": "Game Over"}
-            return end_season()
 
         # Draw card
         card = game_session.deck[game_session.deck_index]
