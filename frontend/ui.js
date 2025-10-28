@@ -97,10 +97,11 @@ export function renderScoringCards(scoreNames, currentSeason) {
     });
   }
 
-```  export function highlightCurrentSeason(seasonId) {
+  export function highlightCurrentSeason(seasonId) {
+    const seasons = ['spring', 'summer', 'fall', 'winter'];
   document.querySelectorAll('.season').forEach(div => {
     div.classList.remove('current-season');
   });
-  const current = document.getElementById(seasonId);
+  const current = document.getElementById(seasons[seasonId]);
   if (current) current.classList.add('current-season');
-}```
+}
