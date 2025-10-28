@@ -52,37 +52,17 @@ export function setCurrentSeason(index) {
 
 let totalPoints = 0;
 
-function updateSeasonOverlay(season, scores) {
-  // scores is an object like { A: 5, B: 3, C: 0, D: 0, coins: 2, monsters: -1 }
-
-  const breakdown = document.getElementById("seasonBreakdown");
-  breakdown.innerHTML = "";
-
-  let criteria;
-  switch (season) {
-    case "Spring":
-      criteria = ["A", "B", "coins", "monsters"];
-      break;
-    case "Summer":
-      criteria = ["B", "C", "coins", "monsters"];
-      break;
-    case "Fall":
-      criteria = ["C", "D", "coins", "monsters"];
-      break;
-    case "Winter":
-      criteria = ["D", "A", "coins", "monsters"];
-      break;
-  }
-
+function updateSeasonScores(seasonId, scores) {
+  // scores = { A: 7, B: 4, coins: 2, monsters: -1 }
   let seasonTotal = 0;
-  criteria.forEach(key => {
-    const val = scores[key] || 0;
-    seasonTotal += val;
-    const row = document.createElement("div");
-    row.className = "breakdown-row";
-    row.innerHTML = `<span>${key.toUpperCase()}</span><span>${val}</span>`;
-    breakdown.appendChild(row);
-  });
+
+  for (const [key, val] of Object.entries(scores)) {
+    const row = document.querySelector(`#${seasonId} .breakdown-row[data-key="${key}"] span`);
+    if (row) {
+      row.textContent = val;
+      seasonTotal += val;
+    }
+  }
 
   totalPoints += seasonTotal;
   document.getElementById("totalPoints").textContent = `Total: ${totalPoints}`;

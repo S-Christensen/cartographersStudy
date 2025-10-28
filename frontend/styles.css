@@ -178,28 +178,49 @@ h1 {
   min-width: 200px;
 }
 
-#pointsOverlay h2 {
-  margin: 0 0 10px 0;
-  font-size: 1.2rem;
-  color: #c9a94d;
-  text-align: center;
+#pointsOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  background: rgba(46, 42, 36, 0.95);
+  border-bottom: 2px solid #c9a94d;
+  padding: 10px;
+  z-index: 1000;
+  font-family: 'Cinzel', serif;
+  color: #e0d8c3;
 }
 
-#seasonBreakdown {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 10px;
+.season {
+  flex: 1;
+  text-align: center;
+  border-right: 1px solid #c9a94d;
+  padding: 0 10px;
+}
+
+.season:last-child {
+  border-right: none;
+}
+
+.season h3 {
+  margin: 0 0 6px 0;
+  font-size: 1.1rem;
+  color: #c9a94d;
 }
 
 .breakdown-row {
   display: flex;
   justify-content: space-between;
+  font-size: 0.9rem;
 }
 
 #totalPoints {
+  flex: 0 0 auto;
+  margin-left: 20px;
   font-weight: bold;
-  text-align: center;
-  margin-top: 8px;
   color: #ffd700;
+  align-self: center;
 }
