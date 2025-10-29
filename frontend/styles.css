@@ -218,3 +218,8 @@ h1 {
   box-shadow: 0 0 12px #c9a94d;
   border-radius: 8px;
 }
+#rulebooklink {
+  
+  margin-top: 10px;
+  font-size: 1rem;
+}
