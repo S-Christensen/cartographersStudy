@@ -261,9 +261,28 @@ h1 {
   background-color: #888;
 }
 
+#rightPanel {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#legendContainer {
+  width: 100%;
+}
+
 #legendContent p {
   display: flex;
   align-items: center;
   gap: 8px;
   margin: 4px 0;
+}
+
+.legend-box {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #333;
+  border-radius: 3px;
 }

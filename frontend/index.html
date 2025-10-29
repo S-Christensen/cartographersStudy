@@ -50,35 +50,38 @@
     <h2 id="ruinsCardName" style="margin-bottom: 0;"></h2>
     <h2 id="activeCardName" style="margin-top: 0;">Card: ...</h2>
   </div>
-        <div id="shapePreview"></div>
-        <div id="terrain-buttons"></div>
-        <div id="shape-buttons"></div>
-        <div class="button-row">
-          <button id="startBtn">Start</button>
-          <button id="drawCardBtn">Draw Card</button>
-          <button id="submitBtn">Submit</button>
-          <button id="undoBtn">Undo</button>
-        </div>
+        <div id="rightPanel">
+          <div id="shapePreview"></div>
+          <div id="terrain-buttons"></div>
+          <div id="shape-buttons"></div>
+          <div class="button-row">
+            <button id="startBtn">Start</button>
+            <button id="drawCardBtn">Draw Card</button>
+            <button id="submitBtn">Submit</button>
+            <button id="undoBtn">Undo</button>
+          </div>
+          <div id="legendContainer">
+            <h2>Legend:</h2>
+            <div id="legendContent">
+              <p><span class="legend-box forest"></span> Forest</p>
+              <p><span class="legend-box water"></span> Water</p>
+              <p><span class="legend-box village"></span> Village</p>
+              <p><span class="legend-box farmland"></span> Farmland</p>
+              <p><span class="legend-box mountain"></span> Mountain</p>
+              <p><span class="legend-box monster"></span> Monster</p>
+              <p><span class="legend-box ruins"></span> Ruins</p>
+            </div>
+            <h2>Controls:</h2>
+            <div id="controlsContent">
+              <p>Q: Rotate left</p>
+              <p>E: Rotate right</p>
+              <p>F: Flip shape</p>
+              <p>Use mouse to position and click to lock in shape</p>
+            </div>
+          </div>
+
       </div>
     </div>
-  </div>
-  <div id="legendContainer">
-    <h2>Legend:</h2>
-    <div id="legendContent">
-      <p><span class="legend-box forest"></span> Forest</p>
-      <p><span class="legend-box water"></span> Water</p>
-      <p><span class="legend-box village"></span> Village</p>
-      <p><span class="legend-box farmland"></span> Farmland</p>
-      <p><span class="legend-box mountain"></span> Mountain</p>
-      <p><span class="legend-box monster"></span> Monster</p>
-      <p><span class="legend-box ruins"></span> Ruins</p>
-    </div>
-    <h2>Controls:</h2>
-    <div id="controlsContent">
-      <p>Q: Rotate left</p>
-      <p>E: Rotate right</p>
-      <p>F: Flip shape</p>
-      <p>Use mouse to position and click to lock in shape</p>
   </div>
   <script type="module" src="game.js"></script>
   <script type="module" src="ui.js"></script>
