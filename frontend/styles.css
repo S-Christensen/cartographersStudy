@@ -270,6 +270,7 @@ h1 {
 
 #legendContainer {
   width: 100%;
+  margin-top: 20px;
 }
 
 #legendContent p {
@@ -285,4 +286,10 @@ h1 {
   height: 20px;
   border: 1px solid #333;
   border-radius: 3px;
+}
+#controlsContent p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
 }
