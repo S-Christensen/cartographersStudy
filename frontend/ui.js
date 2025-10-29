@@ -98,7 +98,7 @@ export function renderScoringCards(scoreNames, currentSeason) {
   }
 
   export function highlightCurrentSeason(seasonId) {
-    const seasons = ['spring', 'summer', 'fall', 'winter'];
+    const seasons = ['spring', 'summer', 'autumn', 'winter'];
   document.querySelectorAll('.season').forEach(div => {
     div.classList.remove('current-season');
   });

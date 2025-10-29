@@ -218,8 +218,52 @@ h1 {
   box-shadow: 0 0 12px #c9a94d;
   border-radius: 8px;
 }
-#rulebooklink {
-  color: #c9a94d;
-  margin-top: 10px;
-  font-size: 1rem;
+#legendContainer h2 {
+  font-size: 1.2em;
+  margin: 4px 0;
+}
+
+.legend-box {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 8px;
+  vertical-align: middle;
+  border: 1px solid #333;
+  border-radius: 3px;
+}
+
+.forest {
+  background-color: #228B22;
+}
+
+.water {
+  background-color: #1E90FF;
+}
+
+.village {
+  background-color: #8B0000;
+}
+
+.farmland {
+  background-color: #DAA520;
+}
+
+.mountain {
+  background-color: #a0522d; 
+}
+
+.monster {
+  background-color: #800080;
+}
+
+.ruins {
+  background-color: #888;
+}
+
+#legendContent p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
 }
