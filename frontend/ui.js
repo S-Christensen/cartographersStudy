@@ -81,9 +81,9 @@ export function renderScoringCards(scoreNames, currentSeason) {
       div.classList.add("inactive");
     }
     console.log("Rendering scoring card:", card);
-    const green = [" sentinelWood", "greenbough", "treetower", "stonesideForest"];
+    const green = ["sentinelWood", "greenbough", "treetower", "stonesideForest"];
     const blue = ["canalLake", "magesValley", "goldenGranary", "shoresideExpanse"];
-    const red = ["wildholds", "greatCity", "greengoldPlains", " shieldgate"];
+    const red = ["wildholds", "greatCity", "greengoldPlains", "shieldgate"];
     const misc = ["borderlands", "lostBarony", "brokenRoad", "cauldrons"];
     
     let file;
