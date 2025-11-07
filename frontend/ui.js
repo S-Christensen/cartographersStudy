@@ -70,13 +70,38 @@ export function renderScoringCards(scoreNames, currentSeason) {
   const container = document.getElementById("scoringDisplay");
   container.innerHTML = "";
   const letters = 'ABCD';
+
+  const cardWidth = 682;
+  const cardHeight = 948;
+
   scoreNames.forEach((card, index) => {
     const div = document.createElement("div");
     div.className = "scoring-card";
     if (index !== currentSeason && index !== (currentSeason + 1) % 4) {
       div.classList.add("inactive");
     }
-    div.textContent = letters[index] + ": " + formatName(card);
+
+    const label = document.createElement("span");
+    label.textContent = `${letters[index]}: ${formatName(card)}`;
+    div.appendChild(label);
+
+    const preview = document.createElement("div");
+    preview.className = "scoring-preview";
+
+    let row, col;
+    if (index < 3) {
+      row = 0;
+      col = index;
+    } else {
+      row = 1;
+      col = 0;
+    }
+
+    const offsetX = -(col * cardWidth);
+    const offsetY = -(row * cardHeight);
+    preview.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
+
+    div.appendChild(preview);
     container.appendChild(div);
   });
 }

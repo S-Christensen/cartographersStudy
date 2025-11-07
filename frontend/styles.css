@@ -162,6 +162,27 @@ h1 {
   text-align: center;
 }
 
+.scoring-preview {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 8px;
+  width: 682px;
+  height: 948px;
+  background-image: url("images/scoring_sheet.png");
+  background-repeat: no-repeat;
+  background-size: 2046px 1896px;
+  border: 1px solid #444;
+  border-radius: 6px;
+  display: none;
+  z-index: 10;
+}
+
+.scoring-card:hover .scoring-preview {
+  display: block;
+}
+
 #pointsOverlay {
   position: fixed;
   bottom: 0;
