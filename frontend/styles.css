@@ -139,6 +139,7 @@ h1 {
 }
 
 .scoring-card {
+  position: relative;
   padding: 10px 16px;
   border-radius: 8px;
   background: #2c2c2c;
@@ -165,12 +166,12 @@ h1 {
 .scoring-preview {
   position: absolute;
   top: 100%;
-  left: 50%;
+  left: 0;
   transform: translateX(-50%);
   margin-top: 8px;
   width: 682px;
   height: 948px;
-  background-image: url("images/scoring_sheet.png");
+  background-image: url("src/blue.png");
   background-repeat: no-repeat;
   background-size: 2046px 1896px;
   border: 1px solid #444;
