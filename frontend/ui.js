@@ -80,10 +80,10 @@ export function renderScoringCards(scoreNames, currentSeason) {
     if (index !== currentSeason && index !== (currentSeason + 1) % 4) {
       div.classList.add("inactive");
     }
-    green = ["greenbough", "stonesideForest", " sentinelWood", "treetower"]
-    blue = ["goldenGranary", "shoresideExpanse", "canalLake", "magesValley"]
-    red = ["greengoldPlains", " shieldgate", "greatCity", "wildholds"]
-    misc = ["borderlands", "brokenRoad", "cauldrons", "lostBarony"]
+    const green = ["greenbough", "stonesideForest", " sentinelWood", "treetower"];
+    const blue = ["goldenGranary", "shoresideExpanse", "canalLake", "magesValley"];
+    const red = ["greengoldPlains", " shieldgate", "greatCity", "wildholds"];
+    const misc = ["borderlands", "brokenRoad", "cauldrons", "lostBarony"];
     
     let file;
     if (green.includes(card)) {
