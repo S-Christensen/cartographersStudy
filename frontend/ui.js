@@ -86,6 +86,7 @@ export function renderScoringCards(scoreNames, currentSeason) {
     const misc = ["borderlands", "brokenRoad", "cauldrons", "lostBarony"];
     
     let file;
+    let scoreIndex;
     if (green.includes(card)) {
       file = "src/green.png";
       scoreIndex = green.indexOf(card);
