@@ -80,10 +80,10 @@ export function renderScoringCards(scoreNames, currentSeason) {
     if (index !== currentSeason && index !== (currentSeason + 1) % 4) {
       div.classList.add("inactive");
     }
-    const green = ["greenbough", "stonesideForest", " sentinelWood", "treetower"];
-    const blue = ["goldenGranary", "shoresideExpanse", "canalLake", "magesValley"];
-    const red = ["greengoldPlains", " shieldgate", "greatCity", "wildholds"];
-    const misc = ["borderlands", "brokenRoad", "cauldrons", "lostBarony"];
+    const green = [" sentinelWood", "greenbough", "treetower", "stonesideForest"];
+    const blue = ["canalLake", "magesValley", "goldenGranary", "shoresideExpanse"];
+    const red = ["wildholds", "greatCity", "greengoldPlains", " shieldgate"];
+    const misc = ["borderlands", "lostBarony", "brokenRoad", "cauldrons"];
     
     let file;
     let scoreIndex;
@@ -101,6 +101,7 @@ export function renderScoringCards(scoreNames, currentSeason) {
       scoreIndex = misc.indexOf(card);
     }
 
+    let row, col;
     if (scoreIndex < 3) {
       row = 0;
       col = scoreIndex;
