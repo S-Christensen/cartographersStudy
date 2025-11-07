@@ -80,18 +80,29 @@ export function renderScoringCards(scoreNames, currentSeason) {
     if (index !== currentSeason && index !== (currentSeason + 1) % 4) {
       div.classList.add("inactive");
     }
+    green = ["greenbough", "stonesideForest", " sentinelWood", "treetower"]
+    blue = ["goldenGranary", "shoresideExpanse", "canalLake", "magesValley"]
+    red = ["greengoldPlains", " shieldgate", "greatCity", "wildholds"]
+    misc = ["borderlands", "brokenRoad", "cauldrons", "lostBarony"]
+    
+    let file;
+    if (green.includes(card)) {
+      file = "src/green.png";
+      scoreIndex = green.indexOf(card);
+    } else if (blue.includes(card)) {
+      file = "src/blue.png";
+      scoreIndex = blue.indexOf(card);
+    } else if (red.includes(card)) {
+      file = "src/red.png";
+      scoreIndex = red.indexOf(card);
+    } else {
+      file = "src/misc.png";
+      scoreIndex = misc.indexOf(card);
+    }
 
-    const label = document.createElement("span");
-    label.textContent = `${letters[index]}: ${formatName(card)}`;
-    div.appendChild(label);
-
-    const preview = document.createElement("div");
-    preview.className = "scoring-preview";
-
-    let row, col;
-    if (index < 3) {
+    if (scoreIndex < 3) {
       row = 0;
-      col = index;
+      col = scoreIndex;
     } else {
       row = 1;
       col = 0;
@@ -99,8 +110,15 @@ export function renderScoringCards(scoreNames, currentSeason) {
 
     const offsetX = -(col * cardWidth);
     const offsetY = -(row * cardHeight);
-    preview.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
 
+    const label = document.createElement("span");
+    label.textContent = `${letters[index]}: ${formatName(card)}`;
+    div.appendChild(label);
+
+    const preview = document.createElement("div");
+    preview.className = "scoring-preview";
+    preview.style.backgroundImage = `url("${file}")`;
+    preview.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
     div.appendChild(preview);
     container.appendChild(div);
   });

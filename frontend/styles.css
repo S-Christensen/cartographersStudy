@@ -167,7 +167,7 @@ h1 {
   position: absolute;
   top: 100%;
   left: 0;
-  transform: translateX(-50%);
+  transform: translateX(-50%) scale(.4);
   margin-top: 8px;
   width: 682px;
   height: 948px;
