@@ -175,7 +175,7 @@ export async function drawCard() {
     const response = await fetch('https://cartographersstudy.onrender.com/api/draw-card', {
       method: 'POST'
     });
-    const currentCard = await response.json();
+    let currentCard = await response.json();
 
     // Refresh seasonRemaining
     await fetchSession();
@@ -208,7 +208,6 @@ export async function drawCard() {
       currentCard.flag = true;
 
       // Set up terrain and shape
-      setCurrentCardCost(currentCard.cost);
       setAvailableShapes(currentCard.shape);
       setActiveShape(currentCard.shape[0]);
       terrain = currentCard.terrainOptions[0];
@@ -235,7 +234,6 @@ export async function drawCard() {
       document.getElementById("ruinsCardName").textContent = "";
       document.getElementById("activeCardName").textContent = `Card: ${currentCard.id}`;
 
-      setCurrentCardCost(currentCard.cost);
       setAvailableShapes(currentCard.shape);
       setActiveShape(currentCard.shape[0]);
       terrain = currentCard.terrainOptions[0];
@@ -243,7 +241,6 @@ export async function drawCard() {
       if (currentCard.type === "Monster") {
         alert("Monster card drawn! This isn't functional at the moment but might be in 2 weeks.");
         terrain = "Monster";
-        setCurrentCardCost(currentCard.cost);
         setAvailableShapes(currentCard.shape);
         setActiveShape(currentCard.shape[0]);
         document.getElementById("ruinsCardName").textContent = "";
