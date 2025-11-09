@@ -48,7 +48,7 @@ function rotateMatrix(matrix, direction) {
 window.addEventListener("DOMContentLoaded", () => {
   const saved = localStorage.getItem("savedGrid");
   if (saved) {
-    gridData = JSON.parse(saved);
+    let gridData = JSON.parse(saved);
     drawGrid();
   }
 });
