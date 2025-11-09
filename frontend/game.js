@@ -373,8 +373,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (undoBtn) undoBtn.style.display = '';
     if (startBtn) startBtn.style.display = 'none';
   }
-
-  if (startBtn) {
+  const saved = localStorage.getItem("savedGrid");
+  if (startBtn || !saved) {
     startBtn.addEventListener('click', function() {
       showGameControls();
       setGameStarted(true);
