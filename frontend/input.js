@@ -13,7 +13,8 @@ import {
   setHover,
   setLastPlacedCells,
   setPlacementLocked,
-  terrain
+  submitMove,
+  terrain,
 } from './game.js';
 
 document.addEventListener("keydown", (e) => {
@@ -44,9 +45,18 @@ function rotateMatrix(matrix, direction) {
   return rotated;
 }
 
+window.addEventListener("DOMContentLoaded", () => {
+  const saved = localStorage.getItem("savedGrid");
+  if (saved) {
+    gridData = JSON.parse(saved);
+    drawGrid();
+  }
+});
+
 document.getElementById("submitBtn").addEventListener("click", () => {
   console.log("Submitting grid:", gridData);
   // TODO: send gridData to backend for validation
+  submitMove();
 });
 
 startBtn.addEventListener('click', async function () {

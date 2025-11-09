@@ -116,6 +116,8 @@ export function drawGrid() {
 }
 
 async function submitMove() {
+  localStorage.setItem("savedGrid", JSON.stringify(gridData));
+  return;
   try {
     const response = await fetch('https://cartographersstudy.onrender.com/api/validate', {
       method: 'POST',
