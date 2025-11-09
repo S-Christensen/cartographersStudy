@@ -1,4 +1,4 @@
-import { activeShape, currentCardCost, drawGrid, seasonRemaining, setActiveShape, setTerrain, terrain } from './game.js';
+import { activeShape, currentCard, drawGrid, seasonRemaining, setActiveShape, setTerrain, terrain } from './game.js';
 
 export function showShapeButtons(shapes) {
   const container = document.getElementById('shape-buttons');
@@ -10,7 +10,7 @@ export function showShapeButtons(shapes) {
     else btn.textContent = `Shape`;
     btn.addEventListener('click', () => {
       setActiveShape(shape);
-      renderShapePreview(shape, terrain, currentCardCost, seasonRemaining);
+      renderShapePreview(shape, terrain, currentCard.cost, seasonRemaining);
       drawGrid();
     });
     container.appendChild(btn);
@@ -137,7 +137,7 @@ export function renderScoringCards(scoreNames, currentSeason) {
       btn.dataset.color = type;
       btn.addEventListener('click', () => {
         setTerrain(type);
-        renderShapePreview(activeShape, type, currentCardCost, seasonRemaining);
+        renderShapePreview(activeShape, type, currentCard.cost, seasonRemaining);
       });
       container.appendChild(btn);
     });
