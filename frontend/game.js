@@ -366,15 +366,31 @@ document.addEventListener('DOMContentLoaded', function() {
   const submitBtn = document.getElementById('submitBtn');
   const undoBtn = document.getElementById('undoBtn');
 
-  // Hide game controls until Start is pressed
   function showGameControls() {
     if (drawBtn) drawBtn.style.display = '';
     if (submitBtn) submitBtn.style.display = '';
     if (undoBtn) undoBtn.style.display = '';
     if (startBtn) startBtn.style.display = 'none';
   }
-  const saved = localStorage.getItem("savedGrid");
-  if (startBtn || !saved) {
+
+  function startGameFromSavedState() {
+    showGameControls();
+    setGameStarted(true);
+    fetchSession();
+    document.getElementById("scoringContainer").style.display = "";
+    const saved = localStorage.getItem("savedGrid");
+    if (saved) {
+      gridData = JSON.parse(saved);
+      drawGrid();
+    }
+  }
+
+  // Auto-start if saved data exists
+  if (localStorage.getItem("savedGrid")) {
+    startGameFromSavedState();
+  }
+
+  if (startBtn) {
     startBtn.addEventListener('click', function() {
       showGameControls();
       setGameStarted(true);
@@ -392,11 +408,11 @@ document.addEventListener('DOMContentLoaded', function() {
   if (undoBtn) {
     undoBtn.addEventListener('click', function() {
       undoLastPlacement();
-      placementLocked = false; 
       placementLocked = false;
       drawGrid();
     });
   }
+
   // Hide controls initially
   if (drawBtn) drawBtn.style.display = 'none';
   if (submitBtn) submitBtn.style.display = 'none';
