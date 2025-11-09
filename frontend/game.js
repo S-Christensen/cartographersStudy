@@ -115,7 +115,7 @@ export function drawGrid() {
   }
 }
 
-async function submitMove() {
+export async function submitMove() {
   localStorage.setItem("savedGrid", JSON.stringify(gridData));
   return;
   try {
