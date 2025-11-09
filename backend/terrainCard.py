@@ -4,6 +4,7 @@ class terrainCard:
         self.cost = cost
         self.shape = shape
         self.type = cardType
+        self.flag = False #Indicates if card needs to be set on ruin (used for persistent player data)
 
     def __str__(self):
         return f"{self.name}"
@@ -14,7 +15,8 @@ class terrainCard:
             "cost": self.cost,
             "shape": self.shape,
             "terrainOptions": self.get_terrain_types(),
-            "type": self.type
+            "type": self.type,
+            "ruinFlag": self.flag
         }
 
     def get_terrain_types(self):

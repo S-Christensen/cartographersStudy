@@ -46,10 +46,78 @@ function rotateMatrix(matrix, direction) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  const saved = localStorage.getItem("savedGrid");
-  if (saved) {
-    let gridData = JSON.parse(saved);
+  const grid = localStorage.getItem("savedGrid");
+  if (grid) {
+    let gridData = JSON.parse(grid);
     drawGrid();
+  }
+  const card = localStorage.getItem("currentCard");
+  if (card) {
+    let currentCard = JSON.parse(card);
+    if (currentCard.flag) {
+      alert("You have a ruins card to place!");
+      document.getElementById("activeCardName").textContent = `Card: ${currentCard.id}`;
+      currentCard.flag = true;
+
+      // Set up terrain and shape
+      setCurrentCardCost(currentCard.cost);
+      setAvailableShapes(currentCard.shape);
+      setActiveShape(currentCard.shape[0]);
+      terrain = currentCard.terrainOptions[0];
+      if (currentCard.cost === 1 && currentCard.shape.length > 1) {
+        showShapeButtons(currentCard.shape);
+        document.getElementById('terrain-buttons').style.display = 'none';
+      } else if (currentCard.terrainOptions.length > 1) {
+        showTerrainButtons(currentCard.terrainOptions);
+        document.getElementById('shape-buttons').innerHTML = '';
+        document.getElementById('terrain-buttons').style.display = '';
+      } else {
+        showTerrainButtons(currentCard.terrainOptions);
+      }
+      renderShapePreview(activeShape, terrain, currentCard.cost, seasonRemaining);
+      placementLocked = false;
+      lastPlacedCells = [];
+      drawGrid();
+    } else {
+      document.getElementById("ruinsCardName").textContent = "";
+      document.getElementById("activeCardName").textContent = `Card: ${currentCard.id}`;
+
+      setCurrentCardCost(currentCard.cost);
+      setAvailableShapes(currentCard.shape);
+      setActiveShape(currentCard.shape[0]);
+      terrain = currentCard.terrainOptions[0];
+
+      if (currentCard.type === "Monster") {
+        alert("Monster card drawn! This isn't functional at the moment but might be in 2 weeks.");
+        terrain = "Monster";
+        setCurrentCardCost(currentCard.cost);
+        setAvailableShapes(currentCard.shape);
+        setActiveShape(currentCard.shape[0]);
+        document.getElementById("ruinsCardName").textContent = "";
+        document.getElementById("activeCardName").textContent = `Card: ${currentCard.id}`;
+        document.getElementById('terrain-buttons').style.display = 'none';
+
+        renderShapePreview(activeShape, terrain, currentCard.cost, seasonRemaining);
+        placementLocked = false;
+        lastPlacedCells = [];
+        drawGrid();
+        localStorage.setItem("currentCard", JSON.stringify(currentCard));
+        return;
+      } else if (currentCard.cost === 1 && currentCard.shape.length > 1) {
+        showShapeButtons(currentCard.shape);
+        document.getElementById('terrain-buttons').style.display = 'none';
+      } else if (currentCard.terrainOptions.length > 1) {
+        showTerrainButtons(currentCard.terrainOptions);
+        document.getElementById('shape-buttons').innerHTML = '';
+        document.getElementById('terrain-buttons').style.display = '';
+      } else {
+        showTerrainButtons(currentCard.terrainOptions);
+      }
+      renderShapePreview(activeShape, terrain, currentCard.cost, seasonRemaining);
+      placementLocked = false;
+      lastPlacedCells = [];
+      drawGrid();
+    }
   }
 });
 
