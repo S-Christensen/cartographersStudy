@@ -61,7 +61,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
       // Set up terrain and shape
       setActiveShape(currentCard.shape[0]);
-      terrain = currentCard.terrainOptions[0];
+      let terrain = currentCard.terrainOptions[0];
       if (currentCard.cost === 1 && currentCard.shape.length > 1) {
         showShapeButtons(currentCard.shape);
         document.getElementById('terrain-buttons').style.display = 'none';
@@ -81,11 +81,11 @@ window.addEventListener("DOMContentLoaded", () => {
       document.getElementById("activeCardName").textContent = `Card: ${currentCard.id}`;
 
       setActiveShape(currentCard.shape[0]);
-      terrain = currentCard.terrainOptions[0];
+      let terrain = currentCard.terrainOptions[0];
 
       if (currentCard.type === "Monster") {
         alert("Monster card drawn! This isn't functional at the moment but might be in 2 weeks.");
-        terrain = "Monster";
+        let terrain = "Monster";
         setActiveShape(currentCard.shape[0]);
         document.getElementById("ruinsCardName").textContent = "";
         document.getElementById("activeCardName").textContent = `Card: ${currentCard.id}`;
