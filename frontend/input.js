@@ -16,6 +16,7 @@ import {
   submitMove,
   terrain,
 } from './game.js';
+import { renderShapePreview, showShapeButtons, showTerrainButtons } from './ui.js';
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "q") rotateLeft();
