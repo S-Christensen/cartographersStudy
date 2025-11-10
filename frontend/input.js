@@ -9,12 +9,13 @@ import {
   hoverX,
   hoverY,
   placementLocked,
+  seasonRemaining,
   setActiveShape,
   setHover,
   setLastPlacedCells,
   setPlacementLocked,
   submitMove,
-  terrain,
+  terrain
 } from './game.js';
 import { renderShapePreview, showShapeButtons, showTerrainButtons } from './ui.js';
 
