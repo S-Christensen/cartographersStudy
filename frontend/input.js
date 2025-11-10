@@ -49,6 +49,16 @@ function rotateMatrix(matrix, direction) {
 
 window.addEventListener("DOMContentLoaded", () => {
   const grid = localStorage.getItem("savedGrid");
+  const startBtn = document.getElementById('startBtn');
+  const drawBtn = document.getElementById('drawCardBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  const undoBtn = document.getElementById('undoBtn');
+
+  if (drawBtn) drawBtn.style.display = '';
+  if (submitBtn) submitBtn.style.display = '';
+  if (undoBtn) undoBtn.style.display = '';
+  if (startBtn) startBtn.style.display = 'none';
+
   if (grid) {
     let gridData = JSON.parse(grid);
     drawGrid();
