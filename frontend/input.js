@@ -75,8 +75,8 @@ window.addEventListener("DOMContentLoaded", () => {
         showTerrainButtons(currentCard.terrainOptions);
       }
       renderShapePreview(activeShape, terrain, currentCard.cost, seasonRemaining);
-      placementLocked = false;
-      lastPlacedCells = [];
+      let placementLocked = false;
+      let lastPlacedCells = [];
       drawGrid();
     } else {
       document.getElementById("ruinsCardName").textContent = "";
@@ -94,8 +94,8 @@ window.addEventListener("DOMContentLoaded", () => {
         document.getElementById('terrain-buttons').style.display = 'none';
 
         renderShapePreview(activeShape, terrain, currentCard.cost, seasonRemaining);
-        placementLocked = false;
-        lastPlacedCells = [];
+        let placementLocked = false;
+        let lastPlacedCells = [];
         drawGrid();
         localStorage.setItem("currentCard", JSON.stringify(currentCard));
         return;
@@ -110,8 +110,8 @@ window.addEventListener("DOMContentLoaded", () => {
         showTerrainButtons(currentCard.terrainOptions);
       }
       renderShapePreview(activeShape, terrain, currentCard.cost, seasonRemaining);
-      placementLocked = false;
-      lastPlacedCells = [];
+      let placementLocked = false;
+      let lastPlacedCells = [];
       drawGrid();
     }
   }
