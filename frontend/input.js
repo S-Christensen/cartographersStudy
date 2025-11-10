@@ -56,6 +56,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const card = localStorage.getItem("currentCard");
   if (card) {
     let currentCard = JSON.parse(card);
+    print("Loaded card from localStorage:", currentCard);
     if (currentCard.flag) {
       alert("You have a ruins card to place!");
       document.getElementById("activeCardName").textContent = `Card: ${currentCard.id}`;
