@@ -316,6 +316,12 @@ h1 {
   margin: 4px 0;
 }
 
+.grid-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 #coinTracker {
   margin-top: 12px;
   display: flex;
