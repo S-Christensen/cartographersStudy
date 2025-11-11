@@ -5,6 +5,7 @@ import {
   cellSize,
   drawCard,
   drawGrid,
+  fetchSession,
   gridData,
   hoverX,
   hoverY,
