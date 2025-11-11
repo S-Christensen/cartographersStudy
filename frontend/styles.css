@@ -34,7 +34,6 @@ h1 {
   border: 3px ridge #c9a94d;
   box-shadow: 0 0 12px #000a;
   background-color: #1e1a16;
-  margin-bottom: 100px;
 }
 
 #sidebar {
@@ -327,6 +326,7 @@ h1 {
   display: flex;
   justify-content: center;
   width: 100%;
+  margin-bottom: 90px;
 }
 
 .coin-row {
