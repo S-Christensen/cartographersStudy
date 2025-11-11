@@ -13,6 +13,7 @@ import {
   placementLocked,
   seasonRemaining,
   setActiveShape,
+  setCurrentCard,
   setHover,
   setLastPlacedCells,
   setPlacementLocked,
@@ -70,7 +71,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
   const card = localStorage.getItem("currentCard");
   if (card) {
-    currentCard = JSON.parse(card);
+    setCurrentCard(JSON.parse(card));
     console.log("Loaded card from localStorage:", currentCard);
     if (currentCard.flag) {
       alert("You have a ruins card to place!");
