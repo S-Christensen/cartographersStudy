@@ -310,16 +310,6 @@ export let activeShape = [[1, 1], [1, 1]]; // Default shape, will be set on card
 export let terrain = "Monster"; // Default terrain, will be set on card draw
 export let lastPlacedCells = [];
 export let placementLocked = false;
-export function setTerrain(newTerrain) {
-  terrain = newTerrain;
-}
-export function setLastPlacedCells(cells) {
-  lastPlacedCells = cells;
-}
-export function setPlacementLocked(locked) {
-  placementLocked = locked;
-}
-
 
 export function setActiveShape(shape) {
   activeShape = shape;
@@ -342,7 +332,6 @@ export function setHover(x, y) {
   hoverX = x;
   hoverY = y;
 }
-
 
 export function canPlaceAt(x, y) {
   for (let dy = 0; dy < activeShape.length; dy++) {
