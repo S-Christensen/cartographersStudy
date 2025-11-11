@@ -69,7 +69,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
   const card = localStorage.getItem("currentCard");
   if (card) {
-    let currentCard = JSON.parse(card);
+    Object.assign(currentCard, JSON.parse(card));
     console.log("Loaded card from localStorage:", currentCard);
     if (currentCard.flag) {
       alert("You have a ruins card to place!");
