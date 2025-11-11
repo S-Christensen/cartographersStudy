@@ -59,6 +59,9 @@ window.addEventListener("DOMContentLoaded", () => {
   if (undoBtn) undoBtn.style.display = '';
   if (startBtn) startBtn.style.display = 'none';
 
+  fetchSession();
+  document.getElementById("scoringContainer").style.display = "";
+
   if (grid) {
     let gridData = JSON.parse(grid);
     drawGrid();
