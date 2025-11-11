@@ -317,13 +317,10 @@ h1 {
 }
 
 #coinTracker {
-  position: fixed;
-  bottom: 160px;
-  left: 0;
-  right: 0;
+  margin-top: 12px;
   display: flex;
   justify-content: center;
-  z-index: 999;
+  width: 100%;
 }
 
 .coin-row {
