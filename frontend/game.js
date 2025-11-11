@@ -26,6 +26,10 @@ gridData[8][1] = "Ruins";
 gridData[8][9] = "Ruins";
 gridData[9][5] = "Ruins";
 
+export function setGridData(newGrid) {
+  gridData = newGrid;
+}
+
 export function setCurrentCard(card) {
   currentCard = card;
 }

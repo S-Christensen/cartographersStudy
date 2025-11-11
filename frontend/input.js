@@ -14,9 +14,11 @@ import {
   seasonRemaining,
   setActiveShape,
   setCurrentCard,
+  setGridData,
   setHover,
   setLastPlacedCells,
   setPlacementLocked,
+  setTerrain,
   submitMove,
   terrain
 } from './game.js';
@@ -66,7 +68,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("scoringContainer").style.display = "";
 
   if (grid) {
-    let gridData = JSON.parse(grid);
+    setGridData(JSON.parse(grid));
     drawGrid();
   }
   const card = localStorage.getItem("currentCard");
@@ -80,7 +82,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
       // Set up terrain and shape
       setActiveShape(currentCard.shape[0]);
-      let terrain = currentCard.terrainOptions[0];
+      setTerrain(currentCard.terrainOptions[0]);
       if (currentCard.cost === 1 && currentCard.shape.length > 1) {
         showShapeButtons(currentCard.shape);
         document.getElementById('terrain-buttons').style.display = 'none';
@@ -92,27 +94,27 @@ window.addEventListener("DOMContentLoaded", () => {
         showTerrainButtons(currentCard.terrainOptions);
       }
       renderShapePreview(activeShape, terrain, currentCard.cost, seasonRemaining);
-      let placementLocked = false;
-      let lastPlacedCells = [];
+      setPlacementLocked(false);
+      setLastPlacedCells([]);
       drawGrid();
     } else {
       document.getElementById("ruinsCardName").textContent = "";
       document.getElementById("activeCardName").textContent = `Card: ${currentCard.id}`;
 
       setActiveShape(currentCard.shape[0]);
-      let terrain = currentCard.terrainOptions[0];
+      setTerrain(currentCard.terrainOptions[0]);
 
       if (currentCard.type === "Monster") {
         alert("Monster card drawn! This isn't functional at the moment but might be in 2 weeks.");
-        let terrain = "Monster";
+        setTerrain("Monster");
         setActiveShape(currentCard.shape[0]);
         document.getElementById("ruinsCardName").textContent = "";
         document.getElementById("activeCardName").textContent = `Card: ${currentCard.id}`;
         document.getElementById('terrain-buttons').style.display = 'none';
 
         renderShapePreview(activeShape, terrain, currentCard.cost, seasonRemaining);
-        let placementLocked = false;
-        let lastPlacedCells = [];
+        setPlacementLocked(false);
+        setLastPlacedCells([]);
         drawGrid();
         localStorage.setItem("currentCard", JSON.stringify(currentCard));
         return;
@@ -127,8 +129,8 @@ window.addEventListener("DOMContentLoaded", () => {
         showTerrainButtons(currentCard.terrainOptions);
       }
       renderShapePreview(activeShape, terrain, currentCard.cost, seasonRemaining);
-      let placementLocked = false;
-      let lastPlacedCells = [];
+      setPlacementLocked(false);
+      setLastPlacedCells([]);
       drawGrid();
     }
   }
