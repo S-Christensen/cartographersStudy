@@ -53,6 +53,7 @@ function rotateMatrix(matrix, direction) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  fetchSession();
   const grid = localStorage.getItem("savedGrid");
 
   if (grid) {
