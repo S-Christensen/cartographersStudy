@@ -142,11 +142,22 @@ export function renderScoringCards(scoreNames, currentSeason) {
     });
   }
 
-  export function highlightCurrentSeason(seasonId) {
+export function highlightCurrentSeason(seasonId) {
     const seasons = ['spring', 'summer', 'autumn', 'winter'];
   document.querySelectorAll('.season').forEach(div => {
     div.classList.remove('current-season');
   });
   const current = document.getElementById(seasons[seasonId]);
   if (current) current.classList.add('current-season');
+}
+
+export function updateCoinTracker(coinsEarned) {
+  const coins = document.querySelectorAll(".coin");
+  coins.forEach((coin, index) => {
+    if (index < coinsEarned) {
+      coin.classList.add("active");
+    } else {
+      coin.classList.remove("active");
+    }
+  });
 }
