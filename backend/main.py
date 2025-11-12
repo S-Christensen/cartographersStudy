@@ -204,7 +204,7 @@ async def end_season():
 class Card(BaseModel):
     id: str
     cost: int
-    shape: List[List[int]]
+    shape: List[List[str]]
     terrainOptions: List[str]
     type: str
     ruinFlag: bool

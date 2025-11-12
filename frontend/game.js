@@ -124,14 +124,20 @@ export function drawGrid() {
   }
 }
 
+
+
 export async function submitMove() {
   fetchSession();
   const playerToken = localStorage.getItem("playerToken"); // secure backend-issued token
   
   console.log("Current Card on submit:", currentCard);
+  const sanitizedCard = {
+    ...currentCard,
+    shape: currentCard.shape.map(row => row.map(cell => parseInt(cell, 10)))
+  };
   const payload = {
     new_grid: gridData.map(row => row.map(cell => String(cell))),
-    card: currentCard
+    card: sanitizedCard
   };
   console.log("Submitting payload:", payload);
 
