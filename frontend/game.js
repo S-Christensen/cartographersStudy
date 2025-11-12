@@ -137,7 +137,7 @@ export async function submitMove() {
 
   console.log("Current Card on submit:", sanitizedCard);
   const payload = {
-    new_grid: gridData.map(row => row.map(cell => String(cell))),
+    new_grid: gridData.map(row => row.map(col => col.map(cell => String(cell)))),
     card: sanitizedCard
   };
   console.log("Submitting payload:", payload);
