@@ -11,6 +11,7 @@ import {
   hoverX,
   hoverY,
   placementLocked,
+  seasonRemaining,
   setActiveShape,
   setCurrentCard,
   setGridData,
