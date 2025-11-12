@@ -148,15 +148,15 @@ def placed_on_ruins(diff, ruins_locations=None):
         ruins_locations = [(1, 5), (2, 1), (2, 8), (8, 1), (8, 9), (9, 5)]
     return any((x, y) in ruins_locations for x, y, _ in diff)
 
-def validate_placement(prev_grid, new_grid, card, flag):
+def validate_placement(prev_grid, new_grid, card):
     diff = get_placement_diff(prev_grid, new_grid)
     if not diff:
         return False, "No placement detected"
 
-    if not matches_card_shape(diff, card.shapes):
+    if not matches_card_shape(diff, card["shape"]):
         return False, "Shape does not match card"
 
-    if flag and not placed_on_ruins(diff):
+    if card["ruinFlag"] and not placed_on_ruins(diff):
         return False, "Ruins card must be placed on a ruins tile"
 
     return True, "Valid placement"

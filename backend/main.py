@@ -21,6 +21,19 @@ app.add_middleware(
 game_session = gameStart.GameSession("session_001")
 season_initialized = False
 player_grids = {}
+player_scores = {}
+sample_grid = [[0 for _ in range(11)] for _ in range(11)]
+sample_grid[1][3] = "Mountain"
+sample_grid[2][8] = "Mountain"
+sample_grid[5][5] = "Mountain"
+sample_grid[8][2] = "Mountain"
+sample_grid[9][7] = "Mountain"
+sample_grid[1][5] = "Ruins"
+sample_grid[2][1] = "Ruins"
+sample_grid[2][9] = "Ruins"
+sample_grid[8][1] = "Ruins"
+sample_grid[8][9] = "Ruins"
+sample_grid[9][5] = "Ruins"
 
 def get_allowed_terrains(card):
     terrains = set()
@@ -205,10 +218,8 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
     except jwt.PyJWTError:
         raise HTTPException(status_code=403, detail="Invalid token")
 
-    # Retrieve stored grid (fallback to prev_grid if first move)
-    stored_grid = player_grids.get(player_id, payload.prev_grid)
+    stored_grid = player_grids[player_id]
 
-    # Validate placement using your logic
     card_data = {
         "shapes": payload.card.shape,
         "terrain": payload.card.terrainOptions[0]
@@ -218,7 +229,6 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
         stored_grid,
         payload.new_grid,
         card_data,
-        payload.ruins_required
     )
 
     if not is_valid:
@@ -234,4 +244,7 @@ SECRET_KEY = "Life from the Loam 1G | Sorcery | Return up to three target land c
 def create_player():
     player_id = str(uuid.uuid4())
     token = jwt.encode({"player_id": player_id}, SECRET_KEY, algorithm="HS256")
+    player_grids[player_id] = sample_grid
+    player_scores[player_id] = 0
+
     return {"playerToken": token}
