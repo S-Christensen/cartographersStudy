@@ -148,10 +148,10 @@ export async function submitMove() {
     const result = await response.json();
 
     if (!response.ok) {
-      alert(result.error || "Invalid move.");
-    } else {
       console.error("Server rejected move:", result);
       alert(result.detail || result.error || "Invalid move.");
+    } else {
+      console.log("Move validated:", result);
     }
     localStorage.setItem("savedGrid", JSON.stringify(gridData));
   } catch (err) {
