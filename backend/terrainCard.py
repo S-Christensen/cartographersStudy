@@ -16,7 +16,7 @@ class terrainCard:
             "shape": self.shape,
             "terrainOptions": self.get_terrain_types(),
             "type": self.type,
-            "ruinFlag": self.flag
+            "ruinFlag": self.ruinFlag
         }
 
     def get_terrain_types(self):
