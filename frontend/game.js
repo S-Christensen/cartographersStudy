@@ -132,7 +132,7 @@ export async function submitMove() {
   };
 
   try {
-    const response = await fetch('https://cartographersstudy.onrender.com/api/validate', {
+    const response = await fetch("https://cartographersstudy.onrender.com/api/validate", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -427,6 +427,105 @@ document.addEventListener('DOMContentLoaded', function() {
   if (undoBtn) undoBtn.style.display = 'none';
 });
 */
+
+document.addEventListener('DOMContentLoaded', function () {
+  const startBtn = document.getElementById('startBtn');
+  const drawBtn = document.getElementById('drawCardBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  const undoBtn = document.getElementById('undoBtn');
+
+  function showGameControls() {
+    if (drawBtn) drawBtn.style.display = '';
+    if (submitBtn) submitBtn.style.display = '';
+    if (undoBtn) undoBtn.style.display = '';
+    if (startBtn) startBtn.style.display = 'none';
+  }
+
+  function restoreSavedGrid() {
+    const saved = localStorage.getItem("savedGrid");
+    if (saved) {
+      gridData = JSON.parse(saved);
+      drawGrid();
+    }
+  }
+
+  function restoreSavedCard() {
+    const card = localStorage.getItem("currentCard");
+    if (!card) return;
+
+    setCurrentCard(JSON.parse(card));
+    console.log("Loaded card from localStorage:", currentCard);
+
+    document.getElementById("activeCardName").textContent = `Card: ${currentCard.id}`;
+    if (currentCard.flag) {
+      alert("You have a ruins card to place!");
+    }
+
+    setActiveShape(currentCard.shape[0]);
+    setTerrain(currentCard.terrainOptions[0]);
+
+    if (currentCard.type === "Monster") {
+      alert("Monster card drawn! This isn't functional at the moment but might be in 2 weeks.");
+      setTerrain("Monster");
+      document.getElementById("ruinsCardName").textContent = "";
+      document.getElementById("terrain-buttons").style.display = 'none';
+    } else if (currentCard.cost === 1 && currentCard.shape.length > 1) {
+      showShapeButtons(currentCard.shape);
+      document.getElementById('terrain-buttons').style.display = 'none';
+    } else if (currentCard.terrainOptions.length > 1) {
+      showTerrainButtons(currentCard.terrainOptions);
+      document.getElementById('shape-buttons').innerHTML = '';
+      document.getElementById('terrain-buttons').style.display = '';
+    } else {
+      showTerrainButtons(currentCard.terrainOptions);
+    }
+
+    renderShapePreview(activeShape, terrain, currentCard.cost, seasonRemaining);
+    setPlacementLocked(false);
+    setLastPlacedCells([]);
+    drawGrid();
+  }
+
+  function startGameFromSavedState() {
+    showGameControls();
+    setGameStarted(true);
+    fetchSession();
+    document.getElementById("scoringContainer").style.display = "";
+    restoreSavedGrid();
+    restoreSavedCard();
+  }
+
+  // Auto-start if saved grid exists
+  if (localStorage.getItem("savedGrid")) {
+    startGameFromSavedState();
+  }
+
+  // Manual start
+  if (startBtn) {
+    startBtn.addEventListener('click', function () {
+      showGameControls();
+      setGameStarted(true);
+      fetchSession();
+      document.getElementById("scoringContainer").style.display = "";
+    });
+  }
+
+  // Button listeners
+  if (drawBtn) drawBtn.addEventListener('click', drawCard);
+  if (submitBtn) submitBtn.addEventListener('click', submitMove);
+  if (undoBtn) {
+    undoBtn.addEventListener('click', function () {
+      undoLastPlacement();
+      placementLocked = false;
+      drawGrid();
+    });
+  }
+
+  // Hide controls initially
+  if (drawBtn) drawBtn.style.display = 'none';
+  if (submitBtn) submitBtn.style.display = 'none';
+  if (undoBtn) undoBtn.style.display = 'none';
+});
 
 function getPreviousGrid() {
   return previousGrid ? previousGrid.map(row => [...row]) : gridData.map(row => [...row]);
