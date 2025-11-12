@@ -49,6 +49,7 @@ def reset_game():
     game_session.season_index = 0
     game_session.season_time = 8
     game_session.season_initialized = True
+    game_session.current_card = deck[0]
     #Change to player in future update
     game_session.mountain_locations = [(1, 3), (2, 8), (5, 5), (8, 2), (9, 7)]
     return {"status": "reset", "message": "Game session initialized"}
@@ -59,7 +60,8 @@ def get_session():
         "scoreTypes": game_session.score_types,
         "scoreTypesNames": game_session.score_types_names,
         "seasonTime": game_session.season_time,
-        "currentSeason": game_session.season_index
+        "currentSeason": game_session.season_index,
+        "currentCard": game_session.current_card.to_dict() if hasattr(game_session, "current_card") else None
     }
 
 @app.post("/api/draw-card")
@@ -83,6 +85,7 @@ async def draw_card():
             game_session.deck_index = 0
             game_session.season_time = 8 - math.ceil((game_session.season_index + 1) / 2.0)
             game_session.season_initialized = True
+            game_session.current_card = deck[0]
             game_session.mountain_locations = [(1, 3), (2, 8), (5, 5), (8, 2), (9, 7)]
 
         # Check if season is over or deck is exhausted

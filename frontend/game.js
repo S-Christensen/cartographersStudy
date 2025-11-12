@@ -84,6 +84,7 @@ export async function fetchSession() {
     setScoreTypes(data.scoreTypes);
     setCurrentSeason(data.currentSeason);
     setSeasonRemaining(data.seasonTime);
+    setCurrentCard(data.currentCard);
 
     renderScoringCards(data.scoreTypesNames, data.currentSeason);
     highlightCurrentSeason(data.currentSeason);
@@ -124,7 +125,9 @@ export function drawGrid() {
 }
 
 export async function submitMove() {
+  fetchSession();
   const playerToken = localStorage.getItem("playerToken"); // secure backend-issued token
+  
   console.log("Current Card on submit:", currentCard);
   const payload = {
     new_grid: gridData,
@@ -150,7 +153,7 @@ export async function submitMove() {
       console.log("Move validated:", result);
       // optionally update UI or advance game state
     }
-    localStorage.setItem("savedGrid", JSON.stringify(currentGrid));
+    localStorage.setItem("savedGrid", JSON.stringify(gridData));
   } catch (err) {
     console.error("Validation failed:", err);
     alert("Network error during validation.");
