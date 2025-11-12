@@ -135,15 +135,26 @@ def normalize_diff(diff):
 
 def matches_card_shape(diff, card_shapes):
     placed_shape = normalize_diff(diff)
-    print(diff)
-    print(placed_shape)
+    placed_mask = (placed_shape != 0)
 
     for shape in card_shapes:
-        print(shape)
         for variant in flip_and_rotate(shape):
             variant = np.array(variant)
-            if variant.shape == placed_shape.shape and np.array_equal(variant, placed_shape):
-                return True
+            variant_mask = (variant != 0)
+
+            h_diff = placed_shape.shape[0] - variant.shape[0]
+            w_diff = placed_shape.shape[1] - variant.shape[1]
+
+            if h_diff < 0 or w_diff < 0:
+                continue  # Variant is larger than diff region
+
+            for i in range(h_diff + 1):
+                for j in range(w_diff + 1):
+                    subregion = placed_shape[i:i+variant.shape[0], j:j+variant.shape[1]]
+                    sub_mask = placed_mask[i:i+variant.shape[0], j:j+variant.shape[1]]
+
+                    if np.array_equal(sub_mask, variant_mask) and np.all(subregion[variant_mask] == variant[variant_mask]):
+                        return True
     return False
 
 def placed_on_ruins(diff, ruins_locations=None):
