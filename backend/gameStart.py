@@ -136,6 +136,8 @@ def normalize_diff(diff):
 def matches_card_shape(diff, card_shapes):
     placed_shape = normalize_diff(diff)
     placed_mask = (placed_shape != 0)
+    print(":Placed Shape:\n", placed_shape)
+    print("Placed Mask:\n", placed_mask)
 
     for shape in card_shapes:
         for variant in flip_and_rotate(shape):
