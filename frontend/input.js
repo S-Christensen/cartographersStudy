@@ -3,26 +3,19 @@ import {
   canPlaceAt,
   canvas,
   cellSize,
-  currentCard,
   drawCard,
   drawGrid,
-  fetchSession,
   gridData,
   hoverX,
   hoverY,
   placementLocked,
-  seasonRemaining,
   setActiveShape,
-  setCurrentCard,
-  setGridData,
   setHover,
   setLastPlacedCells,
   setPlacementLocked,
-  setTerrain,
   submitMove,
   terrain
 } from './game.js';
-import { renderShapePreview, showShapeButtons, showTerrainButtons } from './ui.js';
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "q") rotateLeft();
@@ -52,7 +45,7 @@ function rotateMatrix(matrix, direction) {
   return rotated;
 }
 
-```
+/*
 window.addEventListener("DOMContentLoaded", () => {
   fetchSession();
   const grid = localStorage.getItem("savedGrid");
@@ -139,7 +132,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
-```
+*/
 
 document.getElementById("submitBtn").addEventListener("click", () => {
   console.log("Submitting grid:", gridData);
