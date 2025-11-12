@@ -137,6 +137,7 @@ def matches_card_shape(diff, card_shapes):
     placed_shape = normalize_diff(diff)
 
     for shape in card_shapes:
+        print(shape)
         for variant in flip_and_rotate(shape):
             variant = np.array(variant)
             if variant.shape == placed_shape.shape and np.array_equal(variant, placed_shape):
