@@ -188,7 +188,7 @@ async def end_season():
 class ValidationPayload(BaseModel):
     prev_grid: List[List[str]]
     new_grid: List[List[str]]
-    card: terrainCard
+    card: terrainCard.terrainCard
     ruins_required: bool
     
 @app.post("/api/validate")
