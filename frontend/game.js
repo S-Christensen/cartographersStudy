@@ -130,10 +130,9 @@ export async function submitMove() {
   fetchSession();
   const playerToken = localStorage.getItem("playerToken"); // secure backend-issued token
   
-  const sanitizedCard = {
-    ...currentCard,
-    shape: currentCard.shape.map(row => row.map(cell => parseInt(cell, 10)))
-  };
+  const sanitizedCard = currentCard
+  sanitizedCard.shape = currentCard.shape.map(row => row.map(cell => String(cell)));
+  
   console.log("Current Card on submit:", sanitizedCard);
   const payload = {
     new_grid: gridData.map(row => row.map(cell => String(cell))),
