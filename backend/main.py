@@ -1,8 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, HTTPException, Header
+from pydantic import BaseModel
+from typing import List, Optional
+import jwt
 from fastapi.middleware.cors import CORSMiddleware
 import gameStart
 import math
 import random
+import terrainCard
 
 app = FastAPI()
 
@@ -16,6 +20,7 @@ app.add_middleware(
 
 game_session = gameStart.GameSession("session_001")
 season_initialized = False
+player_grids = {}
 
 def get_allowed_terrains(card):
     terrains = set()
@@ -179,3 +184,53 @@ async def end_season():
         return result
     except Exception as e:
         return {"error": str(e)}
+    
+class ValidationPayload(BaseModel):
+    prev_grid: List[List[str]]
+    new_grid: List[List[str]]
+    card: terrainCard
+    ruins_required: bool
+    
+@app.post("/api/validate")
+async def validatePlacement(payload: ValidationPayload, Authorization: Optional[str] = Header(None)):
+    # Verify token
+    if not Authorization or not Authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or invalid token")
+
+    token = Authorization.split(" ")[1]
+    try:
+        decoded = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        player_id = decoded["player_id"]
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=403, detail="Invalid token")
+
+    # Retrieve stored grid (fallback to prev_grid if first move)
+    stored_grid = player_grids.get(player_id, payload.prev_grid)
+
+    # Validate placement using your logic
+    card_data = {
+        "shapes": payload.card.shape,
+        "terrain": payload.card.terrainOptions[0]
+    }
+
+    is_valid, message = gameStart.validate_placement(
+        stored_grid,
+        payload.new_grid,
+        card_data,
+        payload.ruins_required
+    )
+
+    if not is_valid:
+        raise HTTPException(status_code=400, detail=message)
+
+    # Save new grid and return success
+    player_grids[player_id] = payload.new_grid
+    return {"success": True, "message": "Move validated"}
+
+import uuid
+SECRET_KEY = "Life from the Loam 1G | Sorcery | Return up to three target land cards from your graveyard to your hand. Dredge 3"
+@app.post("/api/create-player")
+def create_player():
+    player_id = str(uuid.uuid4())
+    token = jwt.encode({"player_id": player_id}, SECRET_KEY, algorithm="HS256")
+    return {"playerToken": token}

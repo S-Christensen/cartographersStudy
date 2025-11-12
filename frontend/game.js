@@ -124,35 +124,35 @@ export function drawGrid() {
 }
 
 export async function submitMove() {
-  localStorage.setItem("savedGrid", JSON.stringify(gridData));
+  const playerToken = localStorage.getItem("playerToken"); // secure backend-issued token
+  const currentGrid = gridData; // updated grid after move
+  const payload = {
+    new_grid: currentGrid,
+    card: currentCard
+  };
+
   try {
     const response = await fetch('https://cartographersstudy.onrender.com/api/validate', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        prev_grid: getPreviousGrid(),
-        new_grid: gridData,
-        card: {
-          id: document.getElementById("cardName").textContent.replace("Card: ", ""),
-          shape: [activeShape],
-          terrainOptions: [terrain]
-        },
-        ruins_required: false
-      })
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${playerToken}`
+      },
+      body: JSON.stringify(payload)
     });
 
     const result = await response.json();
-    console.log('Validation result:', result);
 
-    if (result.valid) {
-      alert("Valid placement!");
-      placementLocked = true;
+    if (!response.ok) {
+      alert(result.error || "Invalid move.");
     } else {
-      alert("Invalid move: " + result.message);
-      undoLastPlacement();
+      console.log("Move validated:", result);
+      // optionally update UI or advance game state
     }
+    localStorage.setItem("savedGrid", JSON.stringify(currentGrid));
   } catch (err) {
-    console.error('Failed to validate move:', err);
+    console.error("Validation failed:", err);
+    alert("Network error during validation.");
   }
 }
 

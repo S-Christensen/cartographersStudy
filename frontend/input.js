@@ -52,6 +52,7 @@ function rotateMatrix(matrix, direction) {
   return rotated;
 }
 
+```
 window.addEventListener("DOMContentLoaded", () => {
   fetchSession();
   const grid = localStorage.getItem("savedGrid");
@@ -138,6 +139,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+```
 
 document.getElementById("submitBtn").addEventListener("click", () => {
   console.log("Submitting grid:", gridData);
@@ -152,6 +154,9 @@ startBtn.addEventListener('click', async function () {
     });
     const result = await response.json();
     console.log("Game reset:", result);
+    const valid = await fetch("/api/create-player", { method: "POST" });
+    const { playerToken } = await valid.json();
+    localStorage.setItem("playerToken", playerToken);
 
     drawCard();
   } catch (err) {
