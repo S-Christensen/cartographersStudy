@@ -186,10 +186,8 @@ async def end_season():
         return {"error": str(e)}
     
 class ValidationPayload(BaseModel):
-    prev_grid: List[List[str]]
     new_grid: List[List[str]]
     card: object
-    ruins_required: bool
     
 @app.post("/api/validate")
 async def validatePlacement(payload: ValidationPayload, Authorization: Optional[str] = Header(None)):
