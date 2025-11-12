@@ -130,6 +130,7 @@ export async function submitMove() {
     new_grid: currentGrid,
     card: currentCard
   };
+  console.log("Submitting payload:", payload);
 
   try {
     const response = await fetch("https://cartographersstudy.onrender.com/api/validate", {
