@@ -131,13 +131,13 @@ export async function submitMove() {
   const playerToken = localStorage.getItem("playerToken"); // secure backend-issued token
   
   const sanitizedCard = {
-    ...currentCard,
-    shape: currentCard.shape.map(row => row.map(cell => String(cell)))
-  };
+  ...currentCard,
+  shape: currentCard.shape.map(row => row.map(row => row.map(cell => String(cell))))
+};
 
   console.log("Current Card on submit:", sanitizedCard);
   const payload = {
-    new_grid: gridData.map(row => row.map(col => col.map(cell => String(cell)))),
+    new_grid: gridData.map(row => row.map(cell => String(cell))),
     card: sanitizedCard
   };
   console.log("Submitting payload:", payload);
