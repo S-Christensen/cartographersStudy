@@ -499,6 +499,10 @@ document.addEventListener('DOMContentLoaded', function () {
   if (localStorage.getItem("savedGrid")) {
     startGameFromSavedState();
   }
+    // Hide controls initially
+  if (drawBtn) drawBtn.style.display = 'none';
+  if (submitBtn) submitBtn.style.display = 'none';
+  if (undoBtn) undoBtn.style.display = 'none';
 
   // Manual start
   if (startBtn) {
@@ -520,11 +524,9 @@ document.addEventListener('DOMContentLoaded', function () {
       drawGrid();
     });
   }
-
-  // Hide controls initially
-  if (drawBtn) drawBtn.style.display = 'none';
-  if (submitBtn) submitBtn.style.display = 'none';
-  if (undoBtn) undoBtn.style.display = 'none';
+  if (gameStarted) {
+    showGameControls();
+  }
 });
 
 function getPreviousGrid() {
