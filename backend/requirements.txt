@@ -2,3 +2,5 @@ fastapi
 uvicorn[standard]
 PyJWT
 numpy
+python-cors
+
