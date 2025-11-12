@@ -150,8 +150,8 @@ export async function submitMove() {
     if (!response.ok) {
       alert(result.error || "Invalid move.");
     } else {
-      console.log("Move validated:", result);
-      // optionally update UI or advance game state
+      console.error("Server rejected move:", result);
+      alert(result.detail || result.error || "Invalid move.");
     }
     localStorage.setItem("savedGrid", JSON.stringify(gridData));
   } catch (err) {

@@ -201,9 +201,17 @@ async def end_season():
     except Exception as e:
         return {"error": str(e)}
     
+class Card(BaseModel):
+    id: str
+    cost: int
+    shape: List[List[int]]
+    terrainOptions: List[str]
+    type: str
+    ruinFlag: bool
+    
 class ValidationPayload(BaseModel):
     new_grid: List[List[str]]
-    card: object
+    card: Card
     
 @app.post("/api/validate")
 async def validatePlacement(payload: ValidationPayload, Authorization: Optional[str] = Header(None)):
