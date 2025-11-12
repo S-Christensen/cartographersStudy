@@ -135,6 +135,7 @@ def normalize_diff(diff):
 
 def matches_card_shape(diff, card_shapes):
     placed_shape = normalize_diff(diff)
+    print(diff)
 
     for shape in card_shapes:
         print(shape)
