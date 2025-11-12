@@ -125,9 +125,9 @@ export function drawGrid() {
 
 export async function submitMove() {
   const playerToken = localStorage.getItem("playerToken"); // secure backend-issued token
-  const currentGrid = gridData; // updated grid after move
+  console.log("Current Card on submit:", currentCard);
   const payload = {
-    new_grid: currentGrid,
+    new_grid: gridData,
     card: currentCard
   };
   console.log("Submitting payload:", payload);
