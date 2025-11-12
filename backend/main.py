@@ -220,15 +220,10 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
 
     stored_grid = player_grids[player_id]
 
-    card_data = {
-        "shapes": payload.card.shape,
-        "terrain": payload.card.terrainOptions[0]
-    }
-
     is_valid, message = gameStart.validate_placement(
         stored_grid,
         payload.new_grid,
-        card_data,
+        payload.card,
     )
 
     if not is_valid:
