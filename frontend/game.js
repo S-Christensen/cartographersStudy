@@ -367,6 +367,7 @@ canvas.addEventListener("click", () => {
   }
 });
 
+/*
 document.addEventListener('DOMContentLoaded', function() {
   const startBtn = document.getElementById('startBtn');
   const drawBtn = document.getElementById('drawCardBtn');
@@ -425,6 +426,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (submitBtn) submitBtn.style.display = 'none';
   if (undoBtn) undoBtn.style.display = 'none';
 });
+*/
 
 function getPreviousGrid() {
   return previousGrid ? previousGrid.map(row => [...row]) : gridData.map(row => [...row]);

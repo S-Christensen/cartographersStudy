@@ -45,7 +45,6 @@ function rotateMatrix(matrix, direction) {
   return rotated;
 }
 
-/*
 window.addEventListener("DOMContentLoaded", () => {
   fetchSession();
   const grid = localStorage.getItem("savedGrid");
@@ -132,7 +131,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
-*/
+
 
 document.getElementById("submitBtn").addEventListener("click", () => {
   console.log("Submitting grid:", gridData);
