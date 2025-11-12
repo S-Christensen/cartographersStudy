@@ -1,4 +1,5 @@
 fastapi
 uvicorn[standard]
-python-jose[cryptography]
+python-jose
+cryptography
 numpy
