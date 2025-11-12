@@ -130,7 +130,7 @@ export async function submitMove() {
   
   console.log("Current Card on submit:", currentCard);
   const payload = {
-    new_grid: gridData,
+    new_grid: gridData.map(row => row.map(cell => String(cell))),
     card: currentCard
   };
   console.log("Submitting payload:", payload);
