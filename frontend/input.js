@@ -3,18 +3,23 @@ import {
   canPlaceAt,
   canvas,
   cellSize,
+  currentCard,
   drawCard,
   drawGrid,
+  fetchSession,
   gridData,
   hoverX,
   hoverY,
   placementLocked,
   setActiveShape,
+  setCurrentCard,
+  setGridData,
   setHover,
   setLastPlacedCells,
   setPlacementLocked,
+  setTerrain,
   submitMove,
-  terrain
+  terrain,
 } from './game.js';
 
 document.addEventListener("keydown", (e) => {
