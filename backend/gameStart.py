@@ -120,18 +120,21 @@ def get_placement_diff(prev_grid, new_grid):
     return diff  # List of (row, col, terrain_type)
 
 def normalize_diff(diff):
-    min_x = min(pos[0] for pos in diff)
-    min_y = min(pos[1] for pos in diff)
-    max_x = max(pos[0] for pos in diff)
-    max_y = max(pos[1] for pos in diff)
-
-    height = max_x - min_x + 1
-    width = max_y - min_y + 1
-
-    shape_matrix = [['0' for _ in range(width)] for _ in range(height)]
-    for x, y, terrain in diff:
-        shape_matrix[x - min_x][y - min_y] = terrain
-    return np.array(shape_matrix)
+    arr = np.array(arr)
+    # Find indices where entries are not "0"
+    non_zero_indices = np.argwhere(arr != "0")
+    
+    if non_zero_indices.size == 0:
+        # If the array has only "0", return an empty array
+        return np.array([])
+    
+    # Find bounding box of non-zero region
+    min_x, min_y = non_zero_indices.min(axis=0)
+    max_x, max_y = non_zero_indices.max(axis=0)
+    
+    # Crop the array to that bounding box
+    cropped = arr[min_x:max_x + 1, min_y:max_y + 1]
+    return cropped
 
 def matches_card_shape(diff, card_shapes):
     placed_shape = normalize_diff(diff)
@@ -142,7 +145,7 @@ def matches_card_shape(diff, card_shapes):
     for shape in card_shapes:
         for variant in flip_and_rotate(shape):
             variant = np.array(variant)
-            variant_mask = (variant != 0)
+            variant_mask = (variant != '0')
 
             h_diff = placed_shape.shape[0] - variant.shape[0]
             w_diff = placed_shape.shape[1] - variant.shape[1]
