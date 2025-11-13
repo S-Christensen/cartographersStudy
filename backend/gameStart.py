@@ -112,12 +112,12 @@ def place_piece(card, grid, scoretypes, strategy):
 # q = left rotate, e = right rotate, f = flip
 
 def get_placement_diff(prev_grid, new_grid):
-    diff = []
-    for i in range(len(prev_grid)):
-        for j in range(len(prev_grid[0])):
-            if prev_grid[i][j] != new_grid[i][j] and prev_grid[i][j] == 0:
-                diff.append((i, j, new_grid[i][j]))
-    return diff  # List of (row, col, terrain_type)
+    prev_grid = np.array(prev_grid, dtype=object)
+    new_grid = np.array(new_grid, dtype=object)
+
+    # Make a grid that shows only newly placed terrain (everything else "0")
+    diff_grid = np.where((prev_grid == "0") & (new_grid != "0"), new_grid, "0")
+    return diff_grid
 
 def normalize_diff(arr):
     arr = np.array(arr)
