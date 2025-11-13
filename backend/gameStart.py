@@ -128,14 +128,14 @@ def normalize_diff(diff):
     height = max_x - min_x + 1
     width = max_y - min_y + 1
 
-    shape_matrix = [[0 for _ in range(width)] for _ in range(height)]
+    shape_matrix = [["0" for _ in range(width)] for _ in range(height)]
     for x, y, terrain in diff:
         shape_matrix[x - min_x][y - min_y] = terrain
     return np.array(shape_matrix)
 
 def matches_card_shape(diff, card_shapes):
     placed_shape = normalize_diff(diff)
-    placed_mask = (placed_shape != 0)
+    placed_mask = (placed_shape != '0')
     print(":Placed Shape:\n", placed_shape)
     print("Placed Mask:\n", placed_mask)
 
