@@ -119,7 +119,7 @@ def get_placement_diff(prev_grid, new_grid):
                 diff.append((i, j, new_grid[i][j]))
     return diff  # List of (row, col, terrain_type)
 
-def normalize_diff(diff):
+def normalize_diff(arr):
     arr = np.array(arr)
     # Find indices where entries are not "0"
     non_zero_indices = np.argwhere(arr != "0")
