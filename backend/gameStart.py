@@ -169,7 +169,7 @@ def placed_on_ruins(diff, ruins_locations=None):
 
 def validate_placement(prev_grid, new_grid, card):
     diff = get_placement_diff(prev_grid, new_grid)
-    if not diff:
+    if not diff.any():
         return False, "No placement detected"
 
     if not matches_card_shape(diff, card.shape):
