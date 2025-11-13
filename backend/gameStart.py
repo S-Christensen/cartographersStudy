@@ -120,20 +120,28 @@ def get_placement_diff(prev_grid, new_grid):
     return diff_grid
 
 def normalize_diff(arr):
-    arr = np.array(arr)
+    arr = np.array(arr, dtype=object)
+
+    # If the array is empty, return an empty 2D array
+    if arr.size == 0:
+        return np.empty((0, 0), dtype=object)
+
     # Find indices where entries are not "0"
     non_zero_indices = np.argwhere(arr != "0")
-    
     if non_zero_indices.size == 0:
-        # If the array has only "0", return an empty array
-        return np.array([])
-    
-    # Find bounding box of non-zero region
+        return np.empty((0, 0), dtype=object)
+
     min_x, min_y = non_zero_indices.min(axis=0)
     max_x, max_y = non_zero_indices.max(axis=0)
-    
-    # Crop the array to that bounding box
+
     cropped = arr[min_x:max_x + 1, min_y:max_y + 1]
+
+    # Ensure result is 2D (NumPy collapses 1D slices)
+    if cropped.ndim == 1:
+        cropped = cropped[np.newaxis, :]  # make it 2D row
+    elif cropped.ndim == 0:
+        cropped = cropped.reshape((1, 1))
+
     return cropped
 
 def matches_card_shape(diff, card_shapes):
