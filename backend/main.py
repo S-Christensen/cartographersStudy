@@ -288,6 +288,6 @@ SECRET_KEY = "Life from the Loam 1G | Sorcery | Return up to three target land c
 def create_player():
     player_id = str(uuid.uuid4())
     token = jwt.encode({"player_id": player_id}, SECRET_KEY, algorithm="HS256")
-    players[player_id] = gameStart.Player(player_id, sample_grid)
+    game_session.players[player_id] = gameStart.Player(player_id, sample_grid)
 
     return {"playerToken": token}
