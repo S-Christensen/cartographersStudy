@@ -60,7 +60,7 @@ export function setCurrentSeason(index) {
 
 let totalPoints = 0;
 export function updateSeasonScores(endData) {
-  print(endData)
+  console.log(endData);
   if (!endData || !endData.breakdown || endData.season === undefined) {
       console.warn("Invalid endData:", endData);
       return;
