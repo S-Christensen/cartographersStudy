@@ -262,12 +262,12 @@ export async function drawCard() {
 
       if (currentCard.type === "Standard") {
         alert("Ruins card drawn! The next shape must be placed on a Ruins tile.");
-        document.getElementById("ruinsCardName").textContent = {lastRuin};
+        document.getElementById("ruinsCardName").textContent = `Ruins Card: ${lastRuin}`;
         ruinsFlag = false;
         }
 
       // Show next card name below ruins card
-      document.getElementById("activeCardName").textContent = `Ruins Card: ${lastRuin}`;
+      document.getElementById("activeCardName").textContent = `Card: ${currentCard.id}`;
 
       // Set up terrain and shape
       setAvailableShapes(currentCard.shape);
