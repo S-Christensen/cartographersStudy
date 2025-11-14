@@ -113,8 +113,8 @@ def place_piece(card, grid, scoretypes, strategy):
 
 def get_placement_diff(prev_grid, new_grid):
     
-    prev_grid = np.array(prev_grid, dtype=object)
-    new_grid = np.array(new_grid, dtype=object)
+    prev_grid = np.array(prev_grid, dtype=str)
+    new_grid = np.array(new_grid, dtype=str)
     print("Previous Grid:\n", prev_grid)
     print("New Grid:\n", new_grid)
 
