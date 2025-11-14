@@ -163,7 +163,15 @@ export function updateCoinTracker(coinsEarned) {
 }
 
 export function updateSeasonScores(endData) {
-    if (!endData || endData.season === undefined || !endData.breakdown) return;
+    if (!endData || endData.season === undefined) {
+        console.warn("updateSeasonScores called without valid endData");
+        return;
+    }
+
+    if (!endData.breakdown) {
+        console.warn("No breakdown returned (likely game over).");
+        return;
+    }
 
     const seasonNames = ["spring", "summer", "autumn", "winter"];
     const seasonFinishedIndex = (endData.season - 1 + 4) % 4;
