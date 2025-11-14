@@ -120,7 +120,7 @@ def normalize_diff(arr):
         return np.empty((0, 0), dtype=object)
 
     # Find indices where entries are not "0"
-    non_zero_indices = np.argwhere(arr != "0")
+    non_zero_indices = np.argwhere(arr != "0" or arr != "Ruins")
     if non_zero_indices.size == 0:
         return np.empty((0, 0), dtype=object)
 
