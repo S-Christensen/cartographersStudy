@@ -116,6 +116,11 @@ async def draw_card():
             if game_session.deck_index < len(game_session.deck):
                 card = game_session.deck[game_session.deck_index]
                 game_session.deck_index += 1
+                if card.type == "Ruins":
+                     if game_session.deck_index < len(game_session.deck):
+                        card = game_session.deck[game_session.deck_index]
+                        game_session.deck_index += 1
+
                 if card.type == "Standard":
                     print("Adding card ruin flag")
                     card.ruinFlag = True
