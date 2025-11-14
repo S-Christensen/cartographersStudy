@@ -50,6 +50,11 @@ document.getElementById("submitBtn").addEventListener("click", () => {
   submitMove();
 });
 
+document.getElementById("reset-button").addEventListener("click", () => {
+  console.log("Wiping local storage");
+  localStorage.clear();
+});
+
 startBtn.addEventListener('click', async function () {
   try {
     const response = await fetch('https://cartographersstudy.onrender.com/api/reset-game', {
