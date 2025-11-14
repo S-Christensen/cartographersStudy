@@ -182,6 +182,7 @@ async def end_season():
     }
 
     # Score each player (or just 1 if single-player)
+    print(game_session.players)
     for player in game_session.players:
         grid = player.current_grid
 
