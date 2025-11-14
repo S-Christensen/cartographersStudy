@@ -78,7 +78,6 @@ def get_session():
 @app.post("/api/draw-card")
 async def draw_card():
     global game_session
-
     try:
         # Initialize game session if needed
         if not hasattr(game_session, "season_initialized") or not game_session.season_initialized:
@@ -108,12 +107,14 @@ async def draw_card():
         card = game_session.deck[game_session.deck_index]
         game_session.deck_index += 1
             
+        '''
         # Handle ruins logic
         if card.name in ["TempleRuins", "OutpostRuins"]:
             game_session.ruins_required = True
             if game_session.deck_index < len(game_session.deck):
                 card = game_session.deck[game_session.deck_index]
                 game_session.deck_index += 1
+
                 if card.type == "Ruins":
                      if game_session.deck_index < len(game_session.deck):
                         card = game_session.deck[game_session.deck_index]
@@ -124,13 +125,15 @@ async def draw_card():
                     card.ruinFlag = True
             else:
                 return {"error": "Deck exhausted after ruins"}
+        '''
 
         game_session.season_time -= card.cost
         game_session.current_card = card
 
-        if card.ruinFlag:
-            print("Removing game ruin flag")
-            game_session.ruins_required=False
+        if game_session.ruins_required:
+            if card.type == "Standard":
+                card.ruinFlag = True
+                game_session.ruins_required = False
 
         print(f"Drew card: {card.name}, Cost: {card.cost}, Remaining Season Time: {game_session.season_time}")
         print(f"Deck: {[c.name for c in game_session.deck[game_session.season_index:]]}")
@@ -160,13 +163,64 @@ def start_new_season():
 async def end_season():
     global game_session
 
-    try:
-        result = start_new_season()
-        if "error" in result:
-            return result
-        return result
-    except Exception as e:
-        return {"error": str(e)}
+    seasons = ["spring", "summer", "autumn", "winter"]
+    season_name = seasons[game_session.season_index]
+
+    # Determine which two scoring cards apply this season
+    score_func_1 = game_session.score_types[game_session.season_index % 4]
+    score_func_2 = game_session.score_types[(game_session.season_index + 1) % 4]
+
+    score_letters = ["A", "B", "C", "D"]
+    letter1 = score_letters[game_session.season_index % 4]
+    letter2 = score_letters[(game_session.season_index + 1) % 4]
+
+    breakdown = {
+        letter1: 0,
+        letter2: 0,
+        "coins": 0,
+        "monsters": 0,
+        "total": 0
+    }
+
+    total_score_all_players = 0
+
+    # Score each player (or just 1 if single-player)
+    for player in game_session.players:
+        grid = player.current_grid
+
+        score1 = score_func_1(grid)
+        score2 = score_func_2(grid)
+        coins = player.coins
+        monsters = -gameStart.monster_penalty(grid)
+
+        season_total = score1 + score2 + coins + monsters
+        player.score += season_total
+
+        breakdown[letter1] = score1
+        breakdown[letter2] = score2
+        breakdown["coins"] = coins
+        breakdown["monsters"] = monsters
+        breakdown["total"] = season_total
+
+        total_score_all_players += season_total
+
+    # Advance the game to the next season
+    season_result = start_new_season()
+    if "error" in season_result:
+        # This means game over
+        return {
+            "season": game_session.season_index,
+            "breakdown": breakdown,
+            "total": total_score_all_players,
+            "gameOver": True
+        }
+
+    # Normal season transition
+    return {
+        "season": season_result["season"],
+        "breakdown": breakdown,
+        "total": total_score_all_players
+    }
     
 @app.post("/api/coin-check")
 async def coin_check(Authorization: Optional[str] = Header(None)):

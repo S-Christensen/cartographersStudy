@@ -161,3 +161,35 @@ export function updateCoinTracker(coinsEarned) {
     }
   });
 }
+
+export function updateSeasonScores(endData) {
+    if (!endData || endData.season === undefined || !endData.breakdown) return;
+
+    const seasonNames = ["spring", "summer", "autumn", "winter"];
+    const seasonFinishedIndex = (endData.season - 1 + 4) % 4;
+    const seasonFinishedName = seasonNames[seasonFinishedIndex];
+
+    const seasonDiv = document.getElementById(seasonFinishedName);
+    if (!seasonDiv) return;
+
+    const breakdown = endData.breakdown;
+
+    Object.entries(breakdown).forEach(([key, value]) => {
+        if (key === "total") return;
+
+        const row = seasonDiv.querySelector(`.breakdown-row[data-key="${key}"] span`);
+        if (row) {
+            row.textContent = value;
+        }
+    });
+
+    // Update total points
+    const totalDiv = document.getElementById("totalPoints");
+    if (totalDiv) {
+        totalDiv.textContent = `Total: ${endData.total}`;
+    }
+
+    // Highlight the NEW season
+    const newSeasonName = seasonNames[endData.season];
+    highlightCurrentSeason(newSeasonName);
+}

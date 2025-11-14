@@ -174,6 +174,8 @@ export async function submitMove() {
 }
 
 // Fetch a new card from the backend
+let ruinsFlag = false;
+let lastRuin = "";
 export async function drawCard() {
   try {
     // Check current session state
@@ -193,7 +195,7 @@ export async function drawCard() {
       }
 
       // Update UI with new season info
-      highlightCurrentSeason(endData.seasonName?.toLowerCase());
+      updateSeasonScores(endData);
     }
 
 
@@ -212,25 +214,39 @@ export async function drawCard() {
 
     // Handle Ruins card
     if (currentCard.type === "Ruins") {
-      alert("Ruins card drawn! The next shape must be placed on a Ruins tile.");
-
-      // Show ruins card name
-      document.getElementById("ruinsCardName").textContent = `Ruins Card: ${currentCard.id}`;
+      lastRuin = `Ruins Card: ${currentCard.id}`;
       // Immediately draw the next card
       const nextResponse = await fetch('https://cartographersstudy.onrender.com/api/draw-card', {
         method: 'POST'
       });
       currentCard = await nextResponse.json();
-      // TODO: Handle Monster card if drawn as next card
 
       if (currentCard.error) {
         alert(currentCard.error);
         return;
+      } 
+      if (currentCard.type === "Ruins") {
+        // Show ruins card name
+        lastRuin = `Ruins Card: ${currentCard.id}`;
+        // Immediately draw the next card
+        const nextResponse = await fetch('https://cartographersstudy.onrender.com/api/draw-card', {
+          method: 'POST'
+        });
+        currentCard = await nextResponse.json();
+        if (currentCard.error) {
+          alert(currentCard.error);
+          return;
+        }
       }
+
+      if (currentCard.type === "Standard") {
+        alert("Ruins card drawn! The next shape must be placed on a Ruins tile.");
+        document.getElementById("ruinsCardName").textContent = `Ruins Card: ${lastRuin}`;
+        ruinsFlag = false;
+        }
 
       // Show next card name below ruins card
       document.getElementById("activeCardName").textContent = `Card: ${currentCard.id}`;
-      currentCard.flag = true;
 
       // Set up terrain and shape
       setAvailableShapes(currentCard.shape);
@@ -255,7 +271,11 @@ export async function drawCard() {
       return;
     } else {
       // Normal card flow
-      currentCard.flag = false;
+      if (ruinsFlag && currentCard.type === "Standard") {
+        alert("Ruins card drawn! The next shape must be placed on a Ruins tile.");
+        ruinsFlag = false;
+        }
+
       document.getElementById("ruinsCardName").textContent = "";
       document.getElementById("activeCardName").textContent = `Card: ${currentCard.id}`;
 
@@ -413,7 +433,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log("Loaded card from localStorage:", currentCard);
 
     document.getElementById("activeCardName").textContent = `Card: ${currentCard.id}`;
-    if (currentCard.flag) {
+    if (currentCard.ruinFlag) {
       alert("You have a ruins card to place!");
     }
 

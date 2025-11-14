@@ -339,7 +339,7 @@ def run_season(game_session, deck, monster_deck, score_types, season_index):
             index -= 1
         index += 1
 
-    for player in game_session.players.values():
+    for player in game_session.players:
         player.score += score_types[season_index % 4](player.current_grid)
         player.score += score_types[(season_index + 1) % 4](player.current_grid)
         player.score += player.coins
