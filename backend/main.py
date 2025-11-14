@@ -20,7 +20,6 @@ app.add_middleware(
 
 game_session = gameStart.GameSession("session_001")
 season_initialized = False
-players = {}
 
 sample_grid = [[0 for _ in range(11)] for _ in range(11)]
 sample_grid[1][3] = "Mountain"
@@ -234,7 +233,7 @@ async def coin_check(Authorization: Optional[str] = Header(None)):
     except jwt.PyJWTError:
         raise HTTPException(status_code=403, detail="Invalid token")
     
-    player = players.get(player_id)
+    player = game_session.players.get(player_id)
     if player is None:
         raise HTTPException(status_code=404, detail="Player not found")
 
@@ -256,7 +255,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
         raise HTTPException(status_code=403, detail="Invalid token")
 
     # Retrieve the Player object
-    player = players.get(player_id)
+    player = game_session.players.get(player_id)
     if player is None:
         raise HTTPException(status_code=404, detail="Player not found")
 
