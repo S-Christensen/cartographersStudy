@@ -153,8 +153,8 @@ export async function submitMove() {
       alert(result.detail || result.error || "Invalid move.");
     } else {
       console.log("Move validated:", result);
+      localStorage.setItem("savedGrid", JSON.stringify(gridData));
     }
-    localStorage.setItem("savedGrid", JSON.stringify(gridData));
   } catch (err) {
     console.error("Validation failed:", err);
     alert("Network error during validation.");
