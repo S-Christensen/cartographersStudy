@@ -1,4 +1,4 @@
-import { getColor, highlightCurrentSeason, renderScoringCards, renderShapePreview, showShapeButtons, showTerrainButtons, updateCoinTracker, updateSeasonScores } from './ui.js';
+import { getColor, highlightCurrentSeason, renderScoringCards, renderShapePreview, showShapeButtons, showTerrainButtons, updateCoinTracker } from './ui.js';
 
 export const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
@@ -58,23 +58,43 @@ export function setCurrentSeason(index) {
   currentSeason = index;
 }
 
-/*let totalPoints = 0;
-
-function updateSeasonScores(seasonId, scores) {
-  // scores = { A: 7, B: 4, coins: 2, monsters: -1 }
-  let seasonTotal = 0;
-
-  for (const [key, val] of Object.entries(scores)) {
-    const row = document.querySelector(`#${seasonId} .breakdown-row[data-key="${key}"] span`);
-    if (row) {
-      row.textContent = val;
-      seasonTotal += val;
+let totalPoints = 0;
+export function updateSeasonScores(endData) {
+    if (!endData || !endData.breakdown || endData.season === undefined) {
+        console.warn("Invalid endData:", endData);
+        return;
     }
-  }
 
-  totalPoints += seasonTotal;
-  document.getElementById("totalPoints").textContent = `Total: ${totalPoints}`;
-}*/
+    const seasonNames = ["spring", "summer", "autumn", "winter"];
+
+    // The season that *just finished* is season - 1
+    const finishedSeasonIndex = (endData.season - 1 + 4) % 4;
+    const seasonId = seasonNames[finishedSeasonIndex];
+
+    const scores = endData.breakdown;
+
+    let seasonTotal = 0;
+
+    // Apply your old logic!
+    for (const [key, val] of Object.entries(scores)) {
+        if (key === "total") continue; // skip backend-calculated total
+
+        const row = document.querySelector(`#${seasonId} .breakdown-row[data-key="${key}"] span`);
+        if (row) {
+            row.textContent = val;
+            seasonTotal += val;
+        }
+    }
+
+    // Update front-end running total
+    totalPoints += seasonTotal;
+    document.getElementById("totalPoints").textContent = `Total: ${totalPoints}`;
+
+    // Highlight the NEW season
+    const newSeason = seasonNames[endData.season];
+    highlightCurrentSeason(newSeason);
+}
+
 
 export async function fetchSession() {
   try {

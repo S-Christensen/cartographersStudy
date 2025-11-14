@@ -161,7 +161,7 @@ export function updateCoinTracker(coinsEarned) {
     }
   });
 }
-
+/*
 export function updateSeasonScores(endData) {
     if (!endData || endData.season === undefined) {
         console.warn("updateSeasonScores called without valid endData");
@@ -197,7 +197,7 @@ export function updateSeasonScores(endData) {
         totalDiv.textContent = `Total: ${endData.total}`;
     }
 
-    // Highlight the NEW season
+    // Highlight the new season
     const newSeasonName = seasonNames[endData.season];
     highlightCurrentSeason(newSeasonName);
-}
+}*/
