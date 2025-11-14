@@ -60,39 +60,40 @@ export function setCurrentSeason(index) {
 
 let totalPoints = 0;
 export function updateSeasonScores(endData) {
-    if (!endData || !endData.breakdown || endData.season === undefined) {
-        console.warn("Invalid endData:", endData);
-        return;
-    }
+  print(endData)
+  if (!endData || !endData.breakdown || endData.season === undefined) {
+      console.warn("Invalid endData:", endData);
+      return;
+  }
 
-    const seasonNames = ["spring", "summer", "autumn", "winter"];
-    const finishedSeasonIndex = (endData.season - 1 + 4) % 4; 
-    const seasonId = seasonNames[finishedSeasonIndex];
+  const seasonNames = ["spring", "summer", "autumn", "winter"];
+  const finishedSeasonIndex = (endData.season - 1 + 4) % 4; 
+  const seasonId = seasonNames[finishedSeasonIndex];
 
-    const scores = endData.breakdown;
+  const scores = endData.breakdown;
 
-    let seasonTotal = 0;
+  let seasonTotal = 0;
 
-    for (const key of ["A", "B", "C", "D", "coins", "monsters"]) {
-        if (scores[key] !== undefined) {
-            const row = document.querySelector(`#${seasonId} .breakdown-row[data-key="${key}"] span`);
-            if (row) {
-                row.textContent = scores[key];
-                seasonTotal += scores[key];
-            }
-        }
-    }
+  for (const key of ["A", "B", "C", "D", "coins", "monsters"]) {
+      if (scores[key] !== undefined) {
+          const row = document.querySelector(`#${seasonId} .breakdown-row[data-key="${key}"] span`);
+          if (row) {
+              row.textContent = scores[key];
+              seasonTotal += scores[key];
+          }
+      }
+  }
 
-    totalPoints += seasonTotal;
-    document.getElementById("totalPoints").textContent = `Total: ${totalPoints}`;
+  totalPoints += seasonTotal;
+  document.getElementById("totalPoints").textContent = `Total: ${totalPoints}`;
 
-    // Highlight next season
-    const newSeasonIndex = endData.season % 4;
-    highlightCurrentSeason(seasonNames[newSeasonIndex]);
+  // Highlight next season
+  const newSeasonIndex = endData.season % 4;
+  highlightCurrentSeason(seasonNames[newSeasonIndex]);
 
-    if (endData.gameOver) {
-        console.log("Game Over!");
-    }
+  if (endData.gameOver) {
+      console.log("Game Over!");
+  }
 }
 
 
