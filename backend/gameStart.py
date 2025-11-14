@@ -145,9 +145,10 @@ def normalize_diff(arr):
     return cropped
 
 def matches_card_shape(diff, card_shapes):
+    print("Diff:\n", diff)
     placed_shape = normalize_diff(diff)
     placed_mask = (placed_shape != '0')
-    print(":Placed Shape:\n", placed_shape)
+    print("Placed Shape:\n", placed_shape)
     print("Placed Mask:\n", placed_mask)
 
     for shape in card_shapes:
