@@ -120,7 +120,7 @@ def get_placement_diff(prev_grid, new_grid):
 
 
     # Make a grid that shows only newly placed terrain (everything else "0")
-    diff_grid = np.where((prev_grid == "0") & (new_grid != "0"), new_grid, "0")
+    diff_grid = np.where(((prev_grid == "0") | (prev_grid == "Ruins")) & (new_grid != "0"), new_grid, "0")
     return diff_grid
 
 def normalize_diff(arr):
