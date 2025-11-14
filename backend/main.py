@@ -20,8 +20,8 @@ app.add_middleware(
 
 game_session = gameStart.GameSession("session_001")
 season_initialized = False
-player_grids = {}
-player_scores = {}
+players = {}
+
 sample_grid = [[0 for _ in range(11)] for _ in range(11)]
 sample_grid[1][3] = "Mountain"
 sample_grid[2][8] = "Mountain"
@@ -99,7 +99,6 @@ async def draw_card():
             game_session.season_time = 8 - math.ceil((game_session.season_index + 1) / 2.0)
             game_session.season_initialized = True
             game_session.current_card = deck[0]
-            game_session.mountain_locations = [(1, 3), (2, 8), (5, 5), (8, 2), (9, 7)]
 
         # Check if season is over or deck is exhausted
         if game_session.season_time <= 0 or game_session.deck_index >= len(game_session.deck):
@@ -130,48 +129,6 @@ async def draw_card():
 
     except Exception as e:
         return {"error": str(e)}  
-    '''
-    global current_season, season_initialized
-
-    try:
-        if not season_initialized or not game_session.deck:
-            run_season(
-                game_session,
-                game_session.deck,
-                game_session.monster_deck,
-                game_session.score_types,
-                current_season
-            )
-            current_season += 1
-            season_initialized = True
-
-        if not game_session.deck:
-            return {
-                "cardName": "None",
-                "allowedTerrains": [],
-                "shape": [[0]]
-            }
-
-        card = game_session.deck.pop(0)
-        allowed_terrains = get_allowed_terrains(card)
-        shape = card.shape[0] if hasattr(card, 'shape') and card.shape else [[1]]
-        game_session.current_card = card
-
-        return {
-            "cardName": card.name,
-            "allowedTerrains": allowed_terrains,
-            "shape": shape
-        }
-        card = game_session.deck.pop(0)
-        allowed_terrains = get_allowed_terrains(card)
-        shape = card.shape[0] if hasattr(card, 'shape') and card.shape else [[1]]
-        game_session.current_card = card
-
-        return {
-            "cardName": card.name,
-            "allowedTerrains": allowed_terrains,
-            "shape": shape
-        }        '''
     
 def start_new_season():
     global game_session
@@ -201,12 +158,29 @@ async def end_season():
     except Exception as e:
         return {"error": str(e)}
     
+@app.post("/api/coin-check")
+async def coin_check(Authorization: Optional[str] = Header(None)):
+    if not Authorization or not Authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or invalid token")
+
+    token = Authorization.split(" ")[1]
+    try:
+        decoded = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        player_id = decoded["player_id"]
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=403, detail="Invalid token")
+    
+    player = players.get(player_id)
+    if player is None:
+        raise HTTPException(status_code=404, detail="Player not found")
+
+    return {"coins": player.coins}
+
 class ValidationPayload(BaseModel):
     new_grid: List[List[str]]
     
 @app.post("/api/validate")
 async def validatePlacement(payload: ValidationPayload, Authorization: Optional[str] = Header(None)):
-    # Verify token
     if not Authorization or not Authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing or invalid token")
 
@@ -217,20 +191,32 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
     except jwt.PyJWTError:
         raise HTTPException(status_code=403, detail="Invalid token")
 
-    stored_grid = player_grids[player_id]
+    # Retrieve the Player object
+    player = players.get(player_id)
+    if player is None:
+        raise HTTPException(status_code=404, detail="Player not found")
 
     is_valid, message = gameStart.validate_placement(
-        stored_grid,
+        player.current_grid,
         payload.new_grid,
         game_session.current_card,
+        player
     )
 
     if not is_valid:
         raise HTTPException(status_code=400, detail=message)
 
-    # Save new grid and return success
-    player_grids[player_id] = payload.new_grid
+    # Commit the new grid + update history
+    player.grid_history.append(player.current_grid)
+    player.current_grid = payload.new_grid
+    for mountain in player.mountain_locations[:]:
+        y, x = mountain
+        if gameStart.check_orthogonal_neighbors(player.current_grid, y, x):
+            player.coins += 1
+            player.mountain_locations.remove(mountain)
+
     return {"success": True, "message": "Move validated"}
+
 
 import uuid
 SECRET_KEY = "Life from the Loam 1G | Sorcery | Return up to three target land cards from your graveyard to your hand. Dredge 3"
@@ -238,7 +224,6 @@ SECRET_KEY = "Life from the Loam 1G | Sorcery | Return up to three target land c
 def create_player():
     player_id = str(uuid.uuid4())
     token = jwt.encode({"player_id": player_id}, SECRET_KEY, algorithm="HS256")
-    player_grids[player_id] = sample_grid
-    player_scores[player_id] = 0
+    players[player_id] = gameStart.Player(player_id, sample_grid)
 
     return {"playerToken": token}

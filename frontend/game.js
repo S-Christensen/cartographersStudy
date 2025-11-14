@@ -124,8 +124,6 @@ export function drawGrid() {
   }
 }
 
-
-
 export async function submitMove() {
   fetchSession();
   const playerToken = localStorage.getItem("playerToken"); // secure backend-issued token
@@ -154,6 +152,20 @@ export async function submitMove() {
     } else {
       console.log("Move validated:", result);
       localStorage.setItem("savedGrid", JSON.stringify(gridData));
+      const response2 = await fetch ("https://cartographersstudy.onrender.com/api/coin-check", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${playerToken}`
+        }
+      });
+      const result2 = await response2.json();
+      if (!response2.ok) {
+        console.error("Coin-check failed.", result2);
+        alert(result2.detail || result2.error)
+      } else {
+        updateCoinTracker(result2.coins);
+      }
     }
   } catch (err) {
     console.error("Validation failed:", err);
@@ -371,67 +383,6 @@ canvas.addEventListener("click", () => {
     drawGrid();
   }
 });
-
-/*
-document.addEventListener('DOMContentLoaded', function() {
-  const startBtn = document.getElementById('startBtn');
-  const drawBtn = document.getElementById('drawCardBtn');
-  const submitBtn = document.getElementById('submitBtn');
-  const undoBtn = document.getElementById('undoBtn');
-
-  function showGameControls() {
-    if (drawBtn) drawBtn.style.display = '';
-    if (submitBtn) submitBtn.style.display = '';
-    if (undoBtn) undoBtn.style.display = '';
-    if (startBtn) startBtn.style.display = 'none';
-  }
-
-  function startGameFromSavedState() {
-    showGameControls();
-    setGameStarted(true);
-    fetchSession();
-    document.getElementById("scoringContainer").style.display = "";
-    const saved = localStorage.getItem("savedGrid");
-    if (saved) {
-      gridData = JSON.parse(saved);
-      drawGrid();
-    }
-  }
-
-  // Auto-start if saved data exists
-  if (localStorage.getItem("savedGrid")) {
-    startGameFromSavedState();
-  }
-
-  if (startBtn) {
-    startBtn.addEventListener('click', function() {
-      showGameControls();
-      setGameStarted(true);
-      fetchSession();
-      document.getElementById("scoringContainer").style.display = "";
-    });
-  }
-
-  if (drawBtn) {
-    drawBtn.addEventListener('click', drawCard);
-  }
-  if (submitBtn) {
-    submitBtn.addEventListener('click', submitMove);
-  }
-  if (undoBtn) {
-    undoBtn.addEventListener('click', function() {
-      undoLastPlacement();
-      placementLocked = false;
-      drawGrid();
-    });
-  }
-
-  // Hide controls initially
-  if (drawBtn) drawBtn.style.display = 'none';
-  if (submitBtn) submitBtn.style.display = 'none';
-  if (undoBtn) undoBtn.style.display = 'none';
-});
-*/
 
 document.addEventListener('DOMContentLoaded', function () {
   const startBtn = document.getElementById('startBtn');
