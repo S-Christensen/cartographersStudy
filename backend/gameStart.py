@@ -234,7 +234,6 @@ def start():
 
 def initialize_session():
     session = GameSession("session_001")
-    session.players["player_1"] = Player("player_1")
     #TODO add scalability using webapp
     return session
 
