@@ -235,7 +235,7 @@ export async function drawCard() {
 
     // Handle Ruins card
     if (currentCard.type === "Ruins") {
-      lastRuin = `Ruins Card: ${currentCard.id}`;
+      lastRuin = currentCard.id;
       // Immediately draw the next card
       const nextResponse = await fetch('https://cartographersstudy.onrender.com/api/draw-card', {
         method: 'POST'
@@ -248,7 +248,7 @@ export async function drawCard() {
       } 
       if (currentCard.type === "Ruins") {
         // Show ruins card name
-        lastRuin = `Ruins Card: ${currentCard.id}`;
+        lastRuin = currentCard.id;
         // Immediately draw the next card
         const nextResponse = await fetch('https://cartographersstudy.onrender.com/api/draw-card', {
           method: 'POST'
@@ -267,7 +267,7 @@ export async function drawCard() {
         }
 
       // Show next card name below ruins card
-      document.getElementById("activeCardName").textContent = `Card: ${currentCard.id}`;
+      document.getElementById("activeCardName").textContent = `Ruins Card: ${lastRuin}`;
 
       // Set up terrain and shape
       setAvailableShapes(currentCard.shape);
