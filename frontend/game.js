@@ -521,7 +521,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Button listeners
   if (drawBtn) drawBtn.addEventListener('click', drawCard);
-  if (submitBtn) submitBtn.addEventListener('click', submitMove);
   if (undoBtn) {
     undoBtn.addEventListener('click', function () {
       undoLastPlacement();

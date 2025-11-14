@@ -136,7 +136,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
 document.getElementById("submitBtn").addEventListener("click", () => {
   console.log("Submitting grid:", gridData);
-  // TODO: send gridData to backend for validation
   submitMove();
 });
 
