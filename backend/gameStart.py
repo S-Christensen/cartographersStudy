@@ -182,8 +182,10 @@ def validate_placement(prev_grid, new_grid, card, player):
     if not matches_card_shape(diff, card, player):
         return False, "Shape does not match card"
 
-    if card.ruinFlag and not placed_on_ruins(diff):
-        return False, "Ruins card must be placed on a ruins tile"
+    if card.ruinFlag:
+        print("Ruins detected")
+        if not placed_on_ruins(diff):
+            return False, "Ruins card must be placed on a ruins tile"
 
     return True, "Valid placement"
 
