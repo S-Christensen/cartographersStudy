@@ -63,8 +63,6 @@ def reset_game():
     game_session.season_time = 8
     game_session.season_initialized = True
     game_session.current_card = deck[0]
-    #Change to player in future update
-    game_session.mountain_locations = [(1, 3), (2, 8), (5, 5), (8, 2), (9, 7)]
     return {"status": "reset", "message": "Game session initialized"}
 
 @app.get("/api/session")

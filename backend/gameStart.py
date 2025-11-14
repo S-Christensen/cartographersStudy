@@ -17,6 +17,7 @@ class Player:
             "used_coin_bonus": False,
         }
         self.mountain_locations = [(1, 3), (2, 8), (5, 5), (8, 2), (9, 7)]
+        self.ruins_locations = [(1, 5), (2, 1), (2, 8), (8, 1), (8, 9), (9, 5)]
 
 
 class GameSession:
@@ -172,11 +173,11 @@ def matches_card_shape(diff, card, player):
                         return True
     return False
 
-def placed_on_ruins(diff, ruins_locations=None):
-    if ruins_locations is None:
-        ruins_locations = [(1, 5), (2, 1), (2, 8), (8, 1), (8, 9), (9, 5)]
-    for (x, y) in ruins_locations:
-        if diff[x, y] != "0":
+def placed_on_ruins(diff, player):
+    for ruin in player.ruins_locations:
+        x, y = ruin
+        if diff[x, y] != 0:
+            player.ruins_locations.remove(ruin)
             return True
     return False
 
@@ -190,7 +191,7 @@ def validate_placement(prev_grid, new_grid, card, player):
 
     if card.ruinFlag:
         print("Ruins detected")
-        if not placed_on_ruins(diff):
+        if not placed_on_ruins(diff, player):
             return False, "Ruins card must be placed on a ruins tile"
 
     return True, "Valid placement"
