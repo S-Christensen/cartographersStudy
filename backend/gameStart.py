@@ -149,6 +149,9 @@ def matches_card_shape(diff, card, player):
             variant = np.array(variant)
             variant_mask = (variant != '0')
 
+            print("Variant Shape:", variant.shape)
+            print("Variant Mask:", variant_mask)
+
             h_diff = placed_shape.shape[0] - variant.shape[0]
             w_diff = placed_shape.shape[1] - variant.shape[1]
 
@@ -159,6 +162,9 @@ def matches_card_shape(diff, card, player):
                 for j in range(w_diff + 1):
                     subregion = placed_shape[i:i+variant.shape[0], j:j+variant.shape[1]]
                     sub_mask = placed_mask[i:i+variant.shape[0], j:j+variant.shape[1]]
+
+                    print("Subregion:", subregion)
+                    print("Sub Mask:", sub_mask)
 
                     if np.array_equal(sub_mask, variant_mask) and np.all(subregion[variant_mask] == variant[variant_mask]):
                         if ((card.cost == 1) and (shape == card.shape[0])):
