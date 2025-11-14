@@ -30,6 +30,7 @@ class GameSession:
         self.deck_index = 0
         self.season_index = 0
         self.season_initialized = False
+        self.ruins_required = False
 
 def check_orthogonal_neighbors(grid, x, y):
     rows = len(grid)
@@ -168,7 +169,10 @@ def matches_card_shape(diff, card, player):
 def placed_on_ruins(diff, ruins_locations=None):
     if ruins_locations is None:
         ruins_locations = [(1, 5), (2, 1), (2, 8), (8, 1), (8, 9), (9, 5)]
-    return any((x, y) in ruins_locations for x, y, _ in diff)
+    for (x, y) in ruins_locations:
+        if diff[x, y] != "0":
+            return True
+    return False
 
 def validate_placement(prev_grid, new_grid, card, player):
     diff = get_placement_diff(prev_grid, new_grid)

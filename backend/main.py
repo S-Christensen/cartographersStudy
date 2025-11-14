@@ -109,7 +109,9 @@ async def draw_card():
         # Draw card
         card = game_session.deck[game_session.deck_index]
         game_session.deck_index += 1
-
+        if game_session.ruins_required and card.type == "Standard":
+            card.ruinFlag = True
+            
         # Handle ruins logic
         if card.name in ["TempleRuins", "OutpostRuins"]:
             game_session.ruins_required = True
@@ -121,6 +123,9 @@ async def draw_card():
 
         game_session.season_time -= card.cost
         game_session.current_card = card
+
+        if card.ruinFlag:
+            game_session.ruins_required=False
 
         print(f"Drew card: {card.name}, Cost: {card.cost}, Remaining Season Time: {game_session.season_time}")
         print(f"Deck: {[c.name for c in game_session.deck[game_session.season_index:]]}")
