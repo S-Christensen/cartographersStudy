@@ -66,33 +66,33 @@ export function updateSeasonScores(endData) {
     }
 
     const seasonNames = ["spring", "summer", "autumn", "winter"];
-
-    // The season that *just finished* is season - 1
-    const finishedSeasonIndex = (endData.season - 1 + 4) % 4;
+    const finishedSeasonIndex = (endData.season - 1 + 4) % 4; 
     const seasonId = seasonNames[finishedSeasonIndex];
 
     const scores = endData.breakdown;
 
     let seasonTotal = 0;
 
-    // Apply your old logic!
-    for (const [key, val] of Object.entries(scores)) {
-        if (key === "total") continue; // skip backend-calculated total
-
-        const row = document.querySelector(`#${seasonId} .breakdown-row[data-key="${key}"] span`);
-        if (row) {
-            row.textContent = val;
-            seasonTotal += val;
+    for (const key of ["A", "B", "C", "D", "coins", "monsters"]) {
+        if (scores[key] !== undefined) {
+            const row = document.querySelector(`#${seasonId} .breakdown-row[data-key="${key}"] span`);
+            if (row) {
+                row.textContent = scores[key];
+                seasonTotal += scores[key];
+            }
         }
     }
 
-    // Update front-end running total
     totalPoints += seasonTotal;
     document.getElementById("totalPoints").textContent = `Total: ${totalPoints}`;
 
-    // Highlight the NEW season
-    const newSeason = seasonNames[endData.season];
-    highlightCurrentSeason(newSeason);
+    // Highlight next season
+    const newSeasonIndex = endData.season % 4;
+    highlightCurrentSeason(seasonNames[newSeasonIndex]);
+
+    if (endData.gameOver) {
+        console.log("Game Over!");
+    }
 }
 
 
