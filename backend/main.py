@@ -192,12 +192,17 @@ async def end_season():
 
         season_total = score1 + score2 + coins + monsters
         player.score += season_total
+        print(score1)
+        print(score2)
+        print(coins)
+        print(monsters)
+        print(player.score)
 
         breakdown[letter1] = score1
         breakdown[letter2] = score2
         breakdown["coins"] = coins
         breakdown["monsters"] = monsters
-        breakdown["total"] = season_total
+        breakdown["total"] = player.score
 
     # Advance the game to the next season
     season_result = start_new_season()
@@ -211,8 +216,9 @@ async def end_season():
 
     # Normal season transition
     return {
-        "season": season_result["season"],
+        "season": game_session.season_index,
         "breakdown": breakdown,
+        "gameOver": False
     }
     
 @app.post("/api/coin-check")
