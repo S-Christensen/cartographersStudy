@@ -163,12 +163,11 @@ def start_new_season():
 async def end_season():
     global game_session
 
-    seasons = ["spring", "summer", "autumn", "winter"]
-    season_name = seasons[game_session.season_index]
-
     # Determine which two scoring cards apply this season
     score_func_1 = game_session.score_types[game_session.season_index % 4]
     score_func_2 = game_session.score_types[(game_session.season_index + 1) % 4]
+    print(score_func_1)
+    print(score_func_2)
 
     score_letters = ["A", "B", "C", "D"]
     letter1 = score_letters[game_session.season_index % 4]
@@ -181,8 +180,6 @@ async def end_season():
         "monsters": 0,
         "total": 0
     }
-
-    total_score_all_players = 0
 
     # Score each player (or just 1 if single-player)
     for player in game_session.players:
@@ -202,8 +199,6 @@ async def end_season():
         breakdown["monsters"] = monsters
         breakdown["total"] = season_total
 
-        total_score_all_players += season_total
-
     # Advance the game to the next season
     season_result = start_new_season()
     if "error" in season_result:
@@ -211,7 +206,6 @@ async def end_season():
         return {
             "season": game_session.season_index,
             "breakdown": breakdown,
-            "total": total_score_all_players,
             "gameOver": True
         }
 
@@ -219,7 +213,6 @@ async def end_season():
     return {
         "season": season_result["season"],
         "breakdown": breakdown,
-        "total": total_score_all_players
     }
     
 @app.post("/api/coin-check")

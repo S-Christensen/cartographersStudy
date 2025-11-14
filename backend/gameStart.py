@@ -105,8 +105,8 @@ def get_placement_diff(prev_grid, new_grid):
     
     prev_grid = np.array(prev_grid, dtype=str)
     new_grid = np.array(new_grid, dtype=str)
-    print("Previous Grid:\n", prev_grid)
-    print("New Grid:\n", new_grid)
+    # print("Previous Grid:\n", prev_grid)
+    # print("New Grid:\n", new_grid)
 
 
     # Make a grid that shows only newly placed terrain (everything else "0")
@@ -139,19 +139,19 @@ def normalize_diff(arr):
     return cropped
 
 def matches_card_shape(diff, card, player):
-    print("Diff:\n", diff)
+    # print("Diff:\n", diff)
     placed_shape = normalize_diff(diff)
     placed_mask = (placed_shape != '0')
-    print("Placed Shape:\n", placed_shape)
-    print("Placed Mask:\n", placed_mask)
+    # print("Placed Shape:\n", placed_shape)
+    # print("Placed Mask:\n", placed_mask)
 
     for shape in card.shape:
         for variant in flip_and_rotate(shape):
             variant = np.array(variant)
             variant_mask = (variant != '0')
 
-            print("Variant Shape:", variant.shape)
-            print("Variant Mask:", variant_mask)
+            # print("Variant Shape:", variant.shape)
+            # print("Variant Mask:", variant_mask)
 
             h_diff = placed_shape.shape[0] - variant.shape[0]
             w_diff = placed_shape.shape[1] - variant.shape[1]
@@ -164,8 +164,8 @@ def matches_card_shape(diff, card, player):
                     subregion = placed_shape[i:i+variant.shape[0], j:j+variant.shape[1]]
                     sub_mask = placed_mask[i:i+variant.shape[0], j:j+variant.shape[1]]
 
-                    print("Subregion:", subregion)
-                    print("Sub Mask:", sub_mask)
+                    # print("Subregion:", subregion)
+                    # print("Sub Mask:", sub_mask)
 
                     if np.array_equal(sub_mask, variant_mask) and np.all(subregion[variant_mask] == variant[variant_mask]):
                         if ((card.cost == 1) and (shape == card.shape[0])):
