@@ -32,26 +32,17 @@ class GameSession:
         self.season_initialized = False
 
 def check_orthogonal_neighbors(grid, x, y):
-    # Dimensions of the grid
     rows = len(grid)
     cols = len(grid[0])
-
-    # Offsets to check the orthogonal neighbors (up, down, left, right)
     offsets = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
-    # Check orthogonal neighbors of the placed piece
     for dx, dy in offsets:
         nx, ny = x + dx, y + dy
-        if 0 <= nx < rows and 0 <= ny < cols and grid[nx][ny] == "mountain":
-            # Check if the mountain has all its orthogonal neighbors filled
-            for dx_m, dy_m in offsets:
-                mx, my = nx + dx_m, ny + dy_m
-                if 0 <= mx < rows and 0 <= my < cols:
-                    if grid[mx][my] != "filled" and grid[mx][my] != "mountain":
-                        return False
-                else:
-                    return False
+        if 0 <= nx < rows and 0 <= ny < cols:
+            if grid[nx][ny] == "0" or grid[nx][ny] == "Ruins":
+                return False
     return True
+
 
 '''
 def filter_criteria(card, criteria):
