@@ -58,7 +58,7 @@ export function setCurrentSeason(index) {
   currentSeason = index;
 }
 
-let totalPoints = 0;
+/*let totalPoints = 0;
 
 function updateSeasonScores(seasonId, scores) {
   // scores = { A: 7, B: 4, coins: 2, monsters: -1 }
@@ -74,7 +74,7 @@ function updateSeasonScores(seasonId, scores) {
 
   totalPoints += seasonTotal;
   document.getElementById("totalPoints").textContent = `Total: ${totalPoints}`;
-}
+}*/
 
 export async function fetchSession() {
   try {
