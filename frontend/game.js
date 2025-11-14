@@ -1,4 +1,4 @@
-import { getColor, highlightCurrentSeason, renderScoringCards, renderShapePreview, showShapeButtons, showTerrainButtons } from './ui.js';
+import { getColor, highlightCurrentSeason, renderScoringCards, renderShapePreview, showShapeButtons, showTerrainButtons, updateCoinTracker } from './ui.js';
 
 export const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
