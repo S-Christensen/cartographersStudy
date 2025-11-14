@@ -262,7 +262,7 @@ export async function drawCard() {
 
       if (currentCard.type === "Standard") {
         alert("Ruins card drawn! The next shape must be placed on a Ruins tile.");
-        document.getElementById("ruinsCardName").textContent = `Ruins Card: ${lastRuin}`;
+        document.getElementById("ruinsCardName").textContent = {lastRuin};
         ruinsFlag = false;
         }
 
