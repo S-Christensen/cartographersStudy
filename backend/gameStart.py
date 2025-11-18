@@ -196,14 +196,6 @@ def validate_placement(prev_grid, new_grid, card, player):
 
     return True, "Valid placement"
 
-def get_player_submission(player):
-    # TODO: Replace with actual frontend or peer input
-    return player.current_grid
-
-def reject_submission(player_id, message):
-    #TODO incorporate this with webapp
-    print(f"Player {player_id} submission rejected: {message}")
-
 def monster_penalty(grid):
     penalized = set()
     rows = len(grid)
