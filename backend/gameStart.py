@@ -206,19 +206,20 @@ def reject_submission(player_id, message):
 
 def monster_penalty(grid):
     penalized = set()
+    rows = len(grid)
+    cols = len(grid[0])
 
-    for x in range(len(grid)):
-        for y in range(len(grid[0])):
+    for x in range(rows):
+        for y in range(cols):
             if grid[x][y] == "Monster":
-                for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
                     nx, ny = x + dx, y + dy
-                    if (
-                            len(grid) > nx >= 0 == grid[nx][ny] and
-                            0 <= ny < len(grid[0])
-                    ):
-                        penalized.add((nx, ny))
 
+                    if 0 <= nx < rows and 0 <= ny < cols:
+                        if grid[nx][ny] == "0" or grid[nx][ny] == "Ruins":
+                            penalized.add((nx, ny))
     return len(penalized)
+
 
 def start():
     game_session = initialize_session()
