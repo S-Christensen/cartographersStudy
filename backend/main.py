@@ -106,25 +106,9 @@ async def draw_card():
         card = game_session.deck[game_session.deck_index]
         game_session.deck_index += 1
             
-        '''
         # Handle ruins logic
-        if card.name in ["TempleRuins", "OutpostRuins"]:
+        if card.type == "Ruins":
             game_session.ruins_required = True
-            if game_session.deck_index < len(game_session.deck):
-                card = game_session.deck[game_session.deck_index]
-                game_session.deck_index += 1
-
-                if card.type == "Ruins":
-                     if game_session.deck_index < len(game_session.deck):
-                        card = game_session.deck[game_session.deck_index]
-                        game_session.deck_index += 1
-
-                if card.type == "Standard":
-                    print("Adding card ruin flag")
-                    card.ruinFlag = True
-            else:
-                return {"error": "Deck exhausted after ruins"}
-        '''
 
         game_session.season_time -= card.cost
         game_session.current_card = card

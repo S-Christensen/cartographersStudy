@@ -186,7 +186,7 @@ def calculate_points_for_empty_adjacent(grid, cluster):
     for r, c in cluster:
         for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
             nr, nc = r + dr, c + dc
-            if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]) and grid[nr][nc] == "0":
+            if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]) and (grid[nr][nc] == "0" or grid[nr][nc] == "Ruins"):
                 points += 1
     return points
 
@@ -314,7 +314,7 @@ def craylund(grid):
 # Earn 7 points for each complete row or complete column of filled spaces that contains a Mountain space
 def dwarvenholds(grid):
     def is_filled(row):
-        return all(cell != "0" for cell in row)
+        return all((cell != "0" or cell != "ruins") for cell in row)
 
     def contains_Mountain(row):
         return "Mountain" in row
@@ -354,7 +354,7 @@ def starlitsigil(grid):
 
     for row in range(len(grid)):
         for col in range(len(grid[0])):
-            if (row, col) not in visited and grid[row][col] == "0":
+            if (row, col) not in visited and (grid[row][col] == "0" or grid[row][col] == "Ruins"):
                 cluster = dfs(grid, row, col, visited, 0)
                 if len(cluster) == 3:
                     clusters.append(cluster)
@@ -364,7 +364,7 @@ def starlitsigil(grid):
 # Earn 10 points for each complete odd-numbered column of filled spaces.
 def silos(grid):
     def is_filled(column):
-        return all(cell != "0" for cell in column)
+        return all((cell != "0" or cell != "ruins") for cell in column)
 
     filled_odd_column_count = 0
 
@@ -439,7 +439,7 @@ def treetower(grid):
                 surrounded = True
                 for dr, dc in [(1,0), (-1,0), (0,1), (0,-1)]:
                     nr, nc = r + dr, c + dc
-                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == "0":
+                    if 0 <= nr < rows and 0 <= nc < cols and (grid[nr][nc] == "0" or grid[nr][nc] == "Ruins"):
                         surrounded = False
                         break
                 if surrounded:
@@ -621,7 +621,7 @@ def wildholds(grid):
 # Earn 6 points for each complete row or complete column of filled spaces
 def borderlands(grid):
     def is_filled(line):
-        return all(cell != "0" for cell in line)
+        return all((cell != "0" or cell != "ruins") for cell in line)
 
     row_count = sum(1 for row in grid if is_filled(row))
 
@@ -645,7 +645,7 @@ def brokenRoad(grid):
             diagonal.append(grid[r][c])
             r -= 1
             c += 1
-        if all(cell != "0" for cell in diagonal):
+        if all((cell != "0" or cell != "ruins") for cell in diagonal):
             count += 1
 
     return count * 3
@@ -657,11 +657,11 @@ def cauldrons(grid):
 
     for r in range(rows):
         for c in range(cols):
-            if grid[r][c] == "0":
+            if grid[r][c] == "0" or grid[r][c] == "Ruins":
                 surrounded = True
                 for dr, dc in [(1,0), (-1,0), (0,1), (0,-1)]:
                     nr, nc = r + dr, c + dc
-                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == "0":
+                    if 0 <= nr < rows and 0 <= nc < cols and (grid[nr][nc] == "0" or grid[nr][nc] == "Ruins"):
                         surrounded = False
                         break
                 if surrounded:
@@ -680,7 +680,7 @@ def lostBarony(grid):
                 filled = True
                 for i in range(size):
                     for j in range(size):
-                        if grid[r + i][c + j] == "0":
+                        if grid[r + i][c + j] == "0" or grid[r + i][c + j] == "Ruins":
                             filled = False
                             break
                     if not filled:
