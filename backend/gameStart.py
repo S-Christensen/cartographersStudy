@@ -162,6 +162,7 @@ def matches_card_shape(diff, card, player):
 
 
 def placed_on_ruins(diff, player):
+    print(diff)
     for ruin in player.ruins_locations:
         x, y = ruin
         if diff[x, y] != 0:
