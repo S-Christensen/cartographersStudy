@@ -165,7 +165,7 @@ def placed_on_ruins(diff, player):
     print(diff)
     for ruin in player.ruins_locations:
         x, y = ruin
-        if diff[x, y] != 0:
+        if diff[x, y] != "0":
             player.ruins_locations.remove(ruin)
             return True
     return False
