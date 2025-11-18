@@ -13,7 +13,7 @@ def dfs(grid, row, col, visited, terrain_type):
                     stack.append((nr, nc))
     return cluster
 
-# Earn 2 points for each forest space in the longest unbroken column of forest spaces
+# Earn 2 points for each Forest space in the longest unbroken column of Forest spaces
 def faunlostthicket(grid):
     if not grid or not grid[0]:
         return 0
@@ -24,7 +24,7 @@ def faunlostthicket(grid):
     for col in range(cols):
         current_length = 0
         for row in grid:
-            if row[col] == "forest":
+            if row[col] == "Forest":
                 current_length += 1
                 max_length = max(max_length, current_length)
             else:
@@ -32,7 +32,7 @@ def faunlostthicket(grid):
 
     return max_length*2
 
-def is_surrounded_by_forest_or_edge(grid, r, c):
+def is_surrounded_by_Forest_or_edge(grid, r, c):
     rows = len(grid)
     cols = len(grid[0])
     surroundings = [
@@ -44,63 +44,63 @@ def is_surrounded_by_forest_or_edge(grid, r, c):
 
     for nr, nc in surroundings:
         if 0 <= nr < rows and 0 <= nc < cols:
-            if grid[nr][nc] != "forest":
+            if grid[nr][nc] != "Forest":
                 return False
         else:  # Out of bounds, considered as edge of the map
             continue
     return True
 
-# Earn 2 points for each forest space surrounded on all four sides by forest spaces or the edge of the map
-def heartoftheforest(grid):
+# Earn 2 points for each Forest space surrounded on all four sides by Forest spaces or the edge of the map
+def heartoftheForest(grid):
     count = 0
     for r in range(len(grid)):
         for c in range(len(grid[0])):
-            if grid[r][c] == "forest":
-                if is_surrounded_by_forest_or_edge(grid, r, c):
+            if grid[r][c] == "Forest":
+                if is_surrounded_by_Forest_or_edge(grid, r, c):
                     count += 1
     return count*2
 
-# Earn 4 points for each row that contains three or more forest spaces
+# Earn 4 points for each row that contains three or more Forest spaces
 def sleepyvalley(grid):
-    def count_forests_in_row(row):
-        return row.count("forest")
+    def count_Forests_in_row(row):
+        return row.count("Forest")
 
     row_count = 0
 
     for row in grid:
-        if count_forests_in_row(row) >= 3:
+        if count_Forests_in_row(row) >= 3:
             row_count += 1
 
     return row_count*4
 
-def is_adjacent_to_village(grid, cluster):
+def is_adjacent_to_Village(grid, cluster):
     for r, c in cluster:
         for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
             nr, nc = r + dr, c + dc
-            if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]) and grid[nr][nc] == "village":
+            if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]) and grid[nr][nc] == "Village":
                 return True
     return False
 
-# Earn 6 points for each cluster of five or more forest spaces not adjacent to any village spaces
+# Earn 6 points for each cluster of five or more Forest spaces not adjacent to any Village spaces
 def deepwood(grid):
     visited = set()
     clusters = []
 
     for row in range(len(grid)):
         for col in range(len(grid[0])):
-            if (row, col) not in visited and grid[row][col] == "forest":
-                cluster = dfs(grid, row, col, visited, "forest")
+            if (row, col) not in visited and grid[row][col] == "Forest":
+                cluster = dfs(grid, row, col, visited, "Forest")
                 clusters.append(cluster)
 
     count = 0
     for cluster in clusters:
-        if len(cluster) >= 5 and not is_adjacent_to_village(grid, cluster):
+        if len(cluster) >= 5 and not is_adjacent_to_Village(grid, cluster):
             count += 1
 
     return count*6
 
-# Earn 6 points for each cluster of village spaces that contains four spaces in a 2x2 square
-def gnomishcolony(grid, terrain_type="village"):
+# Earn 6 points for each cluster of Village spaces that contains four spaces in a 2x2 square
+def gnomishcolony(grid, terrain_type="Village"):
     visited = set()
     clusters = []
 
@@ -134,15 +134,15 @@ def contains_4x1_or_1x4(cluster):
             return True
     return False
 
-# Earn 7 points for each cluster of village spaces that contain 4 spaces in a 4x1 or 1x4 rectangle
+# Earn 7 points for each cluster of Village spaces that contain 4 spaces in a 4x1 or 1x4 rectangle
 def traylomonastery(grid):
     visited = set()
     clusters = []
 
     for row in range(len(grid)):
         for col in range(len(grid[0])):
-            if (row, col) not in visited and grid[row][col] == "village":
-                cluster = dfs(grid, row, col, visited, "village")
+            if (row, col) not in visited and grid[row][col] == "Village":
+                cluster = dfs(grid, row, col, visited, "Village")
                 clusters.append(cluster)
 
     count = 0
@@ -160,7 +160,7 @@ def calculate_points(cluster):
         cols.add(c)
     return len(rows) + len(cols)
 
-# Find the cluster of village spaces that will give you the most points where you get 1 point for each row and column
+# Find the cluster of Village spaces that will give you the most points where you get 1 point for each row and column
 # that contains a space from that cluster
 def caravansary(grid):
     visited = set()
@@ -168,8 +168,8 @@ def caravansary(grid):
 
     for row in range(len(grid)):
         for col in range(len(grid[0])):
-            if (row, col) not in visited and grid[row][col] == "village":
-                cluster = dfs(grid, row, col, visited, "village")
+            if (row, col) not in visited and grid[row][col] == "Village":
+                cluster = dfs(grid, row, col, visited, "Village")
                 clusters.append(cluster)
 
     max_points = 0
@@ -186,11 +186,11 @@ def calculate_points_for_empty_adjacent(grid, cluster):
     for r, c in cluster:
         for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
             nr, nc = r + dr, c + dc
-            if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]) and grid[nr][nc] == 0:
+            if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]) and grid[nr][nc] == "0":
                 points += 1
     return points
 
-# C# Find the cluster of village spaces that will give you the most points where you get 1 point for each empty space
+# C# Find the cluster of Village spaces that will give you the most points where you get 1 point for each empty space
 # adjacent to that cluster
 def outerenclave(grid):
     visited = set()
@@ -198,8 +198,8 @@ def outerenclave(grid):
 
     for row in range(len(grid)):
         for col in range(len(grid[0])):
-            if (row, col) not in visited and grid[row][col] == "village":
-                cluster = dfs(grid, row, col, visited, "village")
+            if (row, col) not in visited and grid[row][col] == "Village":
+                cluster = dfs(grid, row, col, visited, "Village")
                 clusters.append(cluster)
 
     max_points = 0
@@ -211,124 +211,124 @@ def outerenclave(grid):
 
     return max_points
 
-# Earn 4 points for each water space adjacent to two or more farm spaces
+# Earn 4 points for each Water space adjacent to two or more Farm spaces
 def ulemswallow(grid):
-    def is_farm(r, c):
-        return 0 <= r < len(grid) and 0 <= c < len(grid[0]) and grid[r][c] == "farm"
+    def is_Farm(r, c):
+        return 0 <= r < len(grid) and 0 <= c < len(grid[0]) and grid[r][c] == "Farm"
 
-    def count_adjacent_farms(r, c):
-        farm_count = 0
+    def count_adjacent_Farms(r, c):
+        Farm_count = 0
         for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
             nr, nc = r + dr, c + dc
-            if is_farm(nr, nc):
-                farm_count += 1
-        return farm_count
+            if is_Farm(nr, nc):
+                Farm_count += 1
+        return Farm_count
 
-    water_count = 0
+    Water_count = 0
 
     for r in range(len(grid)):
         for c in range(len(grid[0])):
-            if grid[r][c] == "water" and count_adjacent_farms(r, c) >= 2:
-                water_count += 1
+            if grid[r][c] == "Water" and count_adjacent_Farms(r, c) >= 2:
+                Water_count += 1
 
-    return water_count*4
+    return Water_count*4
 
-def has_mountain_and_farm(grid, cluster):
-    mountains = set()
-    farms = set()
+def has_Mountain_and_Farm(grid, cluster):
+    Mountains = set()
+    Farms = set()
 
     for r, c in cluster:
         for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
             nr, nc = r + dr, c + dc
             if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]):
-                if grid[nr][nc] == "mountain":
-                    mountains.add((nr, nc))
-                if grid[nr][nc] == "farm":
-                    farms.add((nr, nc))
-    return mountains, farms
+                if grid[nr][nc] == "Mountain":
+                    Mountains.add((nr, nc))
+                if grid[nr][nc] == "Farm":
+                    Farms.add((nr, nc))
+    return Mountains, Farms
 
-# Earn 5 points for each mountain space connected to a farm space by a cluster of waters paces
+# Earn 5 points for each Mountain space connected to a Farm space by a cluster of Waters paces
 def clawsgravepeaks(grid):
     visited = set()
     clusters = []
-    mountain_count = 0
+    Mountain_count = 0
 
     for row in range(len(grid)):
         for col in range(len(grid[0])):
-            if (row, col) not in visited and grid[row][col] == "water":
-                cluster = dfs(grid, row, col, visited, "water")
+            if (row, col) not in visited and grid[row][col] == "Water":
+                cluster = dfs(grid, row, col, visited, "Water")
                 clusters.append(cluster)
 
     for cluster in clusters:
-        mountains, farms = has_mountain_and_farm(grid, cluster)
-        if farms:
-            mountain_count += len(mountains)
+        Mountains, Farms = has_Mountain_and_Farm(grid, cluster)
+        if Farms:
+            Mountain_count += len(Mountains)
 
-    return mountain_count*5
+    return Mountain_count*5
 
-# Earn 4 points for each column that contains an equal number of farm spaces and water spaces.
+# Earn 4 points for each column that contains an equal number of Farm spaces and Water spaces.
 # There must be at least one of each.
 def jorekburg(grid):
     column_count = 0
 
     for col in range(len(grid[0])):
-        farm_count = 0
-        water_count = 0
+        Farm_count = 0
+        Water_count = 0
         for row in range(len(grid)):
-            if grid[row][col] == "farm":
-                farm_count += 1
-            elif grid[row][col] == "water":
-                water_count += 1
-        if farm_count == water_count and farm_count > 0:
+            if grid[row][col] == "Farm":
+                Farm_count += 1
+            elif grid[row][col] == "Water":
+                Water_count += 1
+        if Farm_count == Water_count and Farm_count > 0:
             column_count += 1
 
     return column_count*4
 
-def count_adjacent_water(grid, cluster):
-    water_count = 0
+def count_adjacent_Water(grid, cluster):
+    Water_count = 0
     for r, c in cluster:
         for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
             nr, nc = r + dr, c + dc
-            if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]) and grid[nr][nc] == "water":
-                water_count += 1
-    return water_count
+            if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]) and grid[nr][nc] == "Water":
+                Water_count += 1
+    return Water_count
 
-# Earn 7 points for each cluster of farm spaces adjacent to three or more water spaces
+# Earn 7 points for each cluster of Farm spaces adjacent to three or more Water spaces
 def craylund(grid):
     visited = set()
     clusters = []
 
     for row in range(len(grid)):
         for col in range(len(grid[0])):
-            if (row, col) not in visited and grid[row][col] == "farm":
-                cluster = dfs(grid, row, col, visited, "farm")
+            if (row, col) not in visited and grid[row][col] == "Farm":
+                cluster = dfs(grid, row, col, visited, "Farm")
                 clusters.append(cluster)
 
     count = 0
     for cluster in clusters:
-        if count_adjacent_water(grid, cluster) >= 3:
+        if count_adjacent_Water(grid, cluster) >= 3:
             count += 1
 
     return count*7
 
-# Earn 7 points for each complete row or complete column of filled spaces that contains a mountain space
+# Earn 7 points for each complete row or complete column of filled spaces that contains a Mountain space
 def dwarvenholds(grid):
     def is_filled(row):
-        return all(cell != 0 for cell in row)
+        return all(cell != "0" for cell in row)
 
-    def contains_mountain(row):
-        return "mountain" in row
+    def contains_Mountain(row):
+        return "Mountain" in row
 
     rows_count = 0
     cols_count = 0
 
     for row in grid:
-        if is_filled(row) and contains_mountain(row):
+        if is_filled(row) and contains_Mountain(row):
             rows_count += 1
 
     for col in range(len(grid[0])):
         column = [grid[row][col] for row in range(len(grid))]
-        if is_filled(column) and contains_mountain(column):
+        if is_filled(column) and contains_Mountain(column):
             cols_count += 1
 
     return 7*(rows_count + cols_count)
@@ -354,7 +354,7 @@ def starlitsigil(grid):
 
     for row in range(len(grid)):
         for col in range(len(grid[0])):
-            if (row, col) not in visited and grid[row][col] == 0:
+            if (row, col) not in visited and grid[row][col] == "0":
                 cluster = dfs(grid, row, col, visited, 0)
                 if len(cluster) == 3:
                     clusters.append(cluster)
@@ -364,7 +364,7 @@ def starlitsigil(grid):
 # Earn 10 points for each complete odd-numbered column of filled spaces.
 def silos(grid):
     def is_filled(column):
-        return all(cell != 0 for cell in column)
+        return all(cell != "0" for cell in column)
 
     filled_odd_column_count = 0
 
@@ -376,14 +376,14 @@ def silos(grid):
     return filled_odd_column_count*10
 
 ### BASE GAME SCORING
-#Earn one point per row and column with at least one forest space. The same forest space can be scored in both a row and column
+#Earn one point per row and column with at least one Forest space. The same Forest space can be scored in both a row and column
 def greenbough(grid):
     total = 0
     colSet = set()
     for row in range(len(grid)):
         rowFlag = False
         for col in range(len(grid[0])):
-            if grid[row][col] == "forest":  # FIXED
+            if grid[row][col] == "Forest":  # FIXED
                 rowFlag = True
                 colSet.add(col)
         if rowFlag:
@@ -391,55 +391,55 @@ def greenbough(grid):
     total += len(colSet)
     return total
 
-# Earn 3 points for each mountain space connected to another mountain space by a cluster of forest spaces
+# Earn 3 points for each Mountain space connected to another Mountain space by a cluster of Forest spaces
 def stonesideForest(grid):
     visited = set()
     clusters = []
 
     for r in range(len(grid)):
         for c in range(len(grid[0])):
-            if (r, c) not in visited and grid[r][c] == "forest":
-                cluster = dfs(grid, r, c, visited, "forest")
+            if (r, c) not in visited and grid[r][c] == "Forest":
+                cluster = dfs(grid, r, c, visited, "Forest")
                 clusters.append(cluster)
 
-    count = 0
+    allmount = set()
     for cluster in clusters:
-        mountains = set()
+        Mountains = set()
         for r, c in cluster:
             for dr, dc in [(1,0), (-1,0), (0,1), (0,-1)]:
                 nr, nc = r + dr, c + dc
-                if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]) and grid[nr][nc] == "mountain":
-                    mountains.add((nr, nc))
-        if len(mountains) >= 2:
-            count += len(mountains)
+                if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]) and grid[nr][nc] == "Mountain":
+                    Mountains.add((nr, nc))
+        if len(Mountains) >= 2:
+            allmount = allmount.union(Mountains)
 
-    return count * 3
+    return len(allmount) * 3
 
-# Earn one point for each forest space adjacent to the edge of the map
+# Earn one point for each Forest space adjacent to the edge of the map
 def sentinelWood(grid):
     count = 0
     rows, cols = len(grid), len(grid[0])
 
     for r in range(rows):
         for c in range(cols):
-            if grid[r][c] == "forest":
+            if grid[r][c] == "Forest":
                 if r == 0 or r == rows - 1 or c == 0 or c == cols - 1:
                     count += 1
 
     return count
 
-# Earn one point for each forest space surrounded on all four sides by filled spaces or the edge of the map
+# Earn one point for each Forest space surrounded on all four sides by filled spaces or the edge of the map
 def treetower(grid):
     count = 0
     rows, cols = len(grid), len(grid[0])
 
     for r in range(rows):
         for c in range(cols):
-            if grid[r][c] == "forest":
+            if grid[r][c] == "Forest":
                 surrounded = True
                 for dr, dc in [(1,0), (-1,0), (0,1), (0,-1)]:
                     nr, nc = r + dr, c + dc
-                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 0:
+                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == "0":
                         surrounded = False
                         break
                 if surrounded:
@@ -447,39 +447,39 @@ def treetower(grid):
 
     return count
 
-# Earn one point for each water space adjacent to a ruins space. Earn 3 points for each farm space on a ruins space.
+# Earn one point for each Water space adjacent to a ruins space. Earn 3 points for each Farm space on a ruins space.
 def goldenGranary(grid):
     points = 0
     ruins = [(1,5), (2,1), (2,8), (8,1), (8,9), (9,5)]
 
     for r in range(len(grid)):
         for c in range(len(grid[0])):
-            if grid[r][c] == "water":
+            if grid[r][c] == "Water":
                 for dr, dc in [(1,0), (-1,0), (0,1), (0,-1)]:
                     nr, nc = r + dr, c + dc
                     if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]) and (nr, nc) in ruins:
                         points += 1
                         break
-            elif grid[r][c] == "farm" and (r, c) in ruins:
+            elif grid[r][c] == "Farm" and (r, c) in ruins:
                 points += 3
     return points
 
-# Earn 3 points for each cluster of farm spaces not adjacent to a water space or the edge of the map.
-# Earn 3 points for each cluster of water spaces not adjacent to a farm space or the edge of the map.
+# Earn 3 points for each cluster of Farm spaces not adjacent to a Water space or the edge of the map.
+# Earn 3 points for each cluster of Water spaces not adjacent to a Farm space or the edge of the map.
 def shoresideExpanse(grid):
     visited = set()
-    farm_clusters = []
-    water_clusters = []
+    Farm_clusters = []
+    Water_clusters = []
 
     for r in range(len(grid)):
         for c in range(len(grid[0])):
             if (r, c) not in visited:
-                if grid[r][c] == "farm":
-                    cluster = dfs(grid, r, c, visited, "farm")
-                    farm_clusters.append(cluster)
-                elif grid[r][c] == "water":
-                    cluster = dfs(grid, r, c, visited, "water")
-                    water_clusters.append(cluster)
+                if grid[r][c] == "Farm":
+                    cluster = dfs(grid, r, c, visited, "Farm")
+                    Farm_clusters.append(cluster)
+                elif grid[r][c] == "Water":
+                    cluster = dfs(grid, r, c, visited, "Water")
+                    Water_clusters.append(cluster)
 
     def is_isolated(cluster, target):
         for r, c in cluster:
@@ -492,22 +492,22 @@ def shoresideExpanse(grid):
         return True
 
     count = 0
-    for cluster in farm_clusters:
-        if is_isolated(cluster, "water"):
+    for cluster in Farm_clusters:
+        if is_isolated(cluster, "Water"):
             count += 1
-    for cluster in water_clusters:
-        if is_isolated(cluster, "farm"):
+    for cluster in Water_clusters:
+        if is_isolated(cluster, "Farm"):
             count += 1
 
     return count * 3
 
-# Earn one point for each water space adjacent to at least one farm space. Earn one point for each farm space adjacent to at least one water space.
+# Earn one point for each Water space adjacent to at least one Farm space. Earn one point for each Farm space adjacent to at least one Water space.
 def canalLake(grid):
     points = 0
     for r in range(len(grid)):
         for c in range(len(grid[0])):
-            if grid[r][c] in ["water", "farm"]:
-                target = "farm" if grid[r][c] == "water" else "water"
+            if grid[r][c] in ["Water", "Farm"]:
+                target = "Farm" if grid[r][c] == "Water" else "Water"
                 for dr, dc in [(1,0), (-1,0), (0,1), (0,-1)]:
                     nr, nc = r + dr, c + dc
                     if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]) and grid[nr][nc] == target:
@@ -515,31 +515,31 @@ def canalLake(grid):
                         break
     return points
 
-# Earn 2 points for each water space adjacent to a mountain space. Earn one point for each farm space adjacent to a mountain space.
+# Earn 2 points for each Water space adjacent to a Mountain space. Earn one point for each Farm space adjacent to a Mountain space.
 def magesValley(grid):
     points = 0
     for r in range(len(grid)):
         for c in range(len(grid[0])):
-            if grid[r][c] in ["water", "farm"]:
-                value = 2 if grid[r][c] == "water" else 1
+            if grid[r][c] in ["Water", "Farm"]:
+                value = 2 if grid[r][c] == "Water" else 1
                 for dr, dc in [(1,0), (-1,0), (0,1), (0,-1)]:
                     nr, nc = r + dr, c + dc
-                    if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]) and grid[nr][nc] == "mountain":
+                    if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]) and grid[nr][nc] == "Mountain":
                         points += value
                         break
     return points
 
-# Earn 3 points for each cluster of village spaces adjacent to three or more different terrain types
+# Earn 3 points for each cluster of Village spaces adjacent to three or more different terrain types
 def greengoldPlains(grid):
     visited = set()
     clusters = []
 
-    terrain_types = {"forest", "farm", "water", "monster", "mountain"}
+    terrain_types = {"Forest", "Farm", "Water", "Monster", "Mountain"}
 
     for r in range(len(grid)):
         for c in range(len(grid[0])):
-            if (r, c) not in visited and grid[r][c] == "village":
-                cluster = dfs(grid, r, c, visited, "village")
+            if (r, c) not in visited and grid[r][c] == "Village":
+                cluster = dfs(grid, r, c, visited, "Village")
                 clusters.append(cluster)
 
     count = 0
@@ -557,15 +557,15 @@ def greengoldPlains(grid):
 
     return count * 3
 
-# Earn 2 points for each village space in the 2nd largest cluster of village spaces
+# Earn 2 points for each Village space in the 2nd largest cluster of Village spaces
 def shieldgate(grid):
     visited = set()
     clusters = []
 
     for r in range(len(grid)):
         for c in range(len(grid[0])):
-            if (r, c) not in visited and grid[r][c] == "village":
-                cluster = dfs(grid, r, c, visited, "village")
+            if (r, c) not in visited and grid[r][c] == "Village":
+                cluster = dfs(grid, r, c, visited, "Village")
                 clusters.append(cluster)
 
     clusters.sort(key=len, reverse=True)
@@ -573,30 +573,29 @@ def shieldgate(grid):
         return len(clusters[1]) * 2
     return 0
 
-# Earn one point for each village space in the largest cluster of village spaces that is not adjacent to a mountain space
-# Earn one point for each village space in the largest cluster of village spaces that is not adjacent to a mountain space
+# Earn one point for each Village space in the largest cluster of Village spaces that is not adjacent to a Mountain space
 def greatCity(grid):
     visited = set()
     valid_clusters = []
 
     for r in range(len(grid)):
         for c in range(len(grid[0])):
-            if (r, c) not in visited and grid[r][c] == "village":
-                cluster = dfs(grid, r, c, visited, "village")
+            if (r, c) not in visited and grid[r][c] == "Village":
+                cluster = dfs(grid, r, c, visited, "Village")
 
-                # Check if any tile in cluster is adjacent to a mountain
-                adjacent_to_mountain = False
+                # Check if any tile in cluster is adjacent to a Mountain
+                adjacent_to_Mountain = False
                 for x, y in cluster:
                     for dx, dy in [(1,0), (-1,0), (0,1), (0,-1)]:
                         nx, ny = x + dx, y + dy
                         if 0 <= nx < len(grid) and 0 <= ny < len(grid[0]):
-                            if grid[nx][ny] == "mountain":
-                                adjacent_to_mountain = True
+                            if grid[nx][ny] == "Mountain":
+                                adjacent_to_Mountain = True
                                 break
-                    if adjacent_to_mountain:
+                    if adjacent_to_Mountain:
                         break
 
-                if not adjacent_to_mountain:
+                if not adjacent_to_Mountain:
                     valid_clusters.append(cluster)
 
     if not valid_clusters:
@@ -605,15 +604,15 @@ def greatCity(grid):
     largest = max(valid_clusters, key=len)
     return len(largest)
 
-# Earn 8 points for each cluster of 6 or more village spaces
+# Earn 8 points for each cluster of 6 or more Village spaces
 def wildholds(grid):
     visited = set()
     count = 0
 
     for r in range(len(grid)):
         for c in range(len(grid[0])):
-            if (r, c) not in visited and grid[r][c] == "village":
-                cluster = dfs(grid, r, c, visited, "village")
+            if (r, c) not in visited and grid[r][c] == "Village":
+                cluster = dfs(grid, r, c, visited, "Village")
                 if len(cluster) >= 6:
                     count += 1
 
@@ -622,7 +621,7 @@ def wildholds(grid):
 # Earn 6 points for each complete row or complete column of filled spaces
 def borderlands(grid):
     def is_filled(line):
-        return all(cell != 0 for cell in line)
+        return all(cell != "0" for cell in line)
 
     row_count = sum(1 for row in grid if is_filled(row))
 
@@ -646,7 +645,7 @@ def brokenRoad(grid):
             diagonal.append(grid[r][c])
             r -= 1
             c += 1
-        if all(cell != 0 for cell in diagonal):
+        if all(cell != "0" for cell in diagonal):
             count += 1
 
     return count * 3
@@ -658,11 +657,11 @@ def cauldrons(grid):
 
     for r in range(rows):
         for c in range(cols):
-            if grid[r][c] == 0:
+            if grid[r][c] == "0":
                 surrounded = True
                 for dr, dc in [(1,0), (-1,0), (0,1), (0,-1)]:
                     nr, nc = r + dr, c + dc
-                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 0:
+                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == "0":
                         surrounded = False
                         break
                 if surrounded:
@@ -674,7 +673,6 @@ def cauldrons(grid):
 def lostBarony(grid):
     rows, cols = len(grid), len(grid[0])
     max_size = 0
-    top_left = None
 
     for r in range(rows):
         for c in range(cols):
@@ -682,7 +680,7 @@ def lostBarony(grid):
                 filled = True
                 for i in range(size):
                     for j in range(size):
-                        if grid[r + i][c + j] == 0:
+                        if grid[r + i][c + j] == "0":
                             filled = False
                             break
                     if not filled:
