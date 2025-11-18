@@ -139,39 +139,27 @@ def normalize_diff(arr):
     return cropped
 
 def matches_card_shape(diff, card, player):
-    # print("Diff:\n", diff)
     placed_shape = normalize_diff(diff)
     placed_mask = (placed_shape != '0')
-    # print("Placed Shape:\n", placed_shape)
-    # print("Placed Mask:\n", placed_mask)
 
     for shape in card.shape:
         for variant in flip_and_rotate(shape):
             variant = np.array(variant)
             variant_mask = (variant != '0')
 
-            # print("Variant Shape:", variant.shape)
-            # print("Variant Mask:", variant_mask)
+            # Check if the placed shape is exactly the same size as the variant
+            if placed_shape.shape != variant.shape:
+                continue  # Skip variants that don't fit exactly
 
-            h_diff = placed_shape.shape[0] - variant.shape[0]
-            w_diff = placed_shape.shape[1] - variant.shape[1]
+            # Compare masks and terrain
+            if np.array_equal(placed_mask, variant_mask) and \
+               np.all(placed_shape[variant_mask] == variant[variant_mask]):
+                if (card.cost == 1) and (shape == card.shape[0]):
+                    player.coins += 1
+                return True
 
-            if h_diff < 0 or w_diff < 0:
-                continue  # Variant is larger than diff region
-
-            for i in range(h_diff + 1):
-                for j in range(w_diff + 1):
-                    subregion = placed_shape[i:i+variant.shape[0], j:j+variant.shape[1]]
-                    sub_mask = placed_mask[i:i+variant.shape[0], j:j+variant.shape[1]]
-
-                    # print("Subregion:", subregion)
-                    # print("Sub Mask:", sub_mask)
-
-                    if np.array_equal(sub_mask, variant_mask) and np.all(subregion[variant_mask] == variant[variant_mask]):
-                        if ((card.cost == 1) and (shape == card.shape[0])):
-                            player.coins += 1
-                        return True
     return False
+
 
 def placed_on_ruins(diff, player):
     for ruin in player.ruins_locations:
@@ -188,6 +176,8 @@ def validate_placement(prev_grid, new_grid, card, player):
 
     if not matches_card_shape(diff, card, player):
         return False, "Shape does not match card"
+    
+    print(card.to_dict())
 
     if card.ruinFlag:
         print("Ruins detected")
@@ -286,6 +276,7 @@ def select_scoring_cards():
         score_types_names.append(score.__name__)
     return score_types, score_types_names
 
+'''
 def run_season(game_session, deck, monster_deck, score_types, season_index):
     season_time = 8 - math.ceil((season_index + 1) / 2.0)
     deck.append(monster_deck[season_index])
@@ -337,3 +328,4 @@ def run_season(game_session, deck, monster_deck, score_types, season_index):
         player.score += score_types[(season_index + 1) % 4](player.current_grid)
         player.score += player.coins
         player.score -= monster_penalty(player.current_grid)
+'''
