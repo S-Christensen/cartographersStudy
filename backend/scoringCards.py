@@ -314,7 +314,7 @@ def craylund(grid):
 # Earn 7 points for each complete row or complete column of filled spaces that contains a Mountain space
 def dwarvenholds(grid):
     def is_filled(row):
-        return all((cell != "0" and cell != "ruins") for cell in row)
+        return all((cell != "0" and cell != "Ruins") for cell in row)
 
     def contains_Mountain(row):
         return "Mountain" in row
@@ -364,7 +364,7 @@ def starlitsigil(grid):
 # Earn 10 points for each complete odd-numbered column of filled spaces.
 def silos(grid):
     def is_filled(column):
-        return all((cell != "0" and cell != "ruins") for cell in column)
+        return all((cell != "0" and cell != "Ruins") for cell in column)
 
     filled_odd_column_count = 0
 
@@ -621,7 +621,7 @@ def wildholds(grid):
 # Earn 6 points for each complete row or complete column of filled spaces
 def borderlands(grid):
     def is_filled(line):
-        return all((cell != "0" and cell != "ruins") for cell in line)
+        return all((cell != "0" and cell != "Ruins") for cell in line)
 
     row_count = sum(1 for row in grid if is_filled(row))
 
@@ -645,7 +645,7 @@ def brokenRoad(grid):
             diagonal.append(grid[r][c])
             r -= 1
             c += 1
-        if all((cell != "0" and cell != "ruins") for cell in diagonal):
+        if all((cell != "0" and cell != "Ruins") for cell in diagonal):
             count += 1
 
     return count * 3
