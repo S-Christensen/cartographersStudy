@@ -495,6 +495,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Auto-start if saved grid exists
   if (localStorage.getItem("savedGrid")) {
     startGameFromSavedState();
+    return;
   }
     // Hide controls initially
   if (drawBtn) drawBtn.style.display = 'none';
