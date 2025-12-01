@@ -364,3 +364,28 @@ h1 {
   border-radius: 5px;
   cursor: pointer;
 }
+
+#joinContainer {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+#roomCodeInput {
+  padding: 8px 12px;
+  border: 1px solid #c9a94d;
+  border-radius: 6px;
+  background: #2e2a24;
+  color: #e0d8c3;
+  font-family: 'Cinzel', serif;
+}
+
+#joinBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#joinBtn:not(:disabled):hover {
+  box-shadow: 0 0 8px #c9a94d;
+  transform: translateY(-2px) scale(1.05);
+}

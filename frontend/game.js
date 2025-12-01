@@ -439,18 +439,20 @@ canvas.addEventListener("click", () => {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-  const startBtn = document.getElementById('startBtn');
   const drawBtn = document.getElementById('drawCardBtn');
   const submitBtn = document.getElementById('submitBtn');
   const undoBtn = document.getElementById('undoBtn');
+  const roomCodeInput = document.getElementById('roomCodeInput');
+  const joinBtn = document.getElementById('joinBtn');
 
   function showGameControls() {
     if (drawBtn) drawBtn.style.display = '';
     if (submitBtn) submitBtn.style.display = '';
     if (undoBtn) undoBtn.style.display = '';
-    if (startBtn) startBtn.style.display = 'none';
+    if (joinBtn) joinBtn.style.display = 'none';
+    if (roomCodeInput) roomCodeInput.style.display = 'none';
   }
-
+  
   function restoreSavedGrid() {
     const saved = localStorage.getItem("savedGrid");
     if (saved) {
@@ -514,6 +516,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (submitBtn) submitBtn.style.display = 'none';
   if (undoBtn) undoBtn.style.display = 'none';
 
+  /*
   // Manual start
   if (startBtn) {
     startBtn.addEventListener('click', function () {
@@ -523,6 +526,25 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById("scoringContainer").style.display = "";
     });
   }
+  */
+
+  roomCodeInput.addEventListener('input', function () {
+    joinBtn.disabled = roomCodeInput.value.trim() === '';
+  });
+
+  // Join button click
+  joinBtn.addEventListener('click', function () {
+    const code = roomCodeInput.value.trim();
+    if (!code) return;
+
+    console.log("Joining game with room code:", code);
+    // TODO: Replace with your backend join logic
+    showGameControls();
+    setGameStarted(true);
+    fetchSession();
+    document.getElementById("scoringContainer").style.display = "";
+  });
+
 
   // Button listeners
   if (drawBtn) drawBtn.addEventListener('click', drawCard);
