@@ -80,8 +80,8 @@ def can_place_on_any_ruins(shapes, player):
         all_shapes.append(gameStart.flip_and_rotate(shape))
     for ruin_r, ruin_c in player.ruins_locations:
         for oriented in all_shapes:
-            for i in range(oriented.shape[0]):
-                for j in range(oriented.shape[1]):
+            for i in range(len(oriented)):
+                for j in range(len(oriented[0])):
                     if oriented[i][j] == 1:
                         anchor_r = ruin_r - i
                         anchor_c = ruin_c - j
