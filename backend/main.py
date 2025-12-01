@@ -21,7 +21,7 @@ app.add_middleware(
 game_session = gameStart.GameSession("session_001")
 season_initialized = False
 
-sample_grid = [[0 for _ in range(11)] for _ in range(11)]
+sample_grid = [["0" for _ in range(11)] for _ in range(11)]
 sample_grid[1][3] = "Mountain"
 sample_grid[2][8] = "Mountain"
 sample_grid[5][5] = "Mountain"
