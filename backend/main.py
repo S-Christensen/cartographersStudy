@@ -167,7 +167,7 @@ async def draw_card(Authorization: Optional[str] = Header(None)):
             if card.type == "Standard":
                 card.ruinFlag = True
                 game_session.ruins_required = False
-                player.ruins_fallback = not (any(can_place_on_any_ruins(card.shape, player)))
+                player.ruins_fallback = not can_place_on_any_ruins(card.shape, player)
 
                 if player.ruins_fallback or (len(player.ruins_locations) == 0):
                     card = gameStart.terrainCard(card.name, card.cost, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
