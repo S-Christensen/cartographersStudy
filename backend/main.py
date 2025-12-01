@@ -75,25 +75,34 @@ def get_session():
     }
 
 def can_place_on_any_ruins(shapes, player):
-    all_shapes = []
+    all_orientations = []
     for shape in shapes:
-        all_shapes.append(gameStart.flip_and_rotate(shape))
+        for oriented in gameStart.flip_and_rotate(shape):
+            all_orientations.append(oriented)
+
     for ruin_r, ruin_c in player.ruins_locations:
-        for oriented in all_shapes:
-            for i in range(len(oriented)):
-                for j in range(len(oriented[0])):
-                    if oriented[i][j] == 1:
+        # Skip if ruin already filled
+        if player.current_grid[ruin_r][ruin_c] != "Ruins":
+            continue
+
+        for oriented in all_orientations:
+            rows, cols = oriented.shape
+            for i in range(rows):
+                for j in range(cols):
+                    # Ensure scalar comparison, not array slice
+                    if str(oriented[i][j]) != "0":
                         anchor_r = ruin_r - i
                         anchor_c = ruin_c - j
                         if check_valid(player.current_grid, oriented, anchor_r, anchor_c):
                             return True
     return False
 
+
 def check_valid(board, shape, start_r, start_c):
     rows, cols = len(board), len(board[0])
-    for i in range(len(shape)):
-        for j in range(len(shape[0])):
-            if shape[i][j] == 1:
+    for i in range(shape.shape[0]):
+        for j in range(shape.shape[1]):
+            if str(shape[i][j]) != "0":
                 r, c = start_r + i, start_c + j
                 if r < 0 or r >= rows or c < 0 or c >= cols:
                     return False
