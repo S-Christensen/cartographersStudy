@@ -176,9 +176,7 @@ def validate_placement(prev_grid, new_grid, card, player):
     
     print(card.to_dict())
 
-    if card.ruinFlag:
-        print("Ruins detected")
-        if not placed_on_ruins(diff, player):
+    if card.ruinFlag and not placed_on_ruins(diff, player):
             return False, "Ruins card must be placed on a ruins tile"
 
     return True, "Valid placement"
