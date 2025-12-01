@@ -199,6 +199,7 @@ let ruinsFlag = false;
 let lastRuin = "";
 export async function drawCard() {
   try {
+    const playerToken = localStorage.getItem("playerToken"); // secure backend-issued token
     // Check current session state
     const sessionRes = await fetch("https://cartographersstudy.onrender.com/api/session");
     const session = await sessionRes.json();
