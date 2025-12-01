@@ -75,12 +75,17 @@ def get_session():
     }
 
 def can_place_on_any_ruins(shapes, player):
+    #SOMETHING IS BROKEN HERE
     all_orientations = []
     for shape in shapes:
         for oriented in gameStart.flip_and_rotate(shape):
             all_orientations.append(oriented)
+    print(all_orientations)
 
     for ruin_r, ruin_c in player.ruins_locations:
+        print("Ruin Coords:")
+        print(ruin_r)
+        print(ruin_c)
         # Skip if ruin already filled
         if player.current_grid[ruin_r][ruin_c] != "Ruins":
             continue
