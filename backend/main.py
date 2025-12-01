@@ -90,7 +90,7 @@ def can_place_on_any_ruins(shapes, player):
             for i in range(rows):
                 for j in range(cols):
                     # Ensure scalar comparison, not array slice
-                    if str(oriented[i][j]) != "0":
+                    if str(oriented[i][j]) != 0:
                         anchor_r = ruin_r - i
                         anchor_c = ruin_c - j
                         if check_valid(player.current_grid, oriented, anchor_r, anchor_c):
@@ -102,7 +102,7 @@ def check_valid(board, shape, start_r, start_c):
     rows, cols = len(board), len(board[0])
     for i in range(shape.shape[0]):
         for j in range(shape.shape[1]):
-            if str(shape[i][j]) != "0":
+            if str(shape[i][j]) != 0:
                 r, c = start_r + i, start_c + j
                 if r < 0 or r >= rows or c < 0 or c >= cols:
                     return False
