@@ -12,10 +12,8 @@ class Player:
         self.current_grid = sample_grid
         self.score = 0
         self.coins = 0
-        self.flags = {
-            "placed_this_turn": False,
-            "used_coin_bonus": False,
-        }
+        self.placed = False
+        self.ruins_fallback = False
         self.mountain_locations = [(1, 3), (2, 8), (5, 5), (8, 2), (9, 7)]
         self.ruins_locations = [(1, 5), (2, 1), (2, 9), (8, 1), (8, 9), (9, 5)]
 
@@ -98,8 +96,6 @@ def place_piece(card, grid, scoretypes, strategy):
                 grid[x+i][y+j] = best_shape[i][j]
         print(f"Placing {card.name} at {best_position}")
 '''
-# TODO drag into the grid and rotate/flip while dragging using keybinds
-# q = left rotate, e = right rotate, f = flip
 
 def get_placement_diff(prev_grid, new_grid):
     

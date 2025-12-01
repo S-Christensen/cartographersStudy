@@ -74,9 +74,52 @@ def get_session():
         "currentCard": game_session.current_card.to_dict() if hasattr(game_session, "current_card") else None
     }
 
+def can_place_on_any_ruins(shapes, player):
+    all_shapes = []
+    for shape in shapes:
+        all_shapes.append(gameStart.flip_and_rotate(shapes))
+    for ruin_r, ruin_c in player.ruins_locations:
+        if player.current_grid[ruin_r][ruin_c] != "ruins":
+            continue  # skip already filled ruins
+
+        for oriented in all_shapes:
+            for i in range(oriented.shape[0]):
+                for j in range(oriented.shape[1]):
+                    if oriented[i][j] == 1:
+                        anchor_r = ruin_r - i
+                        anchor_c = ruin_c - j
+                        if check_valid(layer.current_grid, oriented, anchor_r, anchor_c):
+                            return True
+    return False
+
+def check_valid(board, shape, start_r, start_c):
+    rows, cols = len(board), len(board[0])
+    for i in range(shape.shape[0]):
+        for j in range(shape.shape[1]):
+            if shape[i][j] == 1:
+                r, c = start_r + i, start_c + j
+                if r < 0 or r >= rows or c < 0 or c >= cols:
+                    return False
+                if board[r][c] not in ("0", "Ruins"):
+                    return False
+    return True
+
 @app.post("/api/draw-card")
-async def draw_card():
+async def draw_card(Authorization: Optional[str] = Header(None)):
     global game_session
+    if not Authorization or not Authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or invalid token")
+
+    token = Authorization.split(" ")[1]
+    try:
+        decoded = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        player_id = decoded["player_id"]
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=403, detail="Invalid token")
+    
+    player = game_session.players.get(player_id)
+    if player is None:
+        raise HTTPException(status_code=404, detail="Player not found")
     try:
         # Initialize game session if needed
         if not hasattr(game_session, "season_initialized") or not game_session.season_initialized:
@@ -105,7 +148,8 @@ async def draw_card():
         # Draw card
         card = game_session.deck[game_session.deck_index]
         game_session.deck_index += 1
-            
+        player.ruins_fallback = False
+
         # Handle ruins logic
         if card.type == "Ruins":
             game_session.ruins_required = True
@@ -117,6 +161,11 @@ async def draw_card():
             if card.type == "Standard":
                 card.ruinFlag = True
                 game_session.ruins_required = False
+                player.ruins_fallback = not (any(can_place_on_any_ruins(card.shape, player)))
+
+                if player.ruins_fallback or (len(player.ruins_locations) == 0):
+                    card = gameStart.terrainCard(card.name, card.cost, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
+
 
         print(f"Drew card: {card.name}, Cost: {card.cost}, Remaining Season Time: {game_session.season_time}")
         print(f"Deck: {[c.name for c in game_session.deck[game_session.season_index:]]}")
@@ -242,11 +291,14 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
     player = game_session.players.get(player_id)
     if player is None:
         raise HTTPException(status_code=404, detail="Player not found")
-
+    card = game_session.current_card
+    if player.ruins_fallback:
+        card = gameStart.terrainCard(card.name, card.cost, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
+    
     is_valid, message = gameStart.validate_placement(
         player.current_grid,
         payload.new_grid,
-        game_session.current_card,
+        card,
         player
     )
 

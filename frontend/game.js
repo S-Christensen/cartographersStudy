@@ -221,8 +221,12 @@ export async function drawCard() {
 
 
     const response = await fetch('https://cartographersstudy.onrender.com/api/draw-card', {
-      method: 'POST'
-    });
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${playerToken}`
+        }
+      });
     let currentCard = await response.json();
 
     // Refresh seasonRemaining
@@ -238,7 +242,11 @@ export async function drawCard() {
       lastRuin = currentCard.id;
       // Immediately draw the next card
       const nextResponse = await fetch('https://cartographersstudy.onrender.com/api/draw-card', {
-        method: 'POST'
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${playerToken}`
+        }
       });
       currentCard = await nextResponse.json();
 
@@ -251,8 +259,12 @@ export async function drawCard() {
         lastRuin = currentCard.id;
         // Immediately draw the next card
         const nextResponse = await fetch('https://cartographersstudy.onrender.com/api/draw-card', {
-          method: 'POST'
-        });
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${playerToken}`
+        }
+      });
         currentCard = await nextResponse.json();
         if (currentCard.error) {
           alert(currentCard.error);
