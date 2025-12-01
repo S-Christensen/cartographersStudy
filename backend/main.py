@@ -91,8 +91,8 @@ def can_place_on_any_ruins(shapes, player):
 
 def check_valid(board, shape, start_r, start_c):
     rows, cols = len(board), len(board[0])
-    for i in range(shape.shape[0]):
-        for j in range(shape.shape[1]):
+    for i in range(len(shape)):
+        for j in range(len(shape[0])):
             if shape[i][j] == 1:
                 r, c = start_r + i, start_c + j
                 if r < 0 or r >= rows or c < 0 or c >= cols:
