@@ -68,13 +68,13 @@ joinBtn.addEventListener('click', async function () {
 
   try {
     console.log("Joining game with room code:", code);
-    ```
+    /*
     const response = await fetch('https://cartographersstudy.onrender.com/api/reset-game', {
       method: 'POST'
     });
     const result = await response.json();
     console.log("Game reset:", result);
-    ```
+    */
 
     // Create player
     const valid = await fetch('https://cartographersstudy.onrender.com/api/create-player', {
