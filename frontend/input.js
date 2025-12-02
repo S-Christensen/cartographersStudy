@@ -5,14 +5,17 @@ import {
   cellSize,
   drawCard,
   drawGrid,
+  fetchSession,
   gridData,
   hoverX,
   hoverY,
   placementLocked,
   setActiveShape,
+  setGameStarted,
   setHover,
   setLastPlacedCells,
   setPlacementLocked,
+  showGameControls,
   submitMove,
   terrain
 } from './game.js';
@@ -88,7 +91,7 @@ joinBtn.addEventListener('click', async function () {
 
     showGameControls();
     setGameStarted(true);
-    fetchSession(code);
+    fetchSession();
     document.getElementById("scoringContainer").style.display = "";
 
     drawCard();
