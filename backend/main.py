@@ -7,6 +7,7 @@ import gameStart
 import math
 import random
 import terrainCard
+import asyncio
 
 app = FastAPI()
 
@@ -340,6 +341,16 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
         if gameStart.check_orthogonal_neighbors(player.current_grid, y, x):
             player.coins += 1
             player.mountain_locations.remove(mountain)
+    
+    session.submissions += 1
+    timeElapsed = 0
+    while session.submissions != len(session.players):
+        await asyncio.sleep(1)
+        timeElapsed += 1
+        if timeElapsed >= 300:
+            #TODO this
+            print("close room")
+    session.submissions = 0
 
     return {"success": True, "message": "Move validated"}
 

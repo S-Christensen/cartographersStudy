@@ -195,6 +195,7 @@ export async function submitMove() {
       } else {
         updateCoinTracker(result2.coins);
       }
+      drawCard();
     }
   } catch (err) {
     console.error("Validation failed:", err);
@@ -457,7 +458,6 @@ canvas.addEventListener("click", () => {
 });
 
 export function showGameControls() {
-    if (drawBtn) drawBtn.style.display = '';
     if (submitBtn) submitBtn.style.display = '';
     if (undoBtn) undoBtn.style.display = '';
     if (joinBtn) joinBtn.style.display = 'none';
@@ -465,7 +465,6 @@ export function showGameControls() {
   }
 
 document.addEventListener('DOMContentLoaded', function () {
-  const drawBtn = document.getElementById('drawCardBtn');
   const submitBtn = document.getElementById('submitBtn');
   const undoBtn = document.getElementById('undoBtn');
   const roomCodeInput = document.getElementById('roomCodeInput');
@@ -530,7 +529,6 @@ document.addEventListener('DOMContentLoaded', function () {
     startGameFromSavedState();
   }
     // Hide controls initially
-  if (drawBtn) drawBtn.style.display = 'none';
   if (submitBtn) submitBtn.style.display = 'none';
   if (undoBtn) undoBtn.style.display = 'none';
 
@@ -547,7 +545,6 @@ document.addEventListener('DOMContentLoaded', function () {
   */
 
   // Button listeners
-  if (drawBtn) drawBtn.addEventListener('click', drawCard);
   if (undoBtn) {
     undoBtn.addEventListener('click', function () {
       undoLastPlacement();
