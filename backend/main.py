@@ -259,6 +259,7 @@ async def end_season(payload: RoomCodePayload):
     season_result = start_new_season(code)
     if "error" in season_result:
         # This means game over
+        openRooms.pop(code)
         return {
             "season": openRooms[code].season_index,
             "breakdown": breakdown,
