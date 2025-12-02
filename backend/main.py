@@ -345,12 +345,9 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
 
 import uuid
 SECRET_KEY = "Life from the Loam 1G | Sorcery | Return up to three target land cards from your graveyard to your hand. Dredge 3"
-class CreatePlayerPayload(BaseModel):
-    code: str
-
 @app.post("/api/create-player")
-async def create_player(payload: CreatePlayerPayload):
-    code = payload.code.strip()
+async def create_player(payload: RoomCodePayload):
+    code = payload.roomCode.strip()
     if not code:
         raise HTTPException(status_code=400, detail="Room code required")
 
