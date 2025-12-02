@@ -456,6 +456,14 @@ canvas.addEventListener("click", () => {
   }
 });
 
+export function showGameControls() {
+    if (drawBtn) drawBtn.style.display = '';
+    if (submitBtn) submitBtn.style.display = '';
+    if (undoBtn) undoBtn.style.display = '';
+    if (joinBtn) joinBtn.style.display = 'none';
+    if (roomCodeInput) roomCodeInput.style.display = 'none';
+  }
+
 document.addEventListener('DOMContentLoaded', function () {
   const drawBtn = document.getElementById('drawCardBtn');
   const submitBtn = document.getElementById('submitBtn');
@@ -463,14 +471,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const roomCodeInput = document.getElementById('roomCodeInput');
   const joinBtn = document.getElementById('joinBtn');
 
-  function showGameControls() {
-    if (drawBtn) drawBtn.style.display = '';
-    if (submitBtn) submitBtn.style.display = '';
-    if (undoBtn) undoBtn.style.display = '';
-    if (joinBtn) joinBtn.style.display = 'none';
-    if (roomCodeInput) roomCodeInput.style.display = 'none';
-  }
-  
   function restoreSavedGrid() {
     const saved = localStorage.getItem("savedGrid");
     if (saved) {
