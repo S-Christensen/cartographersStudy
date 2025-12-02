@@ -272,12 +272,13 @@ async def end_season(payload: RoomCodePayload):
     }
     
 @app.post("/api/coin-check")
-async def coin_check(Authorization: Optional[str] = Header(None)):
+async def coin_check(payload: RoomCodePayload, Authorization: Optional[str] = Header(None)):
     if not Authorization or not Authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing or invalid token")
 
     token = Authorization.split(" ")[1]
     try:
+        code = payload.roomCode.strip()
         decoded = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
         player_id = decoded["player_id"]
     except jwt.PyJWTError:
