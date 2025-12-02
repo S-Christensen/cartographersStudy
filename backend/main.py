@@ -70,7 +70,7 @@ def reset_game(code):
     return {"status": "reset", "message": f"Game session {code} initialized"}
 
 
-@app.get("/api/session")
+@app.post("/api/session")
 def get_session(payload: RoomCodePayload):
     code = payload.roomCode.strip()
     return {
