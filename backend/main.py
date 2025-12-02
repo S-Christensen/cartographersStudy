@@ -46,9 +46,7 @@ def get_allowed_terrains(card):
 class RoomCodePayload(BaseModel):
     roomCode: str
 
-@app.post("/api/reset-game")
-def reset_game(payload: RoomCodePayload):
-    code = payload.roomCode.strip()
+def reset_game(code):
     if not code:
         raise HTTPException(status_code=400, detail="Room code required")
 
@@ -257,7 +255,7 @@ async def end_season(payload: RoomCodePayload):
         breakdown["total"] = player.score
 
     # Advance the game to the next season
-    season_result = start_new_season()
+    season_result = start_new_season(code)
     if "error" in season_result:
         # This means game over
         return {
