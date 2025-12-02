@@ -87,7 +87,7 @@ joinBtn.addEventListener('click', async function () {
     });
     const { playerToken } = await valid.json();
     localStorage.setItem("playerToken", playerToken);
-    localStorage.setItem("roomCode", JSON.stringify(code));
+    localStorage.setItem("roomCode", code);
 
     showGameControls();
     setGameStarted(true);
