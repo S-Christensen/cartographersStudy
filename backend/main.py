@@ -18,7 +18,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-game_session = gameStart.GameSession("session_001")
+openRooms = {}
 season_initialized = False
 
 sample_grid = [["0" for _ in range(11)] for _ in range(11)]
@@ -43,35 +43,44 @@ def get_allowed_terrains(card):
                     terrains.add(cell)
     return list(terrains)
 
-@app.post("/api/reset-game")
-def reset_game():
-    global game_session
+class RoomCodePayload(BaseModel):
+    roomCode: str
 
-    game_session = gameStart.initialize_session()
+@app.post("/api/reset-game")
+def reset_game(payload: RoomCodePayload):
+    code = payload.roomCode.strip()
+    if not code:
+        raise HTTPException(status_code=400, detail="Room code required")
+
+    openRooms[code] = gameStart.initialize_session()
     deck, monster_deck = gameStart.build_decks()
     score_types, score_types_names = gameStart.select_scoring_cards()
 
     deck.append(monster_deck[0])
     random.shuffle(deck)
 
-    game_session.deck = deck
-    game_session.monster_deck = monster_deck
-    game_session.score_types = score_types
-    game_session.score_types_names = score_types_names
-    game_session.season_index = 0
-    game_session.season_time = 8
-    game_session.season_initialized = True
-    game_session.current_card = deck[0]
-    return {"status": "reset", "message": "Game session initialized"}
+    session = openRooms[code]
+    session.deck = deck
+    session.monster_deck = monster_deck
+    session.score_types = score_types
+    session.score_types_names = score_types_names
+    session.season_index = 0
+    session.season_time = 8
+    session.season_initialized = True
+    session.current_card = deck[0]
+
+    return {"status": "reset", "message": f"Game session {code} initialized"}
+
 
 @app.get("/api/session")
-def get_session():
+def get_session(payload: RoomCodePayload):
+    code = payload.roomCode.strip()
     return {
-        "scoreTypes": game_session.score_types,
-        "scoreTypesNames": game_session.score_types_names,
-        "seasonTime": game_session.season_time,
-        "currentSeason": game_session.season_index,
-        "currentCard": game_session.current_card.to_dict() if hasattr(game_session, "current_card") else None
+        "scoreTypes": openRooms[code].score_types,
+        "scoreTypesNames": openRooms[code].score_types_names,
+        "seasonTime": openRooms[code].season_time,
+        "currentSeason": openRooms[code].season_index,
+        "currentCard": openRooms[code].current_card.to_dict() if hasattr(openRooms[code], "current_card") else None
     }
 
 def can_place_on_any_ruins(shapes, player):
@@ -116,8 +125,8 @@ def check_valid(board, shape, start_r, start_c):
     return True
 
 @app.post("/api/draw-card")
-async def draw_card(Authorization: Optional[str] = Header(None)):
-    global game_session
+async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Header(None)):
+    code = payload.roomCode.strip()
     if not Authorization or not Authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing or invalid token")
 
@@ -128,93 +137,92 @@ async def draw_card(Authorization: Optional[str] = Header(None)):
     except jwt.PyJWTError:
         raise HTTPException(status_code=403, detail="Invalid token")
     
-    player = game_session.players.get(player_id)
+    player = openRooms[code].players.get(player_id)
     if player is None:
         raise HTTPException(status_code=404, detail="Player not found")
     try:
         # Initialize game session if needed
-        if not hasattr(game_session, "season_initialized") or not game_session.season_initialized:
-            game_session = gameStart.initialize_session()
+        if not hasattr(openRooms[code], "season_initialized") or not openRooms[code].season_initialized:
+            openRooms[code] = gameStart.initialize_session()
             deck, monster_deck = gameStart.build_decks()
             score_types = gameStart.select_scoring_cards()
 
             deck.append(monster_deck[0])
             random.shuffle(deck)
 
-            game_session.deck = deck
-            game_session.monster_deck = monster_deck
-            game_session.score_types = score_types
-            game_session.season_index = 0
-            game_session.deck_index = 0
-            game_session.season_time = 8 - math.ceil((game_session.season_index + 1) / 2.0)
-            game_session.season_initialized = True
-            game_session.current_card = deck[0]
+            openRooms[code].deck = deck
+            openRooms[code].monster_deck = monster_deck
+            openRooms[code].score_types = score_types
+            openRooms[code].season_index = 0
+            openRooms[code].deck_index = 0
+            openRooms[code].season_time = 8 - math.ceil((openRooms[code].season_index + 1) / 2.0)
+            openRooms[code].season_initialized = True
+            openRooms[code].current_card = deck[0]
 
         # Check if season is over or deck is exhausted
-        if game_session.season_time <= 0 or game_session.deck_index >= len(game_session.deck):
-            if game_session.season_index >=3:
+        if openRooms[code].season_time <= 0 or openRooms[code].deck_index >= len(openRooms[code].deck):
+            if openRooms[code].season_index >=3:
                 # end game
                 return {"error": "Game Over"}
 
         # Draw card
-        card = game_session.deck[game_session.deck_index]
-        game_session.deck_index += 1
+        card = openRooms[code].deck[openRooms[code].deck_index]
+        openRooms[code].deck_index += 1
         player.ruins_fallback = False
 
         # Handle ruins logic
         if card.type == "Ruins":
-            game_session.ruins_required = True
+            openRooms[code].ruins_required = True
 
-        game_session.season_time -= card.cost
-        game_session.current_card = card
+        openRooms[code].season_time -= card.cost
+        openRooms[code].current_card = card
 
-        if game_session.ruins_required:
+        if openRooms[code].ruins_required:
             if card.type == "Standard":
                 card.ruinFlag = True
-                game_session.ruins_required = False
+                openRooms[code].ruins_required = False
                 player.ruins_fallback = not can_place_on_any_ruins(card.shape, player)
 
                 if player.ruins_fallback or (len(player.ruins_locations) == 0):
                     card = gameStart.terrainCard(card.name, card.cost, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
 
 
-        print(f"Drew card: {card.name}, Cost: {card.cost}, Remaining Season Time: {game_session.season_time}")
-        print(f"Deck: {[c.name for c in game_session.deck[game_session.season_index:]]}")
+        print(f"Drew card: {card.name}, Cost: {card.cost}, Remaining Season Time: {openRooms[code].season_time}")
+        print(f"Deck: {[c.name for c in openRooms[code].deck[openRooms[code].season_index:]]}")
 
         return card.to_dict()
 
     except Exception as e:
         return {"error": str(e)}  
     
-def start_new_season():
-    global game_session
-
-    game_session.season_index += 1
-    if game_session.season_index >= 4:
+def start_new_season(code):
+    openRooms[code].season_index += 1
+    if openRooms[code].season_index >= 4:
         return {"error": "Game Over"}
-    game_session.deck, dummy = gameStart.build_decks()
-    game_session.deck.append(game_session.monster_deck[game_session.season_index])
-    random.shuffle(game_session.deck)
+    openRooms[code].deck, dummy = gameStart.build_decks()
+    openRooms[code].deck.append(openRooms[code].monster_deck[openRooms[code].season_index])
+    random.shuffle(openRooms[code].deck)
 
-    game_session.deck_index = 0
+    openRooms[code].deck_index = 0
     season_times = [8, 8, 7, 6]
-    game_session.season_time = season_times[game_session.season_index]
+    openRooms[code].season_time = season_times[openRooms[code].season_index]
 
-    return {"status": "new season started", "season": game_session.season_index}
+    return {"status": "new season started", "season": openRooms[code].season_index}
 
 @app.post("/api/end-season")
-async def end_season():
-    global game_session
+async def end_season(payload: RoomCodePayload):
+    code = payload.roomCode.strip()
+
 
     # Determine which two scoring cards apply this season
-    score_func_1 = game_session.score_types[game_session.season_index % 4]
-    score_func_2 = game_session.score_types[(game_session.season_index + 1) % 4]
+    score_func_1 = openRooms[code].score_types[openRooms[code].season_index % 4]
+    score_func_2 = openRooms[code].score_types[(openRooms[code].season_index + 1) % 4]
     print(score_func_1)
     print(score_func_2)
 
     score_letters = ["A", "B", "C", "D"]
-    letter1 = score_letters[game_session.season_index % 4]
-    letter2 = score_letters[(game_session.season_index + 1) % 4]
+    letter1 = score_letters[openRooms[code].season_index % 4]
+    letter2 = score_letters[(openRooms[code].season_index + 1) % 4]
 
     breakdown = {
         letter1: 0,
@@ -225,8 +233,8 @@ async def end_season():
     }
 
     # Score each player (or just 1 if single-player)
-    print(game_session.players)
-    for player in game_session.players.values():
+    print(openRooms[code].players)
+    for player in openRooms[code].players.values():
         grid = player.current_grid
 
         score1 = score_func_1(grid)
@@ -253,14 +261,14 @@ async def end_season():
     if "error" in season_result:
         # This means game over
         return {
-            "season": game_session.season_index,
+            "season": openRooms[code].season_index,
             "breakdown": breakdown,
             "gameOver": True
         }
 
     # Normal season transition
     return {
-        "season": game_session.season_index,
+        "season": openRooms[code].season_index,
         "breakdown": breakdown,
         "gameOver": False
     }
@@ -277,13 +285,13 @@ async def coin_check(Authorization: Optional[str] = Header(None)):
     except jwt.PyJWTError:
         raise HTTPException(status_code=403, detail="Invalid token")
     
-    player = game_session.players.get(player_id)
+    player = openRooms[code].players.get(player_id)
     if player is None:
         raise HTTPException(status_code=404, detail="Player not found")
 
     return {"coins": player.coins}
 
-class ValidationPayload(BaseModel):
+class ValidationPayload(RoomCodePayload):
     new_grid: List[List[str]]
     
 @app.post("/api/validate")
@@ -297,12 +305,21 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
         player_id = decoded["player_id"]
     except jwt.PyJWTError:
         raise HTTPException(status_code=403, detail="Invalid token")
+    
+    code = payload.roomCode.strip()
+
+    # decode token, find player, etc.
+    session = openRooms.get(code)
+    if not session:
+        raise HTTPException(status_code=404, detail="Room not found")
+
+    player = session.players.get(player_id)
+    if not player:
+        raise HTTPException(status_code=404, detail="Player not found")
+
 
     # Retrieve the Player object
-    player = game_session.players.get(player_id)
-    if player is None:
-        raise HTTPException(status_code=404, detail="Player not found")
-    card = game_session.current_card
+    card = session.current_card
     if player.ruins_fallback:
         card = gameStart.terrainCard(card.name, card.cost, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
     
@@ -330,10 +347,22 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
 
 import uuid
 SECRET_KEY = "Life from the Loam 1G | Sorcery | Return up to three target land cards from your graveyard to your hand. Dredge 3"
+class CreatePlayerPayload(BaseModel):
+    code: str
+
 @app.post("/api/create-player")
-def create_player():
+async def create_player(payload: CreatePlayerPayload):
+    code = payload.code.strip()
+    if not code:
+        raise HTTPException(status_code=400, detail="Room code required")
+
     player_id = str(uuid.uuid4())
-    token = jwt.encode({"player_id": player_id}, SECRET_KEY, algorithm="HS256")
-    game_session.players[player_id] = gameStart.Player(player_id, sample_grid)
+    token = jwt.encode({"player_id": player_id, "room_code": code}, SECRET_KEY, algorithm="HS256")
+
+    if code not in openRooms:
+        openRooms[code] = gameStart.GameSession(code)
+        reset_game(code)
+    openRooms[code].players[player_id] = gameStart.Player(player_id, sample_grid)
 
     return {"playerToken": token}
+

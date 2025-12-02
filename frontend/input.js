@@ -55,21 +55,44 @@ document.getElementById("reset-button").addEventListener("click", () => {
   localStorage.clear();
 });
 
-startBtn.addEventListener('click', async function () {
+joinBtn.addEventListener('click', async function () {
+  const code = roomCodeInput.value.trim();
+  if (!code) {
+    alert("Please enter a room code first!");
+    return;
+  }
+
   try {
+    console.log("Joining game with room code:", code);
+
+    // Reset game
+    ```
     const response = await fetch('https://cartographersstudy.onrender.com/api/reset-game', {
       method: 'POST'
     });
     const result = await response.json();
     console.log("Game reset:", result);
-    const valid = await fetch('https://cartographersstudy.onrender.com/api/create-player', { method: "POST" });
+    ```
+
+    // Create player
+    const valid = await fetch('https://cartographersstudy.onrender.com/api/create-player', {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({code})
+    });
     const { playerToken } = await valid.json();
     localStorage.setItem("playerToken", playerToken);
+    localStorage.setItem("roomCode", JSON.stringify(code));
+
+    showGameControls();
+    setGameStarted(true);
+    fetchSession(code);
+    document.getElementById("scoringContainer").style.display = "";
 
     drawCard();
   } catch (err) {
-    console.error("Failed to reset game:", err);
-    alert("Error resetting game: " + err.message);
+    console.error("Failed to join game:", err);
+    alert("Error joining game: " + err.message);
   }
 });
 

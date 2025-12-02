@@ -99,7 +99,12 @@ export function updateSeasonScores(endData) {
 
 export async function fetchSession() {
   try {
-    const response = await fetch('https://cartographersstudy.onrender.com/api/session');
+    const code = localStorage.getItem("roomCode");
+    const response = await fetch('https://cartographersstudy.onrender.com/api/session', {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({code})
+    });
     const data = await response.json();
 
     setScoreTypes(data.scoreTypes);
@@ -147,10 +152,12 @@ export function drawGrid() {
 
 export async function submitMove() {
   fetchSession();
-  const playerToken = localStorage.getItem("playerToken"); // secure backend-issued token
+  const playerToken = localStorage.getItem("playerToken");
+  const code = localStorage.getItem("roomCode");
 
   console.log("Current Card on submit:", currentCard);
   const payload = {
+    roomCode: code,
     new_grid: gridData.map(row => row.map(cell => String(cell))),
   };
   console.log("Submitting payload:", payload);
@@ -178,7 +185,8 @@ export async function submitMove() {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${playerToken}`
-        }
+        },
+        body: JSON.stringify({code})
       });
       const result2 = await response2.json();
       if (!response2.ok) {
@@ -199,16 +207,23 @@ let ruinsFlag = false;
 let lastRuin = "";
 export async function drawCard() {
   try {
-    const playerToken = localStorage.getItem("playerToken"); // secure backend-issued token
+    const playerToken = localStorage.getItem("playerToken");
+    const code = localStorage.getItem("roomCode");
     // Check current session state
-    const sessionRes = await fetch("https://cartographersstudy.onrender.com/api/session");
+    const sessionRes = await fetch("https://cartographersstudy.onrender.com/api/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({code})
+    });
     const session = await sessionRes.json();
 
     if (session.seasonTime <= 0) {
       // Trigger backend to start next season
       const endRes = await fetch("https://cartographersstudy.onrender.com/api/end-season", {
-        method: "POST"
-      });
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({code})
+    });
       const endData = await endRes.json();
 
       if (endData.error) {
@@ -226,7 +241,8 @@ export async function drawCard() {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${playerToken}`
-        }
+        },
+        body: JSON.stringify({code})
       });
     let currentCard = await response.json();
 
@@ -247,7 +263,8 @@ export async function drawCard() {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${playerToken}`
-        }
+        },
+        body: JSON.stringify({code})
       });
       currentCard = await nextResponse.json();
 
@@ -264,7 +281,8 @@ export async function drawCard() {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${playerToken}`
-        }
+        },
+        body: JSON.stringify({code})
       });
         currentCard = await nextResponse.json();
         if (currentCard.error) {
@@ -527,24 +545,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
   */
-
-  roomCodeInput.addEventListener('input', function () {
-    joinBtn.disabled = roomCodeInput.value.trim() === '';
-  });
-
-  // Join button click
-  joinBtn.addEventListener('click', function () {
-    const code = roomCodeInput.value.trim();
-    if (!code) return;
-
-    console.log("Joining game with room code:", code);
-    // TODO: Replace with your backend join logic
-    showGameControls();
-    setGameStarted(true);
-    fetchSession();
-    document.getElementById("scoringContainer").style.display = "";
-  });
-
 
   // Button listeners
   if (drawBtn) drawBtn.addEventListener('click', drawCard);
