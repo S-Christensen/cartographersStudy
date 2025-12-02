@@ -83,7 +83,7 @@ joinBtn.addEventListener('click', async function () {
     const valid = await fetch('https://cartographersstudy.onrender.com/api/create-player', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({code})
+      body: JSON.stringify({ roomCode: code})
     });
     const { playerToken } = await valid.json();
     localStorage.setItem("playerToken", playerToken);

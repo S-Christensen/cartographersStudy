@@ -103,7 +103,7 @@ export async function fetchSession() {
     const response = await fetch('https://cartographersstudy.onrender.com/api/session', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({code})
+      body: JSON.stringify({roomCode: code})
     });
     const data = await response.json();
 
@@ -186,7 +186,7 @@ export async function submitMove() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${playerToken}`
         },
-        body: JSON.stringify({code})
+        body: JSON.stringify({roomCode: code})
       });
       const result2 = await response2.json();
       if (!response2.ok) {
@@ -213,7 +213,7 @@ export async function drawCard() {
     const sessionRes = await fetch("https://cartographersstudy.onrender.com/api/session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({code})
+      body: JSON.stringify({roomCode: code})
     });
     const session = await sessionRes.json();
 
@@ -222,7 +222,7 @@ export async function drawCard() {
       const endRes = await fetch("https://cartographersstudy.onrender.com/api/end-season", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({code})
+      body: JSON.stringify({roomCode: code})
     });
       const endData = await endRes.json();
 
@@ -242,7 +242,7 @@ export async function drawCard() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${playerToken}`
         },
-        body: JSON.stringify({code})
+        body: JSON.stringify({roomCode: code})
       });
     let currentCard = await response.json();
 
@@ -264,7 +264,7 @@ export async function drawCard() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${playerToken}`
         },
-        body: JSON.stringify({code})
+        body: JSON.stringify({roomCode: code})
       });
       currentCard = await nextResponse.json();
 
@@ -282,7 +282,7 @@ export async function drawCard() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${playerToken}`
         },
-        body: JSON.stringify({code})
+        body: JSON.stringify({roomCode: code})
       });
         currentCard = await nextResponse.json();
         if (currentCard.error) {
