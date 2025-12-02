@@ -55,6 +55,10 @@ document.getElementById("reset-button").addEventListener("click", () => {
   localStorage.clear();
 });
 
+roomCodeInput.addEventListener('input', function () {
+  joinBtn.disabled = roomCodeInput.value.trim() === '';
+});
+
 joinBtn.addEventListener('click', async function () {
   const code = roomCodeInput.value.trim();
   if (!code) {
@@ -64,8 +68,6 @@ joinBtn.addEventListener('click', async function () {
 
   try {
     console.log("Joining game with room code:", code);
-
-    // Reset game
     ```
     const response = await fetch('https://cartographersstudy.onrender.com/api/reset-game', {
       method: 'POST'
