@@ -348,9 +348,9 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
     while session.submissions != len(session.players):
         await asyncio.sleep(1)
         timeElapsed += 1
-        if timeElapsed >= 300:
-            #TODO this
-            print("close room")
+        if timeElapsed >= 1500:
+            openRooms.pop(code)
+            return {"success": False, "message": "Room Closed due to inactivity"}
     session.submissions = 0
 
     return {"success": True, "message": "Move validated"}
