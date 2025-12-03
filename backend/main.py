@@ -388,6 +388,7 @@ async def create_player(payload: RoomSetupPayload):
             raise HTTPException(status_code=405, detail="Room Timeout. Try Again")
         
     openRooms[code].seating_order.append(player_id)
+    print(openRooms[code].players)
 
     return {"playerToken": token}
 
