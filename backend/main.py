@@ -428,7 +428,7 @@ def can_place_shape(shapes, player):
                                 return True
     return False
 
-async def monsterize(card, session, player):
+def monsterize(card, session, player):
     direction = None
     if card.name in {"Goblin Attack", "Gnoll Raid"}:
         direction = "left"
