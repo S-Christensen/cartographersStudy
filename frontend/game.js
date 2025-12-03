@@ -213,6 +213,7 @@ export async function submitMove() {
         updateCoinTracker(result2.coins);
       }
       alert("Waiting for others to submit.")
+      let locked = true;
       while (locked) {
         const temp = await fetch('https://cartographersstudy.onrender.com/api/busywait' , {
           method: "POST",
