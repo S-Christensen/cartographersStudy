@@ -198,6 +198,9 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
         return {"error": str(e)}  
     
 def start_new_season(code):
+    if openRooms[code].deck_index == 0:
+        return {"status": "new season started", "season": openRooms[code].season_index}
+
     openRooms[code].season_index += 1
     if openRooms[code].season_index >= 4:
         return {"error": "Game Over"}
