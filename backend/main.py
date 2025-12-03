@@ -351,7 +351,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
         if gameStart.check_orthogonal_neighbors(player.current_grid, y, x):
             player.coins += 1
             player.mountain_locations.remove(mountain)
-    if session.submission == session.max_players:
+    if session.submissions == session.max_players:
         session.submissions = 0
     session.submissions += 1
     timeElapsed = 0
