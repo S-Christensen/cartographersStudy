@@ -375,7 +375,7 @@ class RoomSetupPayload(BaseModel):
 @app.post("/api/create-player")
 async def create_player(payload: RoomSetupPayload):
     code = payload.roomCode.strip()
-    size = payload.roomSize.strip()
+    size = payload.roomSize
     if not code:
         raise HTTPException(status_code=400, detail="Room code required")
 
