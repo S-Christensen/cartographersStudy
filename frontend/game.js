@@ -379,6 +379,7 @@ export async function drawCard() {
         const neighborData = await monsterResponse.json();
         let oldGrid = gridData;
         gridData = neighborData.neighborGrid;
+        localStorage.setItem("neighborData", JSON.stringify(gridData));
         alert("Monster card drawn! You are now drawing on your neighbor's board");
         monsterFlag = true;
 
@@ -539,11 +540,16 @@ document.addEventListener('DOMContentLoaded', function () {
     setTerrain(currentCard.terrainOptions[0]);
 
     if (currentCard.type === "Monster") {
-      alert("Monster card drawn! This isn't functional at the moment but might be in 2 weeks.");
+      alert("Monster card drawn! You're now drawing on your neighbor's board!");
       setTerrain("Monster");
       document.getElementById("ruinsCardName").textContent = "";
       document.getElementById("terrain-buttons").style.display = 'none';
       monsterFlag = true
+      const saved = localStorage.getItem("neighborGrid");
+      if (saved) {
+        gridData = JSON.parse(saved);
+        drawGrid();
+      }
     } else if (currentCard.cost === 1 && currentCard.shape.length > 1) {
       showShapeButtons(currentCard.shape);
       document.getElementById('terrain-buttons').style.display = 'none';
