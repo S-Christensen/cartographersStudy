@@ -210,6 +210,16 @@ export async function submitMove() {
       } else {
         updateCoinTracker(result2.coins);
       }
+      alert("Waiting for others to submit.")
+      while (locked) {
+        const temp = await fetch('https://cartographersstudy.onrender.com/api/busywait' , {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ roomCode: code})
+        });
+        const temp2 = await temp.json()
+        locked = temp2.locked;
+      }
       drawCard();
       monsterFlag = false;
     }

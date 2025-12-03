@@ -7,7 +7,7 @@ import gameStart
 import math
 import random
 import terrainCard
-import time
+import asyncio
 
 app = FastAPI()
 
@@ -297,7 +297,7 @@ class ValidationPayload(RoomCodePayload):
     new_grid: List[List[str]]
     
 @app.post("/api/validate")
-def validatePlacement(payload: ValidationPayload, Authorization: Optional[str] = Header(None)):
+async def validatePlacement(payload: ValidationPayload, Authorization: Optional[str] = Header(None)):
     if not Authorization or not Authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing or invalid token")
 
@@ -347,12 +347,14 @@ def validatePlacement(payload: ValidationPayload, Authorization: Optional[str] =
     session.submissions += 1
     timeElapsed = 0
     while session.submissions != len(session.players):
-        time.sleep(1)
+        player.locked= True
+        await asyncio.sleep(1)
         timeElapsed += 1
         if timeElapsed >= 1500:
             openRooms.pop(code)
             return {"success": False, "message": "Room Closed due to inactivity"}
     session.submissions = 0
+    player.locked= False
 
     return {"success": True, "message": "Move validated"}
 
@@ -364,7 +366,7 @@ class RoomSetupPayload(BaseModel):
     roomSize: Optional[int] = None
 
 @app.post("/api/create-player")
-def create_player(payload: RoomSetupPayload):
+async def create_player(payload: RoomSetupPayload):
     code = payload.roomCode.strip()
     if not code:
         raise HTTPException(status_code=400, detail="Room code required")
@@ -381,11 +383,13 @@ def create_player(payload: RoomSetupPayload):
     openRooms[code].players[player_id] = gameStart.Player(player_id, sample_grid)
 
     while len(openRooms[code].players) != openRooms[code].max_players:
-        time.sleep(1)
+        openRooms[code].players[player_id].locked= True
+        await asyncio.sleep(1)
         timeElapsed += 1
         if timeElapsed >= 1500:
             openRooms.pop(code)
             raise HTTPException(status_code=405, detail="Room Timeout. Try Again")
+    openRooms[code].players[player_id].locked= False
         
     openRooms[code].seating_order.append(player_id)
     print(openRooms[code].players)
@@ -482,7 +486,7 @@ class ValidationPayload(RoomCodePayload):
 '''
 
 @app.post("/api/unmash")
-def unmash(payload: RoomCodePayload, Authorization: Optional[str] = Header(None)):
+async def unmash(payload: RoomCodePayload, Authorization: Optional[str] = Header(None)):
     if not Authorization or not Authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing or invalid token")
 
@@ -549,12 +553,38 @@ def unmash(payload: RoomCodePayload, Authorization: Optional[str] = Header(None)
     session.submissions += 1
     timeElapsed = 0
     while session.submissions != len(session.players):
-        time.sleep(1)
+        player.locked=True
+        await asyncio.sleep(1)
         timeElapsed += 1
         if timeElapsed >= 1500:
             openRooms.pop(code)
             return {"success": False, "message": "Room Closed due to inactivity"}
     session.submissions = 0
     player.ruins_fallback = False
+    player.locked= False
 
     return {"success": True, "message": "Move validated", "grid": player.current_grid}
+
+@app.post("/api/busywait")
+async def busywait(payload: RoomCodePayload, Authorization: Optional[str] = Header(None)):
+    if not Authorization or not Authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or invalid token")
+
+    token = Authorization.split(" ")[1]
+    try:
+        decoded = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        player_id = decoded["player_id"]
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=403, detail="Invalid token")
+    
+    code = payload.roomCode.strip()
+
+    session = openRooms.get(code)
+    if not session:
+        raise HTTPException(status_code=404, detail="Room not found")
+
+    player = session.players.get(player_id)
+    if not player:
+        raise HTTPException(status_code=404, detail="Player not found")
+    
+    return {"locked" :player.locked}
