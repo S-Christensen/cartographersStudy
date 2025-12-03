@@ -333,7 +333,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
 
     # Retrieve the Player object
     card = session.current_card
-    seasontime = session.season_time
+    deckIndex = openRooms[code].deck_index
     if player.ruins_fallback:
         card = gameStart.terrainCard(card.name, card.cost, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
     
@@ -368,7 +368,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
             return {"success": False, "message": "Room Closed due to inactivity"}
     
     player.locked= False
-    if openRooms[code].season_time == seasontime:
+    if openRooms[code].deck_index == deckIndex:
         openRooms[code].deck_index += 1
         openRooms[code].season_time -= card.cost
 
