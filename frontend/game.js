@@ -473,7 +473,7 @@ export function canPlaceAt(x, y) {
       if (activeShape[dy][dx]) {
         const gx = x + dx;
         const gy = y + dy;
-        if (gx >= gridSize || gy >= gridSize || (gridData[gy][gx] !== 0 && gridData[gy][gx] !== "Ruins")) {
+        if (gx >= gridSize || gy >= gridSize || (gridData[gy][gx] !== 0 && gridData[gy][gx] !== "Ruins" && gridData[gy][gx] !== "0")) {
           return false;
         }
       }
