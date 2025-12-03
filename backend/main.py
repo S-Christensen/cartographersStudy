@@ -389,7 +389,7 @@ async def create_player(payload: RoomSetupPayload):
         raise HTTPException(status_code=403, detail="Room is full")
 
     openRooms[code].players[player_id] = gameStart.Player(player_id, sample_grid)
-
+    timeElapsed = 0
     while len(openRooms[code].players) != openRooms[code].max_players:
         openRooms[code].players[player_id].locked= True
         await asyncio.sleep(1)
