@@ -100,7 +100,7 @@ joinBtn.addEventListener('click', async function () {
     while (locked) {
       const temp = await fetch('https://cartographersstudy.onrender.com/api/busywait' , {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", 'Authorization': `Bearer ${playerToken}` },
         body: JSON.stringify({ roomCode: code})
       });
       const temp2 = await temp.json()
