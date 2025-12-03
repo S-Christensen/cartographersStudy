@@ -184,7 +184,8 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
 
                 if player.ruins_fallback or (len(player.ruins_locations) == 0):
                     card = gameStart.terrainCard(card.name, card.cost, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
-
+        if card.type == "Monster":
+            card = monsterize(card, openRooms[code], player)
 
         print(f"Drew card: {card.name}, Cost: {card.cost}, Remaining Season Time: {openRooms[code].season_time}")
         print(f"Deck: {[c.name for c in openRooms[code].deck[openRooms[code].season_index:]]}")
@@ -358,8 +359,12 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
 
 import uuid
 SECRET_KEY = "Life from the Loam 1G | Sorcery | Return up to three target land cards from your graveyard to your hand. Dredge 3"
+class RoomSetupPayload(BaseModel):
+    roomCode: str
+    roomSize: Optional[int] = None
+
 @app.post("/api/create-player")
-async def create_player(payload: RoomCodePayload):
+async def create_player(payload: RoomSetupPayload):
     code = payload.roomCode.strip()
     if not code:
         raise HTTPException(status_code=400, detail="Room code required")
@@ -370,7 +375,185 @@ async def create_player(payload: RoomCodePayload):
     if code not in openRooms:
         openRooms[code] = gameStart.GameSession(code)
         reset_game(code)
+    if len(openRooms[code].players) >= openRooms[code].max_players:
+        raise HTTPException(status_code=403, detail="Room is full")
+
     openRooms[code].players[player_id] = gameStart.Player(player_id, sample_grid)
+
+    while len(openRooms[code].players) != openRooms[code].max_players:
+        await asyncio.sleep(1)
+        timeElapsed += 1
+        if timeElapsed >= 1500:
+            openRooms.pop(code)
+            raise HTTPException(status_code=405, detail="Room Timeout. Try Again")
+        
+    openRooms[code].seating_order.append(player_id)
 
     return {"playerToken": token}
 
+def can_place_shape(shapes, player):
+    all_orientations = []
+    for shape in shapes:
+        for oriented in gameStart.flip_and_rotate(shape):
+            all_orientations.append(oriented)
+
+    for ruin_r in range(len(player.current_grid)):
+        for ruin_c in range(len(player.current_grid[0])):
+
+            # Skip if ruin already filled
+            if player.current_grid[ruin_r][ruin_c] != "Ruins" and player.current_grid[ruin_r][ruin_c] != "0":
+                continue
+
+            for oriented in all_orientations:
+                rows, cols = oriented.shape
+                for i in range(rows):
+                    for j in range(cols):
+                        if str(oriented[i][j]) != 0:
+                            anchor_r = ruin_r - i
+                            anchor_c = ruin_c - j
+                            if check_valid(player.current_grid, oriented, anchor_r, anchor_c):
+                                return True
+    return False
+
+async def monsterize(card, session, player):
+    direction = None
+    if card.name in {"Goblin Attack", "Gnoll Raid"}:
+        direction = "left"
+    else:
+        direction = "right"
+    neighbor = None
+    n = len(session.seating_order)
+    i = session.seating_order.index(player.id)
+    if direction == "right":
+        neighbor = session.seating_order[(i+1) % n]
+    elif direction == "left":
+        neighbor = session.seating_order[(i-1) % n]
+    neighbor = session.players[neighbor]
+  
+    if can_place_shape(card.shape, neighbor):
+        return card
+    else:
+        card = gameStart.terrainCard(card.name, card.cost, [[["Monster"]]], "Monster")
+        player.ruins_fallback = True
+        return card
+    
+@app.post("/api/mash")
+async def mash(payload: RoomCodePayload, Authorization: Optional[str] = Header(None)):
+    if not Authorization or not Authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or invalid token")
+
+    token = Authorization.split(" ")[1]
+    try:
+        code = payload.roomCode.strip()
+        decoded = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        player_id = decoded["player_id"]
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=403, detail="Invalid token")
+    
+    player = openRooms[code].players.get(player_id)
+    if player is None:
+        raise HTTPException(status_code=404, detail="Player not found")
+    
+    session = openRooms[code]
+    
+    direction = None
+
+    if session.current_card.name in {"Goblin Attack", "Gnoll Raid"}:
+        direction = "left"
+    else:
+        direction = "right"
+    neighbor = None
+    n = len(session.seating_order)
+    i = session.seating_order.index(player.id)
+    if direction == "right":
+        neighbor = session.seating_order[(i+1) % n]
+    elif direction == "left":
+        neighbor = session.seating_order[(i-1) % n]
+    neighbor = session.players[neighbor]
+
+    return {
+            "neighborGrid": neighbor.current_grid
+            }
+
+'''
+class ValidationPayload(RoomCodePayload):
+    new_grid: List[List[str]]
+'''
+
+@app.post("/api/unmash")
+async def unmash(payload: RoomCodePayload, Authorization: Optional[str] = Header(None)):
+    if not Authorization or not Authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or invalid token")
+
+    token = Authorization.split(" ")[1]
+    try:
+        decoded = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        player_id = decoded["player_id"]
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=403, detail="Invalid token")
+    
+    code = payload.roomCode.strip()
+
+    # decode token, find player, etc.
+    session = openRooms.get(code)
+    if not session:
+        raise HTTPException(status_code=404, detail="Room not found")
+
+    player = session.players.get(player_id)
+    if not player:
+        raise HTTPException(status_code=404, detail="Player not found")
+
+
+    # Retrieve the Player object
+    card = session.current_card
+    if player.ruins_fallback:
+        card = gameStart.terrainCard(card.name, card.cost, [[["Monster"]]], "Monster")
+    
+    session = openRooms[code]
+    
+    direction = None
+
+    if session.current_card.name in {"Goblin Attack", "Gnoll Raid"}:
+        direction = "left"
+    else:
+        direction = "right"
+    neighbor = None
+    n = len(session.seating_order)
+    i = session.seating_order.index(player.id)
+    if direction == "right":
+        neighbor = session.seating_order[(i+1) % n]
+    elif direction == "left":
+        neighbor = session.seating_order[(i-1) % n]
+    neighbor = session.players[neighbor]
+
+    is_valid, message = gameStart.validate_placement(
+        neighbor.current_grid,
+        payload.new_grid,
+        card,
+        neighbor
+    )
+
+    if not is_valid:
+        raise HTTPException(status_code=400, detail=message)
+
+    # Commit the new grid + update history
+    neighbor.grid_history.append(neighbor.current_grid)
+    neighbor.current_grid = neighbor.new_grid
+    for mountain in neighbor.mountain_locations[:]:
+        y, x = mountain
+        if gameStart.check_orthogonal_neighbors(neighbor.current_grid, y, x):
+            neighbor.coins += 1
+            neighbor.mountain_locations.remove(mountain)
+    
+    session.submissions += 1
+    timeElapsed = 0
+    while session.submissions != len(session.players):
+        await asyncio.sleep(1)
+        timeElapsed += 1
+        if timeElapsed >= 1500:
+            openRooms.pop(code)
+            return {"success": False, "message": "Room Closed due to inactivity"}
+    session.submissions = 0
+    player.ruins_fallback = False
+
+    return {"success": True, "message": "Move validated", "grid": player.current_grid}

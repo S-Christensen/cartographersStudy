@@ -31,6 +31,8 @@ class GameSession:
         self.season_initialized = False
         self.ruins_required = False
         self.submissions = 0
+        self.max_players = 1
+        self.seating_order = []
 
 def check_orthogonal_neighbors(grid, x, y):
     rows = len(grid)

@@ -64,13 +64,15 @@ roomCodeInput.addEventListener('input', function () {
 
 joinBtn.addEventListener('click', async function () {
   const code = roomCodeInput.value.trim();
-  if (!code) {
-    alert("Please enter a room code first!");
+  const roomSize = parseInt(document.getElementById("roomSizeInput").value, 10);
+
+  if (!code || !roomSize) {
+    alert("Please enter a room code and room size!");
     return;
   }
 
   try {
-    console.log("Joining game with room code:", code);
+    console.log("Joining game with room code:", code, "room size:", roomSize);
     /*
     const response = await fetch('https://cartographersstudy.onrender.com/api/reset-game', {
       method: 'POST'
@@ -83,7 +85,7 @@ joinBtn.addEventListener('click', async function () {
     const valid = await fetch('https://cartographersstudy.onrender.com/api/create-player', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ roomCode: code})
+      body: JSON.stringify({ roomCode: code, roomSize})
     });
     const { playerToken } = await valid.json();
     localStorage.setItem("playerToken", playerToken);

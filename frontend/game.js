@@ -163,14 +163,26 @@ export async function submitMove() {
   console.log("Submitting payload:", payload);
 
   try {
-    const response = await fetch("https://cartographersstudy.onrender.com/api/validate", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${playerToken}`
-      },
-      body: JSON.stringify(payload)
-    });
+    let response;
+    if (!monsterFlag) {
+      response = await fetch("https://cartographersstudy.onrender.com/api/validate", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${playerToken}`
+        },
+        body: JSON.stringify(payload)
+      });
+    } else {
+      response = await fetch("https://cartographersstudy.onrender.com/api/unmash", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${playerToken}`
+        },
+        body: JSON.stringify(payload)
+      });
+    }
 
     const result = await response.json();
 
@@ -179,6 +191,9 @@ export async function submitMove() {
       alert(result.detail || result.error || "Invalid move.");
     } else {
       console.log("Move validated:", result);
+      if (monsterFlag){
+        gridData = result.grid
+      }
       localStorage.setItem("savedGrid", JSON.stringify(gridData));
       const response2 = await fetch ("https://cartographersstudy.onrender.com/api/coin-check", {
         method: 'POST',
@@ -196,6 +211,7 @@ export async function submitMove() {
         updateCoinTracker(result2.coins);
       }
       drawCard();
+      monsterFlag = false;
     }
   } catch (err) {
     console.error("Validation failed:", err);
@@ -205,6 +221,7 @@ export async function submitMove() {
 
 // Fetch a new card from the backend
 let ruinsFlag = false;
+let monsterFlag = false;
 let lastRuin = "";
 export async function drawCard() {
   try {
@@ -337,7 +354,20 @@ export async function drawCard() {
       terrain = currentCard.terrainOptions[0];
 
       if (currentCard.type === "Monster") {
-        alert("Monster card drawn! This isn't functional at the moment but might be in 2 weeks.");
+        const monsterResponse = await fetch('https://cartographersstudy.onrender.com/api/mash', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${playerToken}`
+          },
+          body: JSON.stringify({roomCode: code})
+        });
+        neighborGrid = await monsterResponse.json();
+        oldGrid = gridData;
+        gridData = neighborGrid;
+        alert("Monster card drawn! You are now drawing on your neighbor's board");
+        monsterFlag = true;
+
         terrain = "Monster";
         setAvailableShapes(currentCard.shape);
         setActiveShape(currentCard.shape[0]);
@@ -462,6 +492,7 @@ export function showGameControls() {
     if (undoBtn) undoBtn.style.display = '';
     if (joinBtn) joinBtn.style.display = 'none';
     if (roomCodeInput) roomCodeInput.style.display = 'none';
+    if (roomSizeInput) roomSizeInput.style.display = 'none';
   }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -498,6 +529,7 @@ document.addEventListener('DOMContentLoaded', function () {
       setTerrain("Monster");
       document.getElementById("ruinsCardName").textContent = "";
       document.getElementById("terrain-buttons").style.display = 'none';
+      monsterFlag = true
     } else if (currentCard.cost === 1 && currentCard.shape.length > 1) {
       showShapeButtons(currentCard.shape);
       document.getElementById('terrain-buttons').style.display = 'none';
@@ -571,3 +603,5 @@ function undoLastPlacement() {
   lastPlacedCells = [];
   drawGrid();
 }
+
+function 
