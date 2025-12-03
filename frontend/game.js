@@ -423,7 +423,7 @@ function drawPreview(x, y) {
       if (activeShape[dy][dx]) {
         const gx = x + dx;
         const gy = y + dy;
-        if (gx < gridSize && gy < gridSize && (gridData[gy][gx] === 0 || gridData[gy][gx] === "Ruins")) {
+        if (gx < gridSize && gy < gridSize && (gridData[gy][gx] === 0 || gridData[gy][gx] === "Ruins" || gridData[gy][gx] === "0")) {
           if (gridData[gy][gx] === "Ruins") {
             ctx.fillStyle = "#888"; // ruins base color
             ctx.globalAlpha = 0.3;
