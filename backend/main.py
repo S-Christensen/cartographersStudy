@@ -7,7 +7,7 @@ import gameStart
 import math
 import random
 import terrainCard
-import asyncio
+import time
 
 app = FastAPI()
 
@@ -347,7 +347,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
     session.submissions += 1
     timeElapsed = 0
     while session.submissions != len(session.players):
-        await asyncio.sleep(1)
+        time.sleep(1)
         timeElapsed += 1
         if timeElapsed >= 1500:
             openRooms.pop(code)
@@ -381,7 +381,7 @@ async def create_player(payload: RoomSetupPayload):
     openRooms[code].players[player_id] = gameStart.Player(player_id, sample_grid)
 
     while len(openRooms[code].players) != openRooms[code].max_players:
-        await asyncio.sleep(1)
+        await time.sleep(1)
         timeElapsed += 1
         if timeElapsed >= 1500:
             openRooms.pop(code)
@@ -548,7 +548,7 @@ async def unmash(payload: RoomCodePayload, Authorization: Optional[str] = Header
     session.submissions += 1
     timeElapsed = 0
     while session.submissions != len(session.players):
-        await asyncio.sleep(1)
+        time.sleep(1)
         timeElapsed += 1
         if timeElapsed >= 1500:
             openRooms.pop(code)
