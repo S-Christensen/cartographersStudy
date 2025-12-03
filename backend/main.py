@@ -561,13 +561,14 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
 
     # Commit the new grid + update history
     neighbor.grid_history.append(neighbor.current_grid)
-    neighbor.current_grid = neighbor.new_grid
+    neighbor.current_grid = payload.new_grid
     for mountain in neighbor.mountain_locations[:]:
         y, x = mountain
         if gameStart.check_orthogonal_neighbors(neighbor.current_grid, y, x):
             neighbor.coins += 1
             neighbor.mountain_locations.remove(mountain)
-    
+    if session.submissions == session.max_players:
+            session.submissions = 0
     session.submissions += 1
     timeElapsed = 0
     while session.submissions != len(session.players):
@@ -577,7 +578,6 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
         if timeElapsed >= 1500:
             openRooms.pop(code)
             return {"success": False, "message": "Room Closed due to inactivity"}
-    session.submissions = 0
     player.ruins_fallback = False
     player.locked= False
     if openRooms[code].season_time == seasontime:
