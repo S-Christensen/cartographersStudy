@@ -166,13 +166,14 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
                 return {"error": "Game Over"}
 
         # Draw card
+        deckIndex = openRooms[code].deck_index
         card = openRooms[code].deck[openRooms[code].deck_index]
         player.ruins_fallback = False
 
         # Handle ruins logic
         if card.type == "Ruins":
-            if not(openRooms[code].ruins_required):
-                openRooms[code].deck_index +=1
+            if deckIndex == openRooms[code].deck_index:
+                openRooms[code].deck_index += 1
             openRooms[code].ruins_required = True
 
         openRooms[code].current_card = card
