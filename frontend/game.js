@@ -275,7 +275,7 @@ export async function drawCard() {
         },
         body: JSON.stringify({roomCode: code})
       });
-    setCurrentCard(await response.json());
+    currentCard = await response.json();
 
     // Refresh seasonRemaining
     await fetchSession();
@@ -316,7 +316,7 @@ export async function drawCard() {
         },
         body: JSON.stringify({roomCode: code})
       });
-        setCurrentCard(await nextResponse.json());
+        currentCard = await nextResponse.json();
         if (currentCard.error) {
           alert(currentCard.error);
           return;
