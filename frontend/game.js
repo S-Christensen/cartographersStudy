@@ -377,7 +377,7 @@ export async function drawCard() {
           body: JSON.stringify({roomCode: code})
         });
         const neighborData = await monsterResponse.json();
-        oldGrid = gridData;
+        let oldGrid = gridData;
         gridData = neighborData.neighborGrid;
         alert("Monster card drawn! You are now drawing on your neighbor's board");
         monsterFlag = true;
