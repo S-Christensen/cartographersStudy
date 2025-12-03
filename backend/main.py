@@ -329,6 +329,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
 
     # Retrieve the Player object
     card = session.current_card
+    seasontime = session.season_time
     if player.ruins_fallback:
         card = gameStart.terrainCard(card.name, card.cost, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
     
@@ -363,8 +364,9 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
             return {"success": False, "message": "Room Closed due to inactivity"}
     
     player.locked= False
-    openRooms[code].deck_index += 1
-    openRooms[code].season_time -= card.cost
+    if openRooms[code].season_time == seasontime:
+        openRooms[code].deck_index += 1
+        openRooms[code].season_time -= card.cost
 
     return {"success": True, "message": "Move validated"}
 
@@ -522,6 +524,7 @@ async def unmash(payload: RoomCodePayload, Authorization: Optional[str] = Header
 
     # Retrieve the Player object
     card = session.current_card
+    seasontime = session.season_time
     if player.ruins_fallback:
         card = gameStart.terrainCard(card.name, card.cost, [[["Monster"]]], "Monster")
     
@@ -573,6 +576,9 @@ async def unmash(payload: RoomCodePayload, Authorization: Optional[str] = Header
     session.submissions = 0
     player.ruins_fallback = False
     player.locked= False
+    if openRooms[code].season_time == seasontime:
+        openRooms[code].deck_index += 1
+        openRooms[code].season_time -= card.cost
 
     return {"success": True, "message": "Move validated", "grid": player.current_grid}
 
