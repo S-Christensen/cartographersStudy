@@ -38,6 +38,7 @@ h1 {
 }
 
 #sidebar {
+  align-self: center;
   min-width: 260px;
   background: #2e2a24;
   padding: 24px 20px 20px 20px;
