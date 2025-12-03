@@ -96,6 +96,7 @@ joinBtn.addEventListener('click', async function () {
     setGameStarted(true);
     fetchSession();
     document.getElementById("scoringContainer").style.display = "";
+    /*
     let locked = true
     while (locked) {
       const temp = await fetch('https://cartographersstudy.onrender.com/api/busywait' , {
@@ -105,7 +106,7 @@ joinBtn.addEventListener('click', async function () {
       });
       const temp2 = await temp.json()
       locked = temp2.locked;
-    }
+    }*/
 
 
     drawCard();

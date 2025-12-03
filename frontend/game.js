@@ -211,7 +211,7 @@ export async function submitMove() {
         alert(result2.detail || result2.error)
       } else {
         updateCoinTracker(result2.coins);
-      }
+      }/*
       alert("Waiting for others to submit.")
       let locked = true;
       while (locked) {
@@ -222,7 +222,7 @@ export async function submitMove() {
         });
         const temp2 = await temp.json()
         locked = temp2.locked;
-      }
+      }*/
       drawCard();
       monsterFlag = false;
     }
