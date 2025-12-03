@@ -133,7 +133,7 @@ export function drawGrid() {
       ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
 
       // Fill terrain if present
-      if (cell && cell !== 0) {
+      if (cell && cell !== 0 && cell !== "0") {
         if (cell === "Ruins") {
           ctx.fillStyle = "#888"; // grayish ruins
           ctx.globalAlpha = 0.3;   // semi-transparent
