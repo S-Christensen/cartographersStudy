@@ -171,6 +171,8 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
 
         # Handle ruins logic
         if card.type == "Ruins":
+            if not(openRooms[code].ruins_required):
+                openRooms[code].deck_index +=1
             openRooms[code].ruins_required = True
 
         openRooms[code].season_time -= card.cost
