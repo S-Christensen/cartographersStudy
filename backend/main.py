@@ -167,7 +167,6 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
 
         # Draw card
         card = openRooms[code].deck[openRooms[code].deck_index]
-        openRooms[code].deck_index += 1
         player.ruins_fallback = False
 
         # Handle ruins logic
@@ -362,6 +361,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
             return {"success": False, "message": "Room Closed due to inactivity"}
     session.submissions = 0
     player.locked= False
+    openRooms[code].deck_index += 1
 
     return {"success": True, "message": "Move validated"}
 
