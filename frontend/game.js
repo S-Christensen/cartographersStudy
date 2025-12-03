@@ -297,7 +297,7 @@ export async function drawCard() {
         },
         body: JSON.stringify({roomCode: code})
       });
-      setCurrentCardawait(nextResponse.json());
+      currentCard = await nextResponse.json();
       console.log(currentCard);
 
       if (currentCard.error) {
