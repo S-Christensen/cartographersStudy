@@ -603,5 +603,3 @@ function undoLastPlacement() {
   lastPlacedCells = [];
   drawGrid();
 }
-
-function 
