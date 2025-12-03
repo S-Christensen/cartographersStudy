@@ -351,7 +351,8 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
         if gameStart.check_orthogonal_neighbors(player.current_grid, y, x):
             player.coins += 1
             player.mountain_locations.remove(mountain)
-    
+    if session.submission == session.max_players:
+        session.submissions = 0
     session.submissions += 1
     timeElapsed = 0
     while session.submissions != session.max_players:
@@ -361,7 +362,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
         if timeElapsed >= 1500:
             openRooms.pop(code)
             return {"success": False, "message": "Room Closed due to inactivity"}
-    session.submissions = 0
+    
     player.locked= False
     openRooms[code].deck_index += 1
 
