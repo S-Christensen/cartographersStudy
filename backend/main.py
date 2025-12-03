@@ -503,7 +503,7 @@ class ValidationPayload(RoomCodePayload):
 '''
 
 @app.post("/api/unmash")
-async def unmash(payload: RoomCodePayload, Authorization: Optional[str] = Header(None)):
+async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Header(None)):
     if not Authorization or not Authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing or invalid token")
 
