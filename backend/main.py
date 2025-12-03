@@ -175,7 +175,6 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
                 openRooms[code].deck_index +=1
             openRooms[code].ruins_required = True
 
-        openRooms[code].season_time -= card.cost
         openRooms[code].current_card = card
 
         if openRooms[code].ruins_required:
@@ -189,7 +188,7 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
         if card.type == "Monster":
             card = monsterize(card, openRooms[code], player)
 
-        print(f"Drew card: {card.name}, Cost: {card.cost}, Remaining Season Time: {openRooms[code].season_time}")
+        print(f"Drew card: {card.name}, Cost: {card.cost}, Remaining Season Time: {openRooms[code].season_time-card.cost}")
         print(f"Deck: {[c.name for c in openRooms[code].deck[openRooms[code].season_index:]]}")
 
         return card.to_dict()
@@ -365,6 +364,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
     
     player.locked= False
     openRooms[code].deck_index += 1
+    openRooms[code].season_time -= card.cost
 
     return {"success": True, "message": "Move validated"}
 
