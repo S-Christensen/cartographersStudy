@@ -47,7 +47,7 @@ def get_allowed_terrains(card):
 class RoomCodePayload(BaseModel):
     roomCode: str
 
-def reset_game(code):
+def reset_game(code, size):
     if not code:
         raise HTTPException(status_code=400, detail="Room code required")
 
@@ -67,6 +67,7 @@ def reset_game(code):
     session.season_time = 8
     session.season_initialized = True
     session.current_card = deck[0]
+    session.max_players = size
 
     return {"status": "reset", "message": f"Game session {code} initialized"}
 
@@ -374,6 +375,7 @@ class RoomSetupPayload(BaseModel):
 @app.post("/api/create-player")
 async def create_player(payload: RoomSetupPayload):
     code = payload.roomCode.strip()
+    size = payload.roomSize.strip()
     if not code:
         raise HTTPException(status_code=400, detail="Room code required")
 
@@ -382,7 +384,7 @@ async def create_player(payload: RoomSetupPayload):
 
     if code not in openRooms:
         openRooms[code] = gameStart.GameSession(code)
-        reset_game(code)
+        reset_game(code, size)
     if len(openRooms[code].players) >= openRooms[code].max_players:
         raise HTTPException(status_code=403, detail="Room is full")
 
