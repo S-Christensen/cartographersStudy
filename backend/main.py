@@ -297,7 +297,7 @@ class ValidationPayload(RoomCodePayload):
     new_grid: List[List[str]]
     
 @app.post("/api/validate")
-async def validatePlacement(payload: ValidationPayload, Authorization: Optional[str] = Header(None)):
+def validatePlacement(payload: ValidationPayload, Authorization: Optional[str] = Header(None)):
     if not Authorization or not Authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing or invalid token")
 
@@ -364,7 +364,7 @@ class RoomSetupPayload(BaseModel):
     roomSize: Optional[int] = None
 
 @app.post("/api/create-player")
-async def create_player(payload: RoomSetupPayload):
+def create_player(payload: RoomSetupPayload):
     code = payload.roomCode.strip()
     if not code:
         raise HTTPException(status_code=400, detail="Room code required")
@@ -381,7 +381,7 @@ async def create_player(payload: RoomSetupPayload):
     openRooms[code].players[player_id] = gameStart.Player(player_id, sample_grid)
 
     while len(openRooms[code].players) != openRooms[code].max_players:
-        await time.sleep(1)
+        time.sleep(1)
         timeElapsed += 1
         if timeElapsed >= 1500:
             openRooms.pop(code)
@@ -482,7 +482,7 @@ class ValidationPayload(RoomCodePayload):
 '''
 
 @app.post("/api/unmash")
-async def unmash(payload: RoomCodePayload, Authorization: Optional[str] = Header(None)):
+def unmash(payload: RoomCodePayload, Authorization: Optional[str] = Header(None)):
     if not Authorization or not Authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing or invalid token")
 
