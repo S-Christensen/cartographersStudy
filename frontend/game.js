@@ -275,7 +275,7 @@ export async function drawCard() {
         },
         body: JSON.stringify({roomCode: code})
       });
-    let currentCard = await response.json();
+    currentCard = await response.json();
 
     // Refresh seasonRemaining
     await fetchSession();
@@ -375,9 +375,9 @@ export async function drawCard() {
           },
           body: JSON.stringify({roomCode: code})
         });
-        neighborGrid = await monsterResponse.json();
+        neighborData = await monsterResponse.json();
         oldGrid = gridData;
-        gridData = neighborGrid;
+        gridData = neighborData.neighborGrid;
         alert("Monster card drawn! You are now drawing on your neighbor's board");
         monsterFlag = true;
 

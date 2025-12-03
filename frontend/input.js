@@ -90,13 +90,13 @@ joinBtn.addEventListener('click', async function () {
     const { playerToken } = await valid.json();
     localStorage.setItem("playerToken", playerToken);
     localStorage.setItem("roomCode", code);
+    alert("Waiting for others to join.")
 
     showGameControls();
     setGameStarted(true);
     fetchSession();
     document.getElementById("scoringContainer").style.display = "";
     let locked = true
-    alert("Waiting for others to join.")
     while (locked) {
       const temp = await fetch('https://cartographersstudy.onrender.com/api/busywait' , {
         method: "POST",
