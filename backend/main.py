@@ -354,7 +354,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
     
     session.submissions += 1
     timeElapsed = 0
-    while session.submissions != len(session.players):
+    while session.submissions != session.max_players:
         player.locked= True
         await asyncio.sleep(1)
         timeElapsed += 1
