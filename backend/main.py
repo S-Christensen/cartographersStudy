@@ -260,11 +260,17 @@ async def end_season(payload: RoomCodePayload):
     season_result = start_new_season(code)
     if "error" in season_result:
         # This means game over
-        openRooms.pop(code)
+        session = openRooms.pop(code)
+        podium = []
+        for guy in session.players.values():
+            podium.append(guy.score)
+        podium = sorted(podium)
+
         return {
             "season": openRooms[code].season_index,
             "breakdown": breakdown,
-            "gameOver": True
+            "gameOver": True,
+            "podium": podium
         }
 
     # Normal season transition

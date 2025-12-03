@@ -93,6 +93,8 @@ export function updateSeasonScores(endData) {
 
   if (endData.gameOver) {
       console.log("Game Over!");
+      alert(endData.podium)
+      localStorage.clear();
   }
 }
 
