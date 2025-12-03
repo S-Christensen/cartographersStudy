@@ -528,7 +528,7 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
 
     # Retrieve the Player object
     card = session.current_card
-    seasontime = session.season_time
+    deckIndex = session.deck_index
     if player.ruins_fallback:
         card = gameStart.terrainCard(card.name, card.cost, [[["Monster"]]], "Monster")
     
@@ -580,7 +580,7 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
             return {"success": False, "message": "Room Closed due to inactivity"}
     player.ruins_fallback = False
     player.locked= False
-    if openRooms[code].season_time == seasontime:
+    if openRooms[code].deck_index == deckIndex:
         openRooms[code].deck_index += 1
         openRooms[code].season_time -= card.cost
 
