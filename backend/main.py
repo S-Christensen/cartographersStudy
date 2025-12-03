@@ -185,13 +185,12 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
 
                 if player.ruins_fallback or (len(player.ruins_locations) == 0):
                     card = gameStart.terrainCard(card.name, card.cost, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
+                openRooms[code].submissions += 1
+                if openRooms[code].submissions == openRooms[code].max_players:
+                    openRooms[code].submissions = 0
+                    openRooms[code].ruins_required = False
         if card.type == "Monster":
             card = monsterize(card, openRooms[code], player)
-            
-        openRooms[code].submissions += 1
-        if openRooms[code].submissions == openRooms[code].max_players:
-            openRooms[code].submissions = 0
-            openRooms[code].ruins_required = False
 
         print(f"Drew card: {card.name}, Cost: {card.cost}, Remaining Season Time: {openRooms[code].season_time-card.cost}")
         print(f"Deck: {[c.name for c in openRooms[code].deck[openRooms[code].season_index:]]}")
