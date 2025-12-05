@@ -358,7 +358,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
         if gameStart.check_orthogonal_neighbors(player.current_grid, y, x):
             player.coins += 1
             player.mountain_locations.remove(mountain)
-    if session.submissions == session.max_players:
+    if session.submissions >= session.max_players:
         session.submissions = 0
     session.submissions += 1
     timeElapsed = 0
@@ -368,7 +368,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
         timeElapsed += 1
         if timeElapsed >= 1500:
             openRooms.pop(code)
-            return {"success": False, "message": "Room Closed due to inactivity"}
+            raise HTTPException(status_code=400, detail="Room closed due to inactivity")
     
     player.locked= False
     if openRooms[code].deck_index == deckIndex:
@@ -570,7 +570,7 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
         if gameStart.check_orthogonal_neighbors(neighbor.current_grid, y, x):
             neighbor.coins += 1
             neighbor.mountain_locations.remove(mountain)
-    if session.submissions == session.max_players:
+    if session.submissions >= session.max_players:
             session.submissions = 0
     session.submissions += 1
     timeElapsed = 0
