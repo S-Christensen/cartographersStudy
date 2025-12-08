@@ -161,15 +161,13 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
                 return {"error": "Game Over"}
 
         # Draw card
+        deckIndex = openRooms[code].deck_index
         card = openRooms[code].deck[openRooms[code].deck_index]
         player.ruins_fallback = False
 
         # Handle ruins logic
         if card.type == "Ruins":
-            openRooms[code].submissions += 1
-            if openRooms[code].submissions == openRooms[code].max_players:
-                openRooms[code].submissions = 0
-            elif openRooms[code].submissions == 1: 
+            if deckIndex == openRooms[code].deck_index:
                 openRooms[code].deck_index += 1
             openRooms[code].ruins_required = True
 
@@ -326,6 +324,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
 
     # Retrieve the Player object
     card = session.current_card
+    deckIndex = openRooms[code].deck_index
     if player.ruins_fallback:
         card = gameStart.terrainCard(card.name, card.cost, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
     
@@ -360,10 +359,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
             raise HTTPException(status_code=400, detail="Room closed due to inactivity")
     
     player.locked= False
-    openRooms[code].submissions += 1
-    if openRooms[code].submissions == openRooms[code].max_players:
-        openRooms[code].submissions = 0
-    elif openRooms[code].submissions == 1: 
+    if openRooms[code].deck_index == deckIndex:
         openRooms[code].deck_index += 1
         openRooms[code].season_time -= card.cost
 
@@ -522,6 +518,7 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
 
     # Retrieve the Player object
     card = session.current_card
+    deckIndex = session.deck_index
     if player.ruins_fallback:
         card = gameStart.terrainCard(card.name, card.cost, [[["Monster"]]], "Monster")
     
@@ -573,10 +570,7 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
             return {"success": False, "message": "Room Closed due to inactivity"}
     player.ruins_fallback = False
     player.locked= False
-    openRooms[code].submissions += 1
-    if openRooms[code].submissions == openRooms[code].max_players:
-        openRooms[code].submissions = 0
-    elif openRooms[code].submissions == 1: 
+    if openRooms[code].deck_index == deckIndex:
         openRooms[code].deck_index += 1
         openRooms[code].season_time -= card.cost
 
