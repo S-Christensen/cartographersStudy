@@ -576,6 +576,7 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
     if openRooms[code].waiting == 0:
         openRooms[code].waiting = openRooms[code].max_players
     openRooms[code].waiting -= 1
+    print(openRooms[code].waiting)
     if openRooms[code].waiting == 0:
         openRooms[code].deck_index += 1
         openRooms[code].season_time -= card.cost
