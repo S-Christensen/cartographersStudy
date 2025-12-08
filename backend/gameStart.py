@@ -17,6 +17,7 @@ class Player:
         self.mountain_locations = [(1, 3), (2, 8), (5, 5), (8, 2), (9, 7)]
         self.ruins_locations = [(1, 5), (2, 1), (2, 9), (8, 1), (8, 9), (9, 5)]
         self.locked = False
+        self.deck_index = 0
 
 
 class GameSession:
