@@ -34,7 +34,7 @@ class GameSession:
         self.submissions = 0
         self.max_players = 1
         self.seating_order = []
-        waiting = 0
+        self.waiting = 0
 
 def check_orthogonal_neighbors(grid, x, y):
     rows = len(grid)
