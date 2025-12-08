@@ -68,6 +68,7 @@ def reset_game(code, size):
     session.season_initialized = True
     session.current_card = deck[0]
     session.max_players = size
+    session.waiting = size
 
     return {"status": "reset", "message": f"Game session {code} initialized"}
 
@@ -165,12 +166,11 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
         player.ruins_fallback = False
 
         # Handle ruins logic
-        if openRooms[code].waiting == 0:
-            openRooms[code].waiting = openRooms[code].max_players
         openRooms[code].waiting -= 1
         if card.type == "Ruins":
             if openRooms[code].waiting == 0:
                 openRooms[code].deck_index += 1
+                openRooms[code].waiting = openRooms[code].max_players
             openRooms[code].ruins_required = True
 
         openRooms[code].current_card = card
@@ -360,12 +360,12 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
             raise HTTPException(status_code=400, detail="Room closed due to inactivity")
     
     player.locked= False
-    if openRooms[code].waiting == 0:
-        openRooms[code].waiting = openRooms[code].max_players
     openRooms[code].waiting -= 1
     if openRooms[code].waiting == 0:
         openRooms[code].deck_index += 1
         openRooms[code].season_time -= card.cost
+        openRooms[code].waiting = openRooms[code].max_players
+
 
     return {"success": True, "message": "Move validated"}
 
@@ -572,14 +572,12 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
             openRooms.pop(code)
             return {"success": False, "message": "Room Closed due to inactivity"}
     player.ruins_fallback = False
-    player.locked= False
-    if openRooms[code].waiting == 0:
-        openRooms[code].waiting = openRooms[code].max_players
+    player.locked= False        
     openRooms[code].waiting -= 1
-    print(openRooms[code].waiting)
     if openRooms[code].waiting == 0:
         openRooms[code].deck_index += 1
         openRooms[code].season_time -= card.cost
+        openRooms[code].waiting = openRooms[code].max_players
 
     return {"success": True, "message": "Move validated", "grid": player.current_grid}
 
