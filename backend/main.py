@@ -88,13 +88,8 @@ def can_place_on_any_ruins(shapes, player):
     for shape in shapes:
         for oriented in gameStart.flip_and_rotate(shape):
             all_orientations.append(oriented)
-    print(all_orientations)
 
     for ruin_r, ruin_c in player.ruins_locations:
-        print("Ruin Coords:")
-        print(ruin_r)
-        print(ruin_c)
-        print(player.current_grid)
 
         # Skip if ruin already filled
         if player.current_grid[ruin_r][ruin_c] != "Ruins":
@@ -166,13 +161,15 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
                 return {"error": "Game Over"}
 
         # Draw card
-        deckIndex = openRooms[code].deck_index
         card = openRooms[code].deck[openRooms[code].deck_index]
         player.ruins_fallback = False
 
         # Handle ruins logic
         if card.type == "Ruins":
-            if deckIndex == openRooms[code].deck_index:
+            openRooms[code].submissions += 1
+            if openRooms[code].submissions == openRooms[code].max_players:
+                openRooms[code].submissions = 0
+            elif openRooms[code].submissions == 1: 
                 openRooms[code].deck_index += 1
             openRooms[code].ruins_required = True
 
@@ -194,6 +191,7 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
 
         print(f"Drew card: {card.name}, Cost: {card.cost}, Remaining Season Time: {openRooms[code].season_time-card.cost}")
         print(f"Deck: {[c.name for c in openRooms[code].deck[openRooms[code].season_index:]]}")
+        print(f"Drawing for {player}")
 
         return card.to_dict()
 
@@ -225,8 +223,6 @@ async def end_season(payload: RoomCodePayload):
     # Determine which two scoring cards apply this season
     score_func_1 = openRooms[code].score_types[openRooms[code].season_index % 4]
     score_func_2 = openRooms[code].score_types[(openRooms[code].season_index + 1) % 4]
-    print(score_func_1)
-    print(score_func_2)
 
     score_letters = ["A", "B", "C", "D"]
     letter1 = score_letters[openRooms[code].season_index % 4]
@@ -241,7 +237,6 @@ async def end_season(payload: RoomCodePayload):
     }
 
     # Score each player (or just 1 if single-player)
-    print(openRooms[code].players)
     for player in openRooms[code].players.values():
         grid = player.current_grid
 
@@ -252,11 +247,6 @@ async def end_season(payload: RoomCodePayload):
 
         season_total = score1 + score2 + coins + monsters
         player.score += season_total
-        print(score1)
-        print(score2)
-        print(coins)
-        print(monsters)
-        print(player.score)
 
         breakdown[letter1] = score1
         breakdown[letter2] = score2
@@ -336,7 +326,6 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
 
     # Retrieve the Player object
     card = session.current_card
-    deckIndex = openRooms[code].deck_index
     if player.ruins_fallback:
         card = gameStart.terrainCard(card.name, card.cost, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
     
@@ -371,7 +360,10 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
             raise HTTPException(status_code=400, detail="Room closed due to inactivity")
     
     player.locked= False
-    if openRooms[code].deck_index == deckIndex:
+    openRooms[code].submissions += 1
+    if openRooms[code].submissions == openRooms[code].max_players:
+        openRooms[code].submissions = 0
+    elif openRooms[code].submissions == 1: 
         openRooms[code].deck_index += 1
         openRooms[code].season_time -= card.cost
 
@@ -412,7 +404,6 @@ async def create_player(payload: RoomSetupPayload):
     openRooms[code].players[player_id].locked= False
         
     openRooms[code].seating_order.append(player_id)
-    print(openRooms[code].players)
 
     return {"playerToken": token}
 
@@ -531,7 +522,6 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
 
     # Retrieve the Player object
     card = session.current_card
-    deckIndex = session.deck_index
     if player.ruins_fallback:
         card = gameStart.terrainCard(card.name, card.cost, [[["Monster"]]], "Monster")
     
@@ -583,7 +573,10 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
             return {"success": False, "message": "Room Closed due to inactivity"}
     player.ruins_fallback = False
     player.locked= False
-    if openRooms[code].deck_index == deckIndex:
+    openRooms[code].submissions += 1
+    if openRooms[code].submissions == openRooms[code].max_players:
+        openRooms[code].submissions = 0
+    elif openRooms[code].submissions == 1: 
         openRooms[code].deck_index += 1
         openRooms[code].season_time -= card.cost
 
