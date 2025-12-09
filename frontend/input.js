@@ -64,7 +64,7 @@ roomCodeInput.addEventListener('input', function () {
 
 joinBtn.addEventListener('click', async function () {
   const code = roomCodeInput.value.trim();
-  const roomSize = parseInt(document.getElementById("roomSizeInput").value, 10);
+  const roomSize = parseInt(document.getElementById("roomSizeInput").value, 10);''
 
   if (!code || !roomSize) {
     alert("Please enter a room code and room size!");
@@ -72,7 +72,8 @@ joinBtn.addEventListener('click', async function () {
   }
 
   try {
-    console.log("Joining game with room code:", code, "room size:", roomSize);
+    alert("Joining game with room code:", code, "room size:", roomSize);
+    joinBtn.disabled = true;
     /*
     const response = await fetch('https://cartographersstudy.onrender.com/api/reset-game', {
       method: 'POST'
@@ -108,11 +109,11 @@ joinBtn.addEventListener('click', async function () {
       locked = temp2.locked;
     }*/
 
-
     drawCard();
   } catch (err) {
     console.error("Failed to join game:", err);
     alert("Error joining game: " + err.message);
+    joinBtn.disabled = false;
   }
 });
 
