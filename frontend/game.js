@@ -154,6 +154,8 @@ export function drawGrid() {
 
 export async function submitMove() {
   fetchSession();
+  submitBtn.disabled=true;
+  undoBtn.disabled=true;
   const playerToken = localStorage.getItem("playerToken");
   const code = localStorage.getItem("roomCode");
 
@@ -229,6 +231,8 @@ export async function submitMove() {
   } catch (err) {
     console.error("Validation failed:", err);
     alert("Network error during validation.");
+    submitBtn.disabled=false;
+    undoBtn.disabled=false;
   }
 }
 
@@ -499,6 +503,8 @@ canvas.addEventListener("click", () => {
     }
     placementLocked = true;
     drawGrid();
+    submitBtn.disabled = false;
+    undoBtn.disabled = false;
   }
 });
 
@@ -602,6 +608,8 @@ document.addEventListener('DOMContentLoaded', function () {
       undoLastPlacement();
       placementLocked = false;
       drawGrid();
+      undoBtn.disabled=true;
+      submitBtn.disabled=true;
     });
   }
   if (gameStarted) {
