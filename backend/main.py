@@ -192,11 +192,14 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
     except Exception as e:
         return {"error": str(e)}  
     
-def start_new_season(code):
-    if openRooms[code].season_index >= 4:
-        return {"error": "Game Over"}
-    if openRooms[code].deck_index == 0:
-        return {"status": "new season started", "season": openRooms[code].season_index}
+def start_new_season(code, player):
+    if player != list(openRooms[code].players.values())[0]:
+        if openRooms[code].season_index >= 4:
+            return {"error": "Game Over"}
+        if player.deck_index == 0:
+            return {"status": "new season started", "season": openRooms[code].season_index}
+        else:
+            return {"status": "new season started", "season": openRooms[code].season_index + 1}
 
     openRooms[code].season_index += 1
     if openRooms[code].season_index >= 4:
@@ -266,8 +269,7 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
         breakdown["total"] = guy.score
 
     # Advance the game to the next season
-    if player == list(openRooms[code].players.values())[0]:
-        season_result = start_new_season(code)
+    season_result = start_new_season(code, player)
     if "error" in season_result:
         session = openRooms[code]
         podium = []
