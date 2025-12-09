@@ -102,6 +102,7 @@ export function updateSeasonScores(endData) {
 export async function fetchSession() {
   try {
     const code = localStorage.getItem("roomCode");
+    const playerToken = localStorage.getItem("playerToken");
     const response = await fetch("https://cartographersstudy.onrender.com/api/session", {
       method: "POST",
       headers: { 
