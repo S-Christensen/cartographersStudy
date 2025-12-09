@@ -163,7 +163,6 @@ def matches_card_shape(diff, card, player):
 
 
 def placed_on_ruins(diff, player):
-    print(diff)
     for ruin in player.ruins_locations:
         x, y = ruin
         if diff[x, y] != "0":
@@ -179,8 +178,6 @@ def validate_placement(prev_grid, new_grid, card, player):
     if not matches_card_shape(diff, card, player):
         return False, "Shape does not match card"
     
-    print(card.to_dict())
-
     if card.ruinFlag and not placed_on_ruins(diff, player):
             return False, "Ruins card must be placed on a ruins tile"
 
