@@ -193,7 +193,8 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
                     card = gameStart.terrainCard(card.name, card.cost, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
                 player.ruins_required = False
         if card.type == "Monster":
-            openRooms[code].monster_deck.remove(card)
+            if card in openRooms[code].monster_deck:
+                openRooms[code].monster_deck.remove(card)
             card = monsterize(card, openRooms[code], player)
 
         print(f"Drew card: {card.name}, Cost: {card.cost}, Remaining Season Time: {player.season_time-card.cost}")
