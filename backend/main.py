@@ -73,8 +73,21 @@ def reset_game(code, size):
 
 
 @app.post("/api/session")
-def get_session(payload: RoomCodePayload):
+def get_session(payload: RoomCodePayload, Authorization: Optional[str] = Header(None)):
     code = payload.roomCode.strip()
+    if not Authorization or not Authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or invalid token")
+
+    token = Authorization.split(" ")[1]
+    try:
+        decoded = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        player_id = decoded["player_id"]
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=403, detail="Invalid token")
+    
+    player = openRooms[code].players.get(player_id)
+    if player is None:
+        raise HTTPException(status_code=404, detail="Player not found")
     return {
         "scoreTypes": openRooms[code].score_types,
         "scoreTypesNames": openRooms[code].score_types_names,
