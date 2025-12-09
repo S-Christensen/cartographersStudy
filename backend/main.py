@@ -155,21 +155,21 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
             openRooms[code].current_card = deck[0]
 
         # Check if season is over or deck is exhausted
-        if openRooms[code].season_time <= 0 or openRooms[code].deck_index >= len(openRooms[code].deck):
+        if openRooms[code].season_time <= 0 or player.deck_index >= len(openRooms[code].deck):
             if openRooms[code].season_index >=3:
                 # end game
                 return {"error": "Game Over"}
 
         # Draw card
-        card = openRooms[code].deck[openRooms[code].deck_index]
+        card = openRooms[code].deck[player.deck_index]
         player.ruins_fallback = False
+        openRooms[code].current_card = card
 
         # Handle ruins logic
         if card.type == "Ruins":
             player.deck_index += 1
             player.ruins_required = True
 
-        openRooms[code].current_card = card
         
         if player.ruins_required:
             if card.type == "Standard":
@@ -193,6 +193,8 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
         return {"error": str(e)}  
     
 def start_new_season(code):
+    if openRooms[code].season_index >= 4:
+        return {"error": "Game Over"}
     if openRooms[code].deck_index == 0:
         return {"status": "new season started", "season": openRooms[code].season_index}
 
@@ -267,12 +269,16 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
     if player == list(openRooms[code].players.values())[0]:
         season_result = start_new_season(code)
     if "error" in season_result:
-        # This means game over
-        session = openRooms.pop(code)
+        session = openRooms[code]
         podium = []
         for guy in session.players.values():
             podium.append(guy.score)
         podium = sorted(podium)
+
+        session.submissions += 1
+        if session.submissions == session.max_players:
+            openRooms.pop(code)
+            session.submissions = 0
 
         return {
             "season": openRooms[code].season_index,
