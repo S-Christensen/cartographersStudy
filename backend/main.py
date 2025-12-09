@@ -273,6 +273,7 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
 
     # Advance the game to the next season
     season_result = start_new_season(code, player)
+    session = openRooms[code]
     if session.submissions >= session.max_players:
         session.submissions = 0
     session.submissions += 1
