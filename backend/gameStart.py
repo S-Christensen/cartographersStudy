@@ -18,7 +18,7 @@ class Player:
         self.ruins_locations = [(1, 5), (2, 1), (2, 9), (8, 1), (8, 9), (9, 5)]
         self.locked = False
         self.deck_index = 0
-
+        self.ruins_required = False
 
 class GameSession:
     def __init__(self, session_id):
@@ -35,7 +35,6 @@ class GameSession:
         self.submissions = 0
         self.max_players = 1
         self.seating_order = []
-        self.waiting = 0
 
 def check_orthogonal_neighbors(grid, x, y):
     rows = len(grid)

@@ -68,7 +68,6 @@ def reset_game(code, size):
     session.season_initialized = True
     session.current_card = deck[0]
     session.max_players = size
-    session.waiting = size
 
     return {"status": "reset", "message": f"Game session {code} initialized"}
 
@@ -166,24 +165,20 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
         player.ruins_fallback = False
 
         # Handle ruins logic
-        openRooms[code].waiting -= 1
         if card.type == "Ruins":
             player.deck_index += 1
-            openRooms[code].ruins_required = True
+            player.ruins_required = True
 
         openRooms[code].current_card = card
         
-        if openRooms[code].ruins_required:
+        if player.ruins_required:
             if card.type == "Standard":
                 card.ruinFlag = True
                 player.ruins_fallback = not can_place_on_any_ruins(card.shape, player)
 
                 if player.ruins_fallback or (len(player.ruins_locations) == 0):
                     card = gameStart.terrainCard(card.name, card.cost, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
-                openRooms[code].submissions += 1
-                if openRooms[code].submissions == openRooms[code].max_players:
-                    openRooms[code].submissions = 0
-                    openRooms[code].ruins_required = False
+                player.ruins_required = False
         if card.type == "Monster":
             card = monsterize(card, openRooms[code], player)
 
@@ -362,10 +357,8 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
     
     player.locked= False
     player.deck_index += 1
-    openRooms[code].waiting -= 1
-    if openRooms[code].waiting == 0:
+    if player == openRooms[code].players.values()[1]:
         openRooms[code].season_time -= card.cost
-        openRooms[code].waiting = openRooms[code].max_players
     openRooms[code].deck_index = player.deck_index
 
     return {"success": True, "message": "Move validated"}
@@ -575,10 +568,8 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
     player.ruins_fallback = False
     player.locked= False       
     player.deck_index += 1 
-    openRooms[code].waiting -= 1
-    if openRooms[code].waiting == 0:
+    if player == openRooms[code].players.values()[1]:
         openRooms[code].season_time -= card.cost
-        openRooms[code].waiting = openRooms[code].max_players
     openRooms[code].deck_index = player.deck_index
 
     return {"success": True, "message": "Move validated", "grid": player.current_grid}
