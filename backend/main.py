@@ -78,8 +78,8 @@ def get_session(payload: RoomCodePayload):
     return {
         "scoreTypes": openRooms[code].score_types,
         "scoreTypesNames": openRooms[code].score_types_names,
-        "seasonTime": openRooms[code].season_time,
-        "currentSeason": openRooms[code].season_index,
+        "seasonTime": player.season_time,
+        "currentSeason": player.season_index,
         "currentCard": openRooms[code].current_card.to_dict() if hasattr(openRooms[code], "current_card") else None
     }
 
@@ -149,14 +149,14 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
             openRooms[code].monster_deck = monster_deck
             openRooms[code].score_types = score_types
             openRooms[code].season_index = 0
-            openRooms[code].deck_index = 0
-            openRooms[code].season_time = 8 - math.ceil((openRooms[code].season_index + 1) / 2.0)
+            player.deck_index = 0
+            player.season_time = 8 - math.ceil((openRooms[code].season_index + 1) / 2.0)
             openRooms[code].season_initialized = True
             openRooms[code].current_card = deck[0]
 
         # Check if season is over or deck is exhausted
-        if openRooms[code].season_time <= 0 or player.deck_index >= len(openRooms[code].deck):
-            if openRooms[code].season_index >=3:
+        if player.season_time <= 0 or player.deck_index >= len(openRooms[code].deck):
+            if player.season_index >=3:
                 # end game
                 return {"error": "Game Over"}
 
@@ -180,10 +180,11 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
                     card = gameStart.terrainCard(card.name, card.cost, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
                 player.ruins_required = False
         if card.type == "Monster":
+            openRooms[code].monster_deck.remove(card)
             card = monsterize(card, openRooms[code], player)
 
-        print(f"Drew card: {card.name}, Cost: {card.cost}, Remaining Season Time: {openRooms[code].season_time-card.cost}")
-        print(f"Deck: {[c.name for c in openRooms[code].deck[openRooms[code].season_index:]]}")
+        print(f"Drew card: {card.name}, Cost: {card.cost}, Remaining Season Time: {player.season_time-card.cost}")
+        print(f"Deck: {[c.name for c in openRooms[code].deck[player.season_index:]]}")
         print(f"Drawing for {player}")
         openRooms[code].deck_index = player.deck_index
 
@@ -193,28 +194,18 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
         return {"error": str(e)}  
     
 def start_new_season(code, player):
-    if player != list(openRooms[code].players.values())[0]:
-        if openRooms[code].season_index >= 4:
-            return {"error": "Game Over"}
-        if player.deck_index == 0:
-            return {"status": "new season started", "season": openRooms[code].season_index}
-        else:
-            return {"status": "new season started", "season": openRooms[code].season_index + 1}
-
-    openRooms[code].season_index += 1
-    if openRooms[code].season_index >= 4:
+    player.season_index += 1
+    if player.season_index >= 4:
         return {"error": "Game Over"}
     openRooms[code].deck, dummy = gameStart.build_decks()
-    openRooms[code].deck.append(openRooms[code].monster_deck[openRooms[code].season_index])
+    openRooms[code].deck.extend(openRooms[code].monster_deck[0:(player.season_index - 3 + len(openRooms[code].monster_deck))])
     random.shuffle(openRooms[code].deck)
 
-    openRooms[code].deck_index = 0
-    for guy in openRooms[code].players.values():
-        guy.deck_index = 0
+    player.deck_index = 0
     season_times = [8, 8, 7, 6]
-    openRooms[code].season_time = season_times[openRooms[code].season_index]
+    player.season_time = season_times[player.season_index]
 
-    return {"status": "new season started", "season": openRooms[code].season_index}
+    return {"status": "new season started", "season": player.season_index}
 
 @app.post("/api/end-season")
 async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = Header(None)):
@@ -235,12 +226,12 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
 
 
     # Determine which two scoring cards apply this season
-    score_func_1 = openRooms[code].score_types[openRooms[code].season_index % 4]
-    score_func_2 = openRooms[code].score_types[(openRooms[code].season_index + 1) % 4]
+    score_func_1 = openRooms[code].score_types[player.season_index % 4]
+    score_func_2 = openRooms[code].score_types[(player.season_index + 1) % 4]
 
     score_letters = ["A", "B", "C", "D"]
-    letter1 = score_letters[openRooms[code].season_index % 4]
-    letter2 = score_letters[(openRooms[code].season_index + 1) % 4]
+    letter1 = score_letters[player.season_index % 4]
+    letter2 = score_letters[(player.season_index + 1) % 4]
 
     breakdown = {
         letter1: 0,
@@ -250,26 +241,37 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
         "total": 0
     }
 
-    # Score each player (or just 1 if single-player)
-    for guy in openRooms[code].players.values():
-        grid = guy.current_grid
+    # Score each player
+    grid = player.current_grid
 
-        score1 = score_func_1(grid)
-        score2 = score_func_2(grid)
-        coins = guy.coins
-        monsters = -gameStart.monster_penalty(grid)
+    score1 = score_func_1(grid)
+    score2 = score_func_2(grid)
+    coins = player.coins
+    monsters = -gameStart.monster_penalty(grid)
 
-        season_total = score1 + score2 + coins + monsters
-        guy.score += season_total
+    season_total = score1 + score2 + coins + monsters
+    player.score += season_total
 
-        breakdown[letter1] = score1
-        breakdown[letter2] = score2
-        breakdown["coins"] = coins
-        breakdown["monsters"] = monsters
-        breakdown["total"] = guy.score
+    breakdown[letter1] = score1
+    breakdown[letter2] = score2
+    breakdown["coins"] = coins
+    breakdown["monsters"] = monsters
+    breakdown["total"] = player.score
 
     # Advance the game to the next season
     season_result = start_new_season(code, player)
+    if session.submissions >= session.max_players:
+        session.submissions = 0
+    session.submissions += 1
+    timeElapsed = 0
+    while session.submissions != session.max_players:
+        player.locked= True
+        await asyncio.sleep(1)
+        timeElapsed += 1
+        if timeElapsed >= 1500:
+            openRooms.pop(code)
+            raise HTTPException(status_code=400, detail="Room closed due to inactivity")
+        
     if "error" in season_result:
         session = openRooms[code]
         podium = []
@@ -283,7 +285,7 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
             session.submissions = 0
 
         return {
-            "season": openRooms[code].season_index,
+            "season": player.season_index,
             "breakdown": breakdown,
             "gameOver": True,
             "podium": podium
@@ -291,7 +293,7 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
 
     # Normal season transition
     return {
-        "season": openRooms[code].season_index,
+        "season": player.season_index,
         "breakdown": breakdown,
         "gameOver": False
     }
@@ -365,6 +367,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
         if gameStart.check_orthogonal_neighbors(player.current_grid, y, x):
             player.coins += 1
             player.mountain_locations.remove(mountain)
+    player.season_time -= card.cost
     if session.submissions >= session.max_players:
         session.submissions = 0
     session.submissions += 1
@@ -376,11 +379,9 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
         if timeElapsed >= 1500:
             openRooms.pop(code)
             raise HTTPException(status_code=400, detail="Room closed due to inactivity")
-    
     player.locked= False
     player.deck_index += 1
-    if player == list(openRooms[code].players.values())[0]:
-        openRooms[code].season_time -= card.cost
+    
     openRooms[code].deck_index = player.deck_index
 
     return {"success": True, "message": "Move validated"}
@@ -590,8 +591,7 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
     player.ruins_fallback = False
     player.locked= False       
     player.deck_index += 1 
-    if player == list(openRooms[code].players.values())[0]:
-        openRooms[code].season_time -= card.cost
+    player.season_time -= card.cost
     openRooms[code].deck_index = player.deck_index
 
     return {"success": True, "message": "Move validated", "grid": player.current_grid}

@@ -19,6 +19,8 @@ class Player:
         self.locked = False
         self.deck_index = 0
         self.ruins_required = False
+        self.season_time = 8
+        self.season_index = 0
 
 class GameSession:
     def __init__(self, session_id):
