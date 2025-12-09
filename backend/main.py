@@ -357,7 +357,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
     
     player.locked= False
     player.deck_index += 1
-    if player == openRooms[code].players.values()[1]:
+    if player == list(openRooms[code].players.values())[1]:
         openRooms[code].season_time -= card.cost
     openRooms[code].deck_index = player.deck_index
 
@@ -568,7 +568,7 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
     player.ruins_fallback = False
     player.locked= False       
     player.deck_index += 1 
-    if player == openRooms[code].players.values()[1]:
+    if player == list(openRooms[code].players.values())[1]:
         openRooms[code].season_time -= card.cost
     openRooms[code].deck_index = player.deck_index
 
