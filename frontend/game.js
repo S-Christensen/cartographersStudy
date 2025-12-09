@@ -154,8 +154,6 @@ export function drawGrid() {
 
 export async function submitMove() {
   fetchSession();
-  submitBtn.disabled=true;
-  undoBtn.disabled=true;
   const playerToken = localStorage.getItem("playerToken");
   const code = localStorage.getItem("roomCode");
 
@@ -512,8 +510,14 @@ canvas.addEventListener("click", () => {
 });
 
 export function showGameControls() {
-    if (submitBtn) submitBtn.style.display = '';
-    if (undoBtn) undoBtn.style.display = '';
+    if (submitBtn) {
+      submitBtn.style.display = '';
+      submitBtn.disabled=true;
+    }
+    if (undoBtn) {
+      undoBtn.style.display = '';
+      undoBtn.disabled=true;
+    }
     if (joinBtn) joinBtn.style.display = 'none';
     if (roomCodeInput) roomCodeInput.style.display = 'none';
     if (roomSizeInput) roomSizeInput.style.display = 'none';
@@ -590,8 +594,14 @@ document.addEventListener('DOMContentLoaded', function () {
     startGameFromSavedState();
   }
     // Hide controls initially
-  if (submitBtn) submitBtn.style.display = 'none';
-  if (undoBtn) undoBtn.style.display = 'none';
+  if (submitBtn){
+    submitBtn.style.display = 'none';
+    submitBtn.disabled = true;
+  }
+  if (undoBtn) {
+     undoBtn.style.display = 'none';
+     undoBtn.disabled = true;
+  }
 
   /*
   // Manual start
@@ -633,4 +643,6 @@ function undoLastPlacement() {
   }
   lastPlacedCells = [];
   drawGrid();
+  undoBtn.disabled=true;
+  submitBtn.disabled=true;
 }

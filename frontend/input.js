@@ -50,6 +50,8 @@ function rotateMatrix(matrix, direction) {
 
 document.getElementById("submitBtn").addEventListener("click", () => {
   console.log("Submitting grid:", gridData);
+  submitBtn.disabled=true;
+  undoBtn.disabled=true;
   submitMove();
 });
 
@@ -146,5 +148,7 @@ canvas.addEventListener("click", () => {
     setLastPlacedCells(placed);
     setPlacementLocked(true);
     drawGrid();
+    submitBtn.disabled = false;
+    undoBtn.disabled = false;
   }
 });
