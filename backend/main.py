@@ -201,6 +201,7 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
         print(f"Deck: {[c.name for c in openRooms[code].deck[player.season_index:]]}")
         print(f"Drawing for {player}")
         openRooms[code].deck_index = player.deck_index
+        player.season_time -= card.cost
 
         return card.to_dict()
 
@@ -382,7 +383,6 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
         if gameStart.check_orthogonal_neighbors(player.current_grid, y, x):
             player.coins += 1
             player.mountain_locations.remove(mountain)
-    player.season_time -= card.cost
     if session.submissions >= session.max_players:
         session.submissions = 0
     session.submissions += 1
@@ -606,7 +606,6 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
     player.ruins_fallback = False
     player.locked= False       
     player.deck_index += 1 
-    player.season_time -= card.cost
     openRooms[code].deck_index = player.deck_index
 
     return {"success": True, "message": "Move validated", "grid": player.current_grid}
