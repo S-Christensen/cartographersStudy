@@ -257,7 +257,10 @@ export async function drawCard() {
       // Trigger backend to start next season
       const endRes = await fetch("https://cartographersstudy.onrender.com/api/end-season", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${playerToken}`
+       },
       body: JSON.stringify({roomCode: code})
     });
       const endData = await endRes.json();
