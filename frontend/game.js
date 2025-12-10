@@ -497,7 +497,7 @@ function drawPreview(x, y) {
   }
 }
 
-export let activeShape = [[1, 1], [1, 1]]; // Default shape, will be set on card draw
+export let activeShape = []; // Default shape, will be set on card draw
 export let terrain = "Monster"; // Default terrain, will be set on card draw
 export let lastPlacedCells = [];
 export let placementLocked = false;
