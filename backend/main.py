@@ -402,13 +402,13 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
         if gameStart.check_orthogonal_neighbors(player.current_grid, y, x):
             player.coins += 1
             player.mountain_locations.remove(mountain)
-    if session.submissions >= session.max_players:
-        session.submissions = 0
+    if session.sub_submissions >= session.max_players:
+        session.sub_submissions = 0
     session.submissions += 1
     timeElapsed = 0
     print("entering validate sub loop")
-    print(session.submissions)
-    while session.submissions != session.max_players:
+    print(session.sub_submissions)
+    while session.sub_submissions != session.max_players:
         player.locked= True
         await asyncio.sleep(1)
         timeElapsed += 1
@@ -615,13 +615,13 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
         if gameStart.check_orthogonal_neighbors(neighbor.current_grid, y, x):
             neighbor.coins += 1
             neighbor.mountain_locations.remove(mountain)
-    if session.submissions >= session.max_players:
-            session.submissions = 0
-    session.submissions += 1
+    if session.sub_submissions >= session.max_players:
+            session.sub_submissions = 0
+    session.sub_submissions += 1
     timeElapsed = 0
     print("entering unmash sub loop")
-    print(session.submissions)
-    while session.submissions != session.max_players:
+    print(session.sub_submissions)
+    while session.sub_submissions != session.max_players:
         player.locked=True
         await asyncio.sleep(1)
         timeElapsed += 1

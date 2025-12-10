@@ -35,6 +35,7 @@ class GameSession:
         self.season_initialized = False
         self.ruins_required = False
         self.submissions = 0
+        self.sub_submissions = 0
         self.max_players = 1
         self.seating_order = []
 
