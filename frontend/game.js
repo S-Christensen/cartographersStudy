@@ -93,7 +93,9 @@ export function updateSeasonScores(endData) {
 
   if (endData.gameOver) {
       console.log("Game Over!");
-      alert(endData.podium)
+      const scores = endData.podium.sort((a, b) => b - a);
+      const message = scores.map((score, i) => `${i + 1}. ${score}`).join("\n");
+      alert("🏆 Final Results:\n\n" + message);
       localStorage.clear();
   }
 }
