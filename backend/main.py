@@ -56,7 +56,7 @@ def reset_game(code, size):
     score_types, score_types_names = gameStart.select_scoring_cards()
 
     deck.append(monster_deck[0])
-    random.shuffle(deck)
+    # random.shuffle(deck)
 
     session = openRooms[code]
     session.deck = deck
