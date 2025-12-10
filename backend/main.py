@@ -180,11 +180,11 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
 
         # Handle ruins logic
         if card.type == "Ruins":
-            player.deck_index += 1
             player.ruins_required = True
 
-        
         if player.ruins_required:
+            while openRooms[code].deck[player.deck_index].type == "Ruins":
+                player.deck_index += 1
             if card.type == "Standard":
                 card.ruinFlag = True
                 player.ruins_required = False
@@ -194,6 +194,7 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
                     card = gameStart.terrainCard(card.name, card.cost, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
                 
         if card.type == "Monster":
+            card.ruinFlag = False
             if card in openRooms[code].monster_deck:
                 openRooms[code].monster_deck.remove(card)
             card = monsterize(card, openRooms[code], player)
@@ -215,7 +216,7 @@ def start_new_season(code, player):
         return {"error": "Game Over"}
     openRooms[code].deck, dummy = gameStart.build_decks()
     openRooms[code].deck.extend(openRooms[code].monster_deck[0:(player.season_index - 3 + len(openRooms[code].monster_deck))])
-    random.shuffle(openRooms[code].deck)
+    # random.shuffle(openRooms[code].deck)
 
     player.deck_index = 0
     season_times = [8, 8, 7, 6]

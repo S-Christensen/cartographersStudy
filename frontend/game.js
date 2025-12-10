@@ -284,6 +284,7 @@ export async function drawCard() {
 
       // Update UI with new season info
       updateSeasonScores(endData);
+      return;
     }
 
     console.log("drawing card for drawCard")

@@ -231,6 +231,8 @@ def build_decks():
     deck = [
         terrainCard("Treetop Village", 2, [[[0, 0, "Forest", "Forest"], ["Forest", "Forest", "Forest", 0]],
                                           [[0, 0, "Village", "Village"], ["Village", "Village", "Village", 0]]], "Standard"),
+        terrainCard("Temple Ruins", 0, [[[-1]]], "Ruins"),
+        terrainCard("Outpost Ruins", 0, [[[-1]]], "Ruins"),
         terrainCard("Fishing Village", 2, [[["Village", "Village", "Village", "Village"]],
                                           [["Water", "Water", "Water", "Water"]]], "Standard"),
         terrainCard("Hinterland Stream", 2, [[["Farm", "Farm", "Farm"], ["Farm", 0, 0], ["Farm", 0, 0]],
@@ -249,9 +251,7 @@ def build_decks():
                                       [[0, 0, "Water"], [0, "Water", "Water"], ["Water", "Water", 0]]], "Standard"),
         terrainCard("Hamlet", 1, [[["Village", 0], ["Village", "Village"]],
                                   [["Village", "Village", "Village"], ["Village", "Village", 0]]], "Standard"),
-        terrainCard("Rift Lands", 0, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard"),
-        terrainCard("Temple Ruins", 0, [[[-1]]], "Ruins"),
-        terrainCard("Outpost Ruins", 0, [[[-1]]], "Ruins")
+        terrainCard("Rift Lands", 0, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
     ]
 
     monster_deck = [
