@@ -56,7 +56,7 @@ def reset_game(code, size):
     score_types, score_types_names = gameStart.select_scoring_cards()
 
     deck.append(monster_deck[0])
-    # random.shuffle(deck)
+    random.shuffle(deck)
 
     session = openRooms[code]
     session.deck = deck
@@ -216,7 +216,7 @@ def start_new_season(code, player):
         return {"error": "Game Over"}
     openRooms[code].deck, dummy = gameStart.build_decks()
     openRooms[code].deck.extend(openRooms[code].monster_deck[0:(player.season_index - 3 + len(openRooms[code].monster_deck))])
-    # random.shuffle(openRooms[code].deck)
+    random.shuffle(openRooms[code].deck)
 
     player.deck_index = 0
     season_times = [8, 8, 7, 6]

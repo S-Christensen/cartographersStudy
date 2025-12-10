@@ -20,8 +20,7 @@ class Player:
         self.deck_index = 0
         self.ruins_required = False
         self.season_time = 8
-        # RESET TO 0
-        self.season_index = 3
+        self.season_index = 0
 
 class GameSession:
     def __init__(self, session_id):
@@ -32,8 +31,7 @@ class GameSession:
         self.current_card = self.deck[0]
         self.season_time = 8
         self.deck_index = 0
-        # RESET TO 0
-        self.season_index = 3
+        self.season_index = 0
         self.season_initialized = False
         self.ruins_required = False
         self.submissions = 0
@@ -231,9 +229,6 @@ def build_decks():
     deck = [
         terrainCard("Treetop Village", 2, [[[0, 0, "Forest", "Forest"], ["Forest", "Forest", "Forest", 0]],
                                           [[0, 0, "Village", "Village"], ["Village", "Village", "Village", 0]]], "Standard"),
-        terrainCard("Temple Ruins", 0, [[[-1]]], "Ruins"),
-        terrainCard("Goblin Attack", 0, [[["Monster", 0, 0], [0, "Monster", 0], [0, 0, "Monster"]]], "Monster"),
-        terrainCard("Outpost Ruins", 0, [[[-1]]], "Ruins"),
         terrainCard("Fishing Village", 2, [[["Village", "Village", "Village", "Village"]],
                                           [["Water", "Water", "Water", "Water"]]], "Standard"),
         terrainCard("Hinterland Stream", 2, [[["Farm", "Farm", "Farm"], ["Farm", 0, 0], ["Farm", 0, 0]],
@@ -252,7 +247,9 @@ def build_decks():
                                       [[0, 0, "Water"], [0, "Water", "Water"], ["Water", "Water", 0]]], "Standard"),
         terrainCard("Hamlet", 1, [[["Village", 0], ["Village", "Village"]],
                                   [["Village", "Village", "Village"], ["Village", "Village", 0]]], "Standard"),
-        terrainCard("Rift Lands", 0, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
+        terrainCard("Rift Lands", 0, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard"),
+        terrainCard("Temple Ruins", 0, [[[-1]]], "Ruins"),
+        terrainCard("Outpost Ruins", 0, [[[-1]]], "Ruins")
     ]
 
     monster_deck = [
