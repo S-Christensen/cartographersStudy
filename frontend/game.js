@@ -195,6 +195,8 @@ export async function submitMove() {
     if (!response.ok) {
       console.error("Server rejected move:", result);
       alert(result.detail || result.error || "Invalid move.");
+      submitBtn.disabled = false;
+      undoBtn.disabled = false;
     } else {
       console.log("Move validated:", result);
       if (monsterFlag){
@@ -213,6 +215,8 @@ export async function submitMove() {
       if (!response2.ok) {
         console.error("Coin-check failed.", result2);
         alert(result2.detail || result2.error)
+        submitBtn.disabled = false;
+        undoBtn.disabled = false;
       } else {
         updateCoinTracker(result2.coins);
       }/*
