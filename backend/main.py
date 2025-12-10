@@ -404,7 +404,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
             player.mountain_locations.remove(mountain)
     if session.sub_submissions >= session.max_players:
         session.sub_submissions = 0
-    session.submissions += 1
+    session.sub_submissions += 1
     timeElapsed = 0
     print("entering validate sub loop")
     print(session.sub_submissions)
