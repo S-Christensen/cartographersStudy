@@ -285,6 +285,7 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
             session.submissions = 0
         session.submissions += 1
         timeElapsed = 0
+        print("entering end season game over sub loop")
         while session.submissions != session.max_players:
             player.locked= True
             await asyncio.sleep(1)
@@ -314,6 +315,7 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
         session.submissions = 0
     session.submissions += 1
     timeElapsed = 0
+    print("entering end season normal sub loop")
     while session.submissions != session.max_players:
         player.locked= True
         await asyncio.sleep(1)
@@ -401,6 +403,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
         session.submissions = 0
     session.submissions += 1
     timeElapsed = 0
+    print("entering validate sub loop")
     while session.submissions != session.max_players:
         player.locked= True
         await asyncio.sleep(1)
@@ -440,6 +443,7 @@ async def create_player(payload: RoomSetupPayload):
 
     openRooms[code].players[player_id] = gameStart.Player(player_id, sample_grid)
     timeElapsed = 0
+    print("entering create player sub loop")
     while len(openRooms[code].players) != openRooms[code].max_players:
         openRooms[code].players[player_id].locked= True
         await asyncio.sleep(1)
@@ -610,6 +614,7 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
             session.submissions = 0
     session.submissions += 1
     timeElapsed = 0
+    print("entering unmash sub loop")
     while session.submissions < session.max_players:
         player.locked=True
         await asyncio.sleep(1)
