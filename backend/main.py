@@ -308,6 +308,8 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
         }
 
     # Normal season transition
+    if session.submission >= session.max_players:
+        session.submission = 0
     session.submissions += 1
     while session.submissions < session.max_players:
         player.locked=True
@@ -317,7 +319,6 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
             openRooms.pop(code)
             raise HTTPException(status_code=400, detail="Room closed due to inactivity")
     player.locked= False
-    session.submission = 0
     return {
         "season": player.season_index,
         "breakdown": breakdown,
