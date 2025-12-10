@@ -308,6 +308,16 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
         }
 
     # Normal season transition
+    session.submissions += 1
+    while session.submissions < session.max_players:
+        player.locked=True
+        await asyncio.sleep(1)
+        timeElapsed += 1
+        if timeElapsed >= 1500:
+            openRooms.pop(code)
+            raise HTTPException(status_code=400, detail="Room closed due to inactivity")
+    player.locked= False
+    session.submission = 0
     return {
         "season": player.season_index,
         "breakdown": breakdown,
@@ -596,7 +606,7 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
             session.submissions = 0
     session.submissions += 1
     timeElapsed = 0
-    while session.submissions != len(session.players):
+    while session.submissions < session.max_players:
         player.locked=True
         await asyncio.sleep(1)
         timeElapsed += 1
