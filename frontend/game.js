@@ -262,6 +262,7 @@ export async function drawCard() {
     const session = await sessionRes.json();
 
     if (session.seasonTime <= 0) {
+      console.log("ending season")
       // Trigger backend to start next season
       const endRes = await fetch("https://cartographersstudy.onrender.com/api/end-season", {
       method: "POST",
