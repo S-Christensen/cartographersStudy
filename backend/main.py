@@ -187,11 +187,12 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
         if player.ruins_required:
             if card.type == "Standard":
                 card.ruinFlag = True
+                player.ruins_required = False
                 player.ruins_fallback = not can_place_on_any_ruins(card.shape, player)
 
                 if player.ruins_fallback or (len(player.ruins_locations) == 0):
                     card = gameStart.terrainCard(card.name, card.cost, [[["Forest"]], [["Village"]], [["Farm"]], [["Water"]], [["Monster"]]], "Standard")
-                player.ruins_required = False
+                
         if card.type == "Monster":
             if card in openRooms[code].monster_deck:
                 openRooms[code].monster_deck.remove(card)
@@ -311,6 +312,7 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
     if session.submissions >= session.max_players:
         session.submissions = 0
     session.submissions += 1
+    timeElapsed = 0
     while session.submissions < session.max_players:
         player.locked=True
         await asyncio.sleep(1)
