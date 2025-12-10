@@ -298,7 +298,8 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
         for guy in session.players.values():
             podium.append(guy.score)
         podium = sorted(podium)
-
+        if session.submissions >= session.max_players:
+            session.submissions = 0
         session.submissions += 1
         if session.submissions == session.max_players:
             openRooms.pop(code)
@@ -414,6 +415,7 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
         if timeElapsed >= 1500:
             openRooms.pop(code)
             raise HTTPException(status_code=400, detail="Room closed due to inactivity")
+    print("left validate sub loop")
     player.locked= False
     player.deck_index += 1
     
