@@ -292,6 +292,7 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
             if timeElapsed >= 1500:
                 openRooms.pop(code)
                 raise HTTPException(status_code=400, detail="Room closed due to inactivity")
+        player.locked= False
         for guy in session.players.values():
             podium.append(guy.score)
         podium = sorted(podium)
@@ -313,8 +314,8 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
         session.submissions = 0
     session.submissions += 1
     timeElapsed = 0
-    while session.submissions < session.max_players:
-        player.locked=True
+    while session.submissions != session.max_players:
+        player.locked= True
         await asyncio.sleep(1)
         timeElapsed += 1
         if timeElapsed >= 1500:
