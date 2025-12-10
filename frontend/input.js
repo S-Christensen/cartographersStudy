@@ -74,7 +74,7 @@ joinBtn.addEventListener('click', async function () {
   }
 
   try {
-    alert("Joining game with room code:", code, "room size:", roomSize);
+    alert(`Joining game with room code: ${code}, room size: ${roomSize}`);
     joinBtn.disabled = true;
     /*
     const response = await fetch('https://cartographersstudy.onrender.com/api/reset-game', {
