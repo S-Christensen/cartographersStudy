@@ -298,12 +298,12 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
         for guy in session.players.values():
             podium.append(guy.score)
         podium = sorted(podium)
-        if session.submissions >= session.max_players:
-            session.submissions = 0
-        session.submissions += 1
-        if session.submissions == session.max_players:
+        if session.sub_submissions >= session.max_players:
+            session.sub_submissions = 0
+        session.sub_submissions += 1
+        if session.sub_submissions == session.max_players:
             openRooms.pop(code)
-            session.submissions = 0
+            session.sub_submissions = 0
 
         return {
             "season": player.season_index,

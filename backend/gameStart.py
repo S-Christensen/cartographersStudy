@@ -20,7 +20,8 @@ class Player:
         self.deck_index = 0
         self.ruins_required = False
         self.season_time = 8
-        self.season_index = 0
+        # RESET TO 0
+        self.season_index = 3
 
 class GameSession:
     def __init__(self, session_id):
@@ -31,7 +32,8 @@ class GameSession:
         self.current_card = self.deck[0]
         self.season_time = 8
         self.deck_index = 0
-        self.season_index = 0
+        # RESET TO 0
+        self.season_index = 3
         self.season_initialized = False
         self.ruins_required = False
         self.submissions = 0
