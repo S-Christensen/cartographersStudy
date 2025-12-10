@@ -251,6 +251,7 @@ export async function drawCard() {
     const playerToken = localStorage.getItem("playerToken");
     const code = localStorage.getItem("roomCode");
     // Check current session state
+    console.log("session for drawCard")
     const sessionRes = await fetch("https://cartographersstudy.onrender.com/api/session", {
       method: "POST",
       headers: { 
@@ -283,7 +284,7 @@ export async function drawCard() {
       updateSeasonScores(endData);
     }
 
-
+    console.log("drawing card for drawCard")
     const response = await fetch('https://cartographersstudy.onrender.com/api/draw-card', {
         method: 'POST',
         headers: {
@@ -306,6 +307,7 @@ export async function drawCard() {
     if (currentCard.type === "Ruins") {
       lastRuin = currentCard.id;
       // Immediately draw the next card
+      console.log("drawing post ruins for drawCard")
       const nextResponse = await fetch('https://cartographersstudy.onrender.com/api/draw-card', {
         method: 'POST',
         headers: {
@@ -325,6 +327,7 @@ export async function drawCard() {
         // Show ruins card name
         lastRuin = currentCard.id;
         // Immediately draw the next card
+        console.log("double ruins for drawCard")
         const nextResponse = await fetch('https://cartographersstudy.onrender.com/api/draw-card', {
         method: 'POST',
         headers: {
@@ -353,6 +356,7 @@ export async function drawCard() {
       setAvailableShapes(currentCard.shape);
       setActiveShape(currentCard.shape[0]);
       terrain = currentCard.terrainOptions[0];
+      console.log("session 2 for drawCard")
       await fetchSession();
       if (currentCard.cost === 1 && currentCard.shape.length > 1) {
         showShapeButtons(currentCard.shape);
@@ -385,6 +389,7 @@ export async function drawCard() {
       terrain = currentCard.terrainOptions[0];
 
       if (currentCard.type === "Monster") {
+        console.log("mash for drawCard")
         const monsterResponse = await fetch('https://cartographersstudy.onrender.com/api/mash', {
           method: 'POST',
           headers: {
@@ -406,7 +411,7 @@ export async function drawCard() {
         document.getElementById("ruinsCardName").textContent = "";
         document.getElementById("activeCardName").textContent = `Card: ${currentCard.id}`;
         document.getElementById('terrain-buttons').style.display = 'none';
-
+        showTerrainButtons(currentCard.terrainOptions);
         renderShapePreview(activeShape, terrain, currentCard.cost, seasonRemaining);
         placementLocked = false;
         lastPlacedCells = [];
