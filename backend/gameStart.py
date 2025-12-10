@@ -232,6 +232,7 @@ def build_decks():
         terrainCard("Treetop Village", 2, [[[0, 0, "Forest", "Forest"], ["Forest", "Forest", "Forest", 0]],
                                           [[0, 0, "Village", "Village"], ["Village", "Village", "Village", 0]]], "Standard"),
         terrainCard("Temple Ruins", 0, [[[-1]]], "Ruins"),
+        terrainCard("Goblin Attack", 0, [[["Monster", 0, 0], [0, "Monster", 0], [0, 0, "Monster"]]], "Monster"),
         terrainCard("Outpost Ruins", 0, [[[-1]]], "Ruins"),
         terrainCard("Fishing Village", 2, [[["Village", "Village", "Village", "Village"]],
                                           [["Water", "Water", "Water", "Water"]]], "Standard"),
