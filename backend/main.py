@@ -576,7 +576,7 @@ async def unmash(payload: ValidationPayload, Authorization: Optional[str] = Head
 
 
     # Retrieve the Player object
-    card = session.current_card
+    card = session.deck[player.deck_index]
     if player.ruins_fallback:
         card = gameStart.terrainCard(card.name, card.cost, [[["Monster"]]], "Monster")
     
