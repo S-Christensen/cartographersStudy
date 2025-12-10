@@ -345,6 +345,37 @@ export async function drawCard() {
           return;
         }
       }
+      if (currentCard.type === "Monster") {
+        console.log("mash for post ruins drawCard")
+        const monsterResponse = await fetch('https://cartographersstudy.onrender.com/api/mash', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${playerToken}`
+          },
+          body: JSON.stringify({roomCode: code})
+        });
+        const neighborData = await monsterResponse.json();
+        let oldGrid = gridData;
+        gridData = neighborData.neighborGrid;
+        localStorage.setItem("neighborData", JSON.stringify(gridData));
+        alert("Monster card drawn! You are now drawing on your neighbor's board");
+        monsterFlag = true;
+
+        terrain = "Monster";
+        setAvailableShapes(currentCard.shape);
+        setActiveShape(currentCard.shape[0]);
+        document.getElementById("ruinsCardName").textContent = "";
+        document.getElementById("activeCardName").textContent = `Card: ${currentCard.id}`;
+        document.getElementById('terrain-buttons').style.display = 'none';
+        showTerrainButtons(currentCard.terrainOptions);
+        renderShapePreview(activeShape, terrain, currentCard.cost, seasonRemaining);
+        placementLocked = false;
+        lastPlacedCells = [];
+        drawGrid();
+        localStorage.setItem("currentCard", JSON.stringify(currentCard));
+        return;
+      }
 
       if (currentCard.type === "Standard") {
         alert("Ruins card drawn! The next shape must be placed on a Ruins tile.");
