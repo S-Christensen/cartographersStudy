@@ -51,19 +51,6 @@ def check_orthogonal_neighbors(grid, x, y):
                 return False
     return True
 
-
-'''
-def filter_criteria(card, criteria):
-    result = [criteria["Misc"]]
-    if "farm" in card.shapes[0] or "farm" in card.shapes[1]:
-         result.insert(0, [criteria["Blue"]])
-    if "forest" in card.shapes[0] or "forest" in card.shapes[1]:
-        result.insert(0, [criteria["Green"]])
-    if "village" in card.shapes[0] or "village" in card.shapes[1]:
-        result.insert(0, [criteria["Red"]])
-    return result
-'''
-
 def flip_and_rotate(shape):
     shapes = []
     for flip in [False, True]:
@@ -73,37 +60,6 @@ def flip_and_rotate(shape):
             shapes.append(rotated)
     return shapes
 
-'''
-def evaluate_position(card, grid, weights, criteria):
-    best_score = -1
-    best_position = None
-    best_shape = None
-    for shape in card.shapes:
-        for variant in flip_and_rotate(shape):
-            variant = np.array(variant)
-            for x in range(len(grid) - len(variant) + 1):
-                for y in range(len(grid[0]) - len(variant[0]) + 1):
-                    score = 0
-                    for criterion in criteria:
-                        # Placeholder for actual scoring logic
-                        score += criterion() * weights
-                    if score > best_score:
-                        best_score = score
-                        best_position = (x, y)
-                        best_shape = variant
-    return best_position, best_shape
-'''
-'''
-def place_piece(card, grid, scoretypes, strategy):
-    criteria = filter_criteria(card, scoretypes)
-    best_position, best_shape = evaluate_position(card, grid, strategy, criteria)
-    if best_position:
-        x, y = best_position
-        for i in range(len(best_shape)):
-            for j in range(len(best_shape[0])):
-                grid[x+i][y+j] = best_shape[i][j]
-        print(f"Placing {card.name} at {best_position}")
-'''
 
 def get_placement_diff(prev_grid, new_grid):
     
@@ -277,55 +233,45 @@ def select_scoring_cards():
     return score_types, score_types_names
 
 '''
-def run_season(game_session, deck, monster_deck, score_types, season_index):
-    season_time = 8 - math.ceil((season_index + 1) / 2.0)
-    deck.append(monster_deck[season_index])
-    random.shuffle(deck)
-    index = 0
-    mountain_locations = [(1, 3), (2, 8), (5, 5), (8, 2), (9, 7)]
+def evaluate_position(card, grid, weights, criteria):
+    best_score = -1
+    best_position = None
+    best_shape = None
+    for shape in card.shapes:
+        for variant in flip_and_rotate(shape):
+            variant = np.array(variant)
+            for x in range(len(grid) - len(variant) + 1):
+                for y in range(len(grid[0]) - len(variant[0]) + 1):
+                    score = 0
+                    for criterion in criteria:
+                        # Placeholder for actual scoring logic
+                        score += criterion() * weights
+                    if score > best_score:
+                        best_score = score
+                        best_position = (x, y)
+                        best_shape = variant
+    return best_position, best_shape
+'''
+'''
+def place_piece(card, grid, scoretypes, strategy):
+    criteria = filter_criteria(card, scoretypes)
+    best_position, best_shape = evaluate_position(card, grid, strategy, criteria)
+    if best_position:
+        x, y = best_position
+        for i in range(len(best_shape)):
+            for j in range(len(best_shape[0])):
+                grid[x+i][y+j] = best_shape[i][j]
+        print(f"Placing {card.name} at {best_position}")
+'''
 
-    while season_time > 0:
-        ruins_flag = False
-        card = deck[index]
-        season_time -= card.cost
-        if card.name in ["TempleRuins", "OutpostRuins"]:
-            ruins_flag = True
-            index+=1
-            card = deck[index]
-
-
-        # TODO wait for valid input from all players. Maybe set a flag that validate_placement grants?
-        # Can't implement this now otherwise test will break lol
-        for player in game_session.players.values():
-            prev_grid = player.current_grid
-            new_grid = get_player_submission(player)
-            valid, message = validate_placement(prev_grid, new_grid, card, ruins_flag)
-            if not valid:
-                reject_submission(player.id, message)
-                continue
-
-            player.grid_history.append(copy.deepcopy(prev_grid))
-            player.current_grid = new_grid
-            player.flags["placed_this_turn"] = True
-        # TODO wait for valid input from all players. Maybe set a flag that validate_placement grants?
-
-            for mountain in mountain_locations[:]:
-                y, x = mountain
-                if check_orthogonal_neighbors(player.current_grid, y, x):
-                    player.coins += 1
-                    mountain_locations.remove(mountain)
-
-            if player.flags["used_coin_bonus"]:
-                player.coins += 1
-
-        if card.name in [m.name for m in monster_deck]:
-            deck.pop(index)
-            index -= 1
-        index += 1
-
-    for player in game_session.players:
-        player.score += score_types[season_index % 4](player.current_grid)
-        player.score += score_types[(season_index + 1) % 4](player.current_grid)
-        player.score += player.coins
-        player.score -= monster_penalty(player.current_grid)
+'''
+def filter_criteria(card, criteria):
+    result = [criteria["Misc"]]
+    if "farm" in card.shapes[0] or "farm" in card.shapes[1]:
+         result.insert(0, [criteria["Blue"]])
+    if "forest" in card.shapes[0] or "forest" in card.shapes[1]:
+        result.insert(0, [criteria["Green"]])
+    if "village" in card.shapes[0] or "village" in card.shapes[1]:
+        result.insert(0, [criteria["Red"]])
+    return result
 '''

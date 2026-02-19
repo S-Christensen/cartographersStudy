@@ -8,6 +8,8 @@ import math
 import random
 import terrainCard
 import asyncio
+from logging import log_move
+from logging import log_season_result
 
 app = FastAPI()
 
@@ -269,6 +271,19 @@ async def end_season(payload: RoomCodePayload, Authorization: Optional[str] = He
     season_total = score1 + score2 + coins + monsters
     player.score += season_total
 
+    log_season_result(
+        room_code=code,
+        player_id=player_id,
+        season=player.season_index,
+        score1=score1,
+        score2=score2,
+        coins=coins,
+        monsters=monsters,
+        season_total=season_total,
+        cumulative_score=player.score,
+    )
+
+
     breakdown[letter1] = score1
     breakdown[letter2] = score2
     breakdown["coins"] = coins
@@ -394,6 +409,21 @@ async def validatePlacement(payload: ValidationPayload, Authorization: Optional[
 
     if not is_valid:
         raise HTTPException(status_code=400, detail=message)
+
+    diff = gameStart.get_placement_diff(player.current_grid, payload.new_grid)
+    log_move(
+        room_code=code,
+        player_id=player_id,
+        season=player.season_index,
+        turn_index=player.deck_index,
+        card_dict=card.to_dict(),
+        grid_before=player.current_grid,
+        grid_after=payload.new_grid,
+        placement_diff=diff.tolist(),
+        coins_before=player.coins,
+        coins_after=player.coins,
+    )
+
 
     # Commit the new grid + update history
     player.grid_history.append(player.current_grid)
