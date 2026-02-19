@@ -108,9 +108,6 @@ def run_single_game(game_id="sim_001", verbose=False):
         season_total = score1 + score2 + coins + monsters
         player.score += season_total
 
-        # (Optional) Log season result
-        # log_season_result(...)
-
         if verbose:
             print(f"Season {season} score: {season_total} (Total: {player.score})")
 

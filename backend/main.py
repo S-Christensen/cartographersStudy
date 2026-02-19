@@ -8,8 +8,8 @@ import math
 import random
 import terrainCard
 import asyncio
-from logging import log_move
-from logging import log_season_result
+from logging_ml import log_move
+from logging_ml import log_season_result
 
 app = FastAPI()
 
