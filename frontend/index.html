@@ -17,11 +17,6 @@
       <div id="trainingStatus">Idle</div>
     </div>
     <div class="training-controls">
-      <select id="trainingModelSelect">
-        <option value="equal_weights">Equal Weights</option>
-        <option value="trained_color">Trained Color</option>
-        <option value="trained_position">Trained Position</option>
-      </select>
       <button id="trainingLoadSampleBtn">Load Sample</button>
       <label class="file-label" for="trainingFileInput">Load JSON</label>
       <input id="trainingFileInput" type="file" accept="application/json" />
@@ -32,24 +27,32 @@
     </div>
     <div class="training-meta">
       <div>Seed: <span id="trainingSeed">-</span></div>
-      <div>Model Score: <span id="trainingScore">-</span></div>
       <div>Step: <span id="trainingStepValue">0 / 0</span></div>
       <div>Season: <span id="trainingSeasonValue">-</span></div>
       <div>Card: <span id="trainingCardValue">-</span></div>
       <div>Move: <span id="trainingMoveValue">-</span></div>
-      <div>Coins: <span id="trainingCoinsValue">-</span></div>
-      <div>Time Left: <span id="trainingTimeValue">-</span></div>
     </div>
     <input id="trainingProgress" type="range" min="0" max="0" value="0" disabled />
-    <div class="training-visuals">
-      <div>
-        <h3>Grid After Step</h3>
-        <div id="trainingGrid" class="training-grid" aria-live="polite"></div>
+    <div class="training-models">
+      <div class="training-model-column" data-model="equal_weights">
+        <h3>Equal Weights</h3>
+        <div class="model-score"><span id="trainingScore-equal_weights">-</span></div>
+        <div id="trainingGrid-equal_weights" class="training-grid" aria-live="polite"></div>
       </div>
-      <div>
-        <h3>Deviation Timeline</h3>
-        <canvas id="trainingTimeline" width="540" height="110"></canvas>
+      <div class="training-model-column" data-model="trained_color">
+        <h3>Trained Color</h3>
+        <div class="model-score"><span id="trainingScore-trained_color">-</span></div>
+        <div id="trainingGrid-trained_color" class="training-grid" aria-live="polite"></div>
       </div>
+      <div class="training-model-column" data-model="trained_position">
+        <h3>Trained Position</h3>
+        <div class="model-score"><span id="trainingScore-trained_position">-</span></div>
+        <div id="trainingGrid-trained_position" class="training-grid" aria-live="polite"></div>
+      </div>
+    </div>
+    <div class="training-timeline-container">
+      <h3>Deviation Timeline</h3>
+      <canvas id="trainingTimeline" width="980" height="140"></canvas>
     </div>
   </section>
   <div id="pointsOverlay">
