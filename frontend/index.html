@@ -11,6 +11,47 @@
     <input type="number" id="roomSizeInput" placeholder="Room size" min="1" />
     <button id="joinBtn" disabled>Join Game</button>
   </div>
+  <section id="trainingPanel" aria-label="Model training replay panel">
+    <div class="training-header">
+      <h2>Model Training Replay</h2>
+      <div id="trainingStatus">Idle</div>
+    </div>
+    <div class="training-controls">
+      <select id="trainingModelSelect">
+        <option value="equal_weights">Equal Weights</option>
+        <option value="trained_color">Trained Color</option>
+        <option value="trained_position">Trained Position</option>
+      </select>
+      <button id="trainingLoadSampleBtn">Load Sample</button>
+      <label class="file-label" for="trainingFileInput">Load JSON</label>
+      <input id="trainingFileInput" type="file" accept="application/json" />
+      <button id="trainingPlayPauseBtn" disabled>Play</button>
+      <button id="trainingStepBtn" disabled>Step</button>
+      <label for="trainingSpeedRange">Speed</label>
+      <input id="trainingSpeedRange" type="range" min="1" max="20" value="6" />
+    </div>
+    <div class="training-meta">
+      <div>Seed: <span id="trainingSeed">-</span></div>
+      <div>Model Score: <span id="trainingScore">-</span></div>
+      <div>Step: <span id="trainingStepValue">0 / 0</span></div>
+      <div>Season: <span id="trainingSeasonValue">-</span></div>
+      <div>Card: <span id="trainingCardValue">-</span></div>
+      <div>Move: <span id="trainingMoveValue">-</span></div>
+      <div>Coins: <span id="trainingCoinsValue">-</span></div>
+      <div>Time Left: <span id="trainingTimeValue">-</span></div>
+    </div>
+    <input id="trainingProgress" type="range" min="0" max="0" value="0" disabled />
+    <div class="training-visuals">
+      <div>
+        <h3>Grid After Step</h3>
+        <div id="trainingGrid" class="training-grid" aria-live="polite"></div>
+      </div>
+      <div>
+        <h3>Deviation Timeline</h3>
+        <canvas id="trainingTimeline" width="540" height="110"></canvas>
+      </div>
+    </div>
+  </section>
   <div id="pointsOverlay">
     <div class="season" id="spring">
       <h3>Spring</h3>
@@ -110,4 +151,5 @@
   <script type="module" src="game.js"></script>
   <script type="module" src="ui.js"></script>
   <script type="module" src="input.js"></script>
+  <script type="module" src="trainingViz.js"></script>
 </body>

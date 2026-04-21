@@ -12,6 +12,51 @@ def dfs(grid, row, col, visited, terrain_type):
                 if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]):
                     stack.append((nr, nc))
     return cluster
+
+def mountain_coin_reward(prev_grid, curr_grid, action):
+    rows, cols = len(prev_grid), len(prev_grid[0])
+    reward = 0.0
+
+    # Helper to check if a cell is filled
+    def filled(cell):
+        return cell not in ("0", "Ruins")
+
+    # Find all mountains
+    mountains = []
+    for r in range(rows):
+        for c in range(cols):
+            if prev_grid[r][c] == "Mountain":
+                mountains.append((r, c))
+
+    # For each mountain, compute progress before and after
+    for (r, c) in mountains:
+        neighbors = [
+            (r-1, c),
+            (r+1, c),
+            (r, c-1),
+            (r, c+1)
+        ]
+
+        prev_filled = 0
+        curr_filled = 0
+
+        for (rr, cc) in neighbors:
+            if 0 <= rr < rows and 0 <= cc < cols:
+                if filled(prev_grid[rr][cc]):
+                    prev_filled += 1
+                if filled(curr_grid[rr][cc]):
+                    curr_filled += 1
+
+        # Incremental reward: +0.25 per new filled neighbor
+        if curr_filled > prev_filled:
+            reward += 0.25 * (curr_filled - prev_filled)
+
+        # Bonus for completing a mountain
+        if prev_filled < 4 and curr_filled == 4:
+            reward += 1 - (0.25 * (curr_filled - prev_filled))
+
+    return reward
+
 '''
 # Earn 2 points for each Forest space in the longest unbroken column of Forest spaces
 def faunlostthicket(grid):
