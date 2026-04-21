@@ -27,7 +27,7 @@ class GameSession:
         self.id = session_id
         self.players = {}
         self.deck, self.monster_deck = build_decks()
-        self.score_types, self.score_types_names = select_scoring_cards()
+        self.score_types, self.score_types_names, self.score_types_colors = select_scoring_cards()
         self.current_card = self.deck[0]
         self.season_time = 8
         self.deck_index = 0
@@ -228,9 +228,18 @@ def select_scoring_cards():
     score_types = [random.choice(green), random.choice(blue), random.choice(red), random.choice(misc)]
     random.shuffle(score_types)
     score_types_names = []
+    score_types_colors = []
     for score in score_types:
         score_types_names.append(score.__name__)
-    return score_types, score_types_names
+        if score in green:
+            score_types_colors.append("Green")
+        elif score in blue:
+            score_types_colors.append("Blue")
+        elif score in red:
+            score_types_colors.append("Red")
+        else:
+            score_types_colors.append("Misc")
+    return score_types, score_types_names, score_types_colors
 
 '''
 def evaluate_position(card, grid, weights, criteria):
