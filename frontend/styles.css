@@ -189,22 +189,21 @@ h1 {
 }
 
 #pointsOverlay {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position: relative;
   display: flex;
   justify-content: space-around;
   align-items: flex-start;
+  gap: 8px;
+  flex-wrap: wrap;
   background: rgba(46, 42, 36, 0.95);
-  border-top: 2px solid #c9a94d;
+  border: 2px solid #c9a94d;
+  border-radius: 12px;
   padding: 10px;
-  z-index: 1000;
+  margin: 14px auto;
+  width: min(1200px, calc(100% - 28px));
+  box-sizing: border-box;
   font-family: 'Cinzel', serif;
   color: #e0d8c3;
-  height: auto;
-  max-height: 160px;
-  overflow-y: auto; 
 }
 
 .season {
