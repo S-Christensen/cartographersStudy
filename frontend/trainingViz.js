@@ -39,6 +39,7 @@ function $(id) {
 }
 
 const elements = {
+  toggleBtn: $("trainingToggleBtn"),
   panel: $("trainingPanel"),
   loadSampleBtn: $("trainingLoadSampleBtn"),
   fileInput: $("trainingFileInput"),
@@ -66,6 +67,15 @@ MODEL_KEYS.forEach((key) => {
 
 function setStatus(text) {
   elements.status.textContent = text;
+}
+
+function setReplayPanelVisible(visible) {
+  elements.panel.classList.toggle("is-hidden", !visible);
+  if (elements.toggleBtn) {
+    elements.toggleBtn.textContent = visible
+      ? "Hide Model Training Replay"
+      : "Show Model Training Replay";
+  }
 }
 
 function sanitizeGrid(rawGrid) {
@@ -257,6 +267,7 @@ function configureModels(payload) {
     throw new Error("Invalid payload: missing results.");
   }
 
+  setReplayPanelVisible(true);
   stopPlayback();
 
   // Load all three models
@@ -341,10 +352,23 @@ function loadTraceFromFile(file) {
   reader.readAsText(file);
 }
 
+function initializeReplayToggle() {
+  setReplayPanelVisible(false);
+  if (!elements.toggleBtn) {
+    return;
+  }
+  elements.toggleBtn.addEventListener("click", () => {
+    const shouldShow = elements.panel.classList.contains("is-hidden");
+    setReplayPanelVisible(shouldShow);
+  });
+}
+
 function init() {
   if (!elements.panel) {
     return;
   }
+
+  initializeReplayToggle();
 
   elements.loadSampleBtn.addEventListener("click", loadSampleTrace);
 

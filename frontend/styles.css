@@ -434,6 +434,27 @@ h1 {
   transform: translateY(-2px) scale(1.05);
 }
 
+#trainingToggleBar {
+  width: min(1240px, 96vw);
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+#trainingToggleBtn {
+  background: linear-gradient(90deg, #5c3d2e 0%, #7a5c3b 100%);
+  color: #f4e9d8;
+  border: 1px solid #c9a94d;
+  border-radius: 6px;
+  font-family: 'Cinzel', serif;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+#trainingToggleBtn:hover {
+  box-shadow: 0 0 8px #c9a94d;
+}
+
 #trainingPanel {
   width: min(1240px, 96vw);
   margin-top: 14px;
@@ -443,6 +464,10 @@ h1 {
   border-radius: 14px;
   background: linear-gradient(180deg, rgba(60, 49, 36, 0.95), rgba(38, 31, 24, 0.95));
   box-shadow: 0 10px 25px #0007;
+}
+
+#trainingPanel.is-hidden {
+  display: none;
 }
 
 .training-header {
