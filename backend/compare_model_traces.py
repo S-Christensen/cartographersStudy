@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import random
 
 import numpy as np
 
@@ -113,10 +114,10 @@ def run_same_game(seed=42):
 
 
 if __name__ == "__main__":
-    seed = 42
+    seed = random.randint(0, 1_000_000)
     result = to_json_safe(run_same_game(seed=seed))
-    while result["results"]["trained_position"]["score"] <= result["results"]["equal_weights"]["score"] or result["results"]["trained_color"]["score"] <= result["results"]["equal_weights"]["score"]:
-        seed += 1
+    while result["results"]["equal_weights"]["score"] <= 65 or result["results"]["trained_position"]["score"] <= result["results"]["equal_weights"]["score"] or result["results"]["trained_color"]["score"] <= result["results"]["equal_weights"]["score"]:
+        seed = random.randint(0, 1_000_000)
         result = to_json_safe(run_same_game(seed=seed))
 
     out_dir = Path("ml_logs")

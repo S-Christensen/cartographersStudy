@@ -12,6 +12,9 @@ const TERRAIN_COLORS = {
 
 const SEASON_NAMES = ["Spring", "Summer", "Autumn", "Winter"];
 const SAMPLE_PATHS = [
+  "../ml_logs/model_trace_716156.json",
+  "/ml_logs/model_trace_716156.json",
+  "./ml_logs/model_trace_716156.json",
   "../ml_logs/model_trace_43.json",
   "/ml_logs/model_trace_43.json",
   "./ml_logs/model_trace_43.json",

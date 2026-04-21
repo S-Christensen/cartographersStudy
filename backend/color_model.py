@@ -351,9 +351,18 @@ def apply_ambush_rules(grid, card):
     }
     dr, dc = DIRS.get(direction, (0, 1))
 
+    # Move inward one space at a time from the active edge while keeping
+    # the same corner and sweep direction for each inset layer.
+    if direction in ("right", "left"):
+        inward_r = 1 if start_r == 0 else -1
+        inward_c = 0
+    else:
+        inward_r = 0
+        inward_c = 1 if start_c == 0 else -1
+
     for layer in range(N):
-        r = start_r + (layer if start_r == 0 else -layer if start_r == N - 1 else 0)
-        c = start_c + (layer if start_c == 0 else -layer if start_c == N - 1 else 0)
+        r = start_r + inward_r * layer
+        c = start_c + inward_c * layer
 
         for step in range(N):
             rr = r + dr * step
