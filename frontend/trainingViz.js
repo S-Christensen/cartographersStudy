@@ -21,6 +21,13 @@ const SAMPLE_PATHS = [
 ];
 
 const MODEL_KEYS = ["equal_weights", "trained_color", "trained_position"];
+const SCORE_COLOR_MAP = {
+  Blue: "#3a8ee6",
+  Green: "#2ea84d",
+  Red: "#d14b3f",
+  Yellow: "#d7b13a",
+  Misc: "#8f7f66",
+};
 
 const state = {
   payload: null,
@@ -53,6 +60,7 @@ const elements = {
   season: $("trainingSeasonValue"),
   card: $("trainingCardValue"),
   move: $("trainingMoveValue"),
+  scoreCards: $("trainingScoreCards"),
   timeline: $("trainingTimeline"),
 };
 
@@ -76,6 +84,42 @@ function setReplayPanelVisible(visible) {
       ? "Hide Model Training Replay"
       : "Show Model Training Replay";
   }
+}
+
+function renderScoreCards(payload) {
+  if (!elements.scoreCards) {
+    return;
+  }
+
+  elements.scoreCards.innerHTML = "";
+  const names = payload?.scenario?.score_types_names;
+  const colors = payload?.scenario?.score_types_colors;
+
+  if (!Array.isArray(names) || names.length === 0) {
+    const empty = document.createElement("span");
+    empty.className = "training-scorecard";
+    empty.textContent = "No scenario score cards in this trace";
+    elements.scoreCards.appendChild(empty);
+    return;
+  }
+
+  names.forEach((name, idx) => {
+    const card = document.createElement("span");
+    card.className = "training-scorecard";
+
+    const dot = document.createElement("span");
+    dot.className = "training-scorecard-dot";
+    const colorName = Array.isArray(colors) ? colors[idx] : "Misc";
+    dot.style.backgroundColor = SCORE_COLOR_MAP[colorName] || SCORE_COLOR_MAP.Misc;
+    dot.title = String(colorName || "Misc");
+
+    const label = document.createElement("span");
+    label.textContent = `${String.fromCharCode(65 + idx)}: ${String(name)}`;
+
+    card.appendChild(dot);
+    card.appendChild(label);
+    elements.scoreCards.appendChild(card);
+  });
 }
 
 function sanitizeGrid(rawGrid) {
@@ -290,6 +334,7 @@ function configureModels(payload) {
   );
 
   elements.seed.textContent = String(payload.seed ?? "-");
+  renderScoreCards(payload);
   elements.progress.max = String(Math.max(0, maxSteps - 1));
   elements.progress.value = "0";
   elements.progress.disabled = maxSteps === 0;
