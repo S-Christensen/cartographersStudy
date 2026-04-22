@@ -55,7 +55,7 @@ def reset_game(code, size):
 
     openRooms[code] = gameStart.initialize_session()
     deck, monster_deck = gameStart.build_decks()
-    score_types, score_types_names = gameStart.select_scoring_cards()
+    score_types, score_types_names, score_types_colors = gameStart.select_scoring_cards()
 
     deck.append(monster_deck[0])
     random.shuffle(deck)
@@ -65,6 +65,7 @@ def reset_game(code, size):
     session.monster_deck = monster_deck
     session.score_types = score_types
     session.score_types_names = score_types_names
+    session.score_types_colors = score_types_colors
     session.season_index = 0
     session.season_time = 8
     session.season_initialized = True
@@ -155,7 +156,7 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
         if not hasattr(openRooms[code], "season_initialized") or not openRooms[code].season_initialized:
             openRooms[code] = gameStart.initialize_session()
             deck, monster_deck = gameStart.build_decks()
-            score_types = gameStart.select_scoring_cards()
+            score_types, score_types_names, score_types_colors = gameStart.select_scoring_cards()
 
             deck.append(monster_deck[0])
             random.shuffle(deck)
@@ -163,6 +164,8 @@ async def draw_card(payload: RoomCodePayload, Authorization: Optional[str] = Hea
             openRooms[code].deck = deck
             openRooms[code].monster_deck = monster_deck
             openRooms[code].score_types = score_types
+            openRooms[code].score_types_names = score_types_names
+            openRooms[code].score_types_colors = score_types_colors
             openRooms[code].season_index = 0
             player.deck_index = 0
             player.season_time = 8 - math.ceil((openRooms[code].season_index + 1) / 2.0)

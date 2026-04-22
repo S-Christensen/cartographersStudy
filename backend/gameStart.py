@@ -162,7 +162,7 @@ def monster_penalty(grid):
 def start():
     game_session = initialize_session()
     deck, monster_deck = build_decks()
-    score_types, score_types_names = select_scoring_cards()
+    score_types, score_types_names, score_types_colors = select_scoring_cards()
 
     for season_index in range(4):
         run_season(
@@ -171,6 +171,7 @@ def start():
             monster_deck,
             score_types,
             score_types_names,
+            score_types_colors,
             season_index,
         )
 

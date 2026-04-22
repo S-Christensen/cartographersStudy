@@ -126,14 +126,16 @@ class TestGameLogic(unittest.TestCase):
             card.name in ["GoblinAttack", "GnollRaid", "BugbearAssault", "KoboldOnslaught"] for card in monster_deck))
 
     def test_select_scoring_cards(self):
-        score_types = gameStart.select_scoring_cards()
+        score_types, score_types_names, score_types_colors = gameStart.select_scoring_cards()
         self.assertEqual(len(score_types), 4)
+        self.assertEqual(len(score_types_names), 4)
+        self.assertEqual(len(score_types_colors), 4)
         self.assertTrue(callable(score_types[0]))
 
     def test_run_season_valid_flow(self):
         session = gameStart.initialize_session()
         deck, monster_deck = gameStart.build_decks()
-        score_types = gameStart.select_scoring_cards()
+        score_types, score_types_names, score_types_colors = gameStart.select_scoring_cards()
         print("\nDeck:")
         for i in deck:
             print(i.name)
@@ -143,7 +145,7 @@ class TestGameLogic(unittest.TestCase):
 
         print(score_types)
 
-        gameStart.run_season(session, deck, monster_deck, score_types, 0)
+        gameStart.run_season(session, deck, monster_deck, score_types, score_types_names, score_types_colors, 0)
         self.assertLessEqual(session.players["player_1"].score, 3)
 
 
